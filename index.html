@@ -1,0 +1,25 @@
+<form id="asiForm">
+    <label for="pension">Pension d'invalidité (annuelle en €) :</label>
+    <input type="number" id="pension" placeholder="Exemple : 4056.96" required>
+
+    <label for="salaire">Salaire (annuel en €) :</label>
+    <input type="number" id="salaire" placeholder="Exemple : 15000" required>
+
+    <label for="indemnites">Indemnités journalières (annuelles en €) :</label>
+    <input type="number" id="indemnites" placeholder="Exemple : 2664.48" required>
+
+    <label for="foncier">Revenus fonciers (annuels en €) :</label>
+    <input type="number" id="foncier" placeholder="Exemple : 3600">
+
+    <label for="autres">Autres ressources (annuelles en €) :</label>
+    <input type="number" id="autres" placeholder="Exemple : 1200">
+
+    <label for="abattement">Abattement à appliquer (en €) :</label>
+    <input type="number" id="abattement" placeholder="Exemple : 2000">
+
+    <label for="plafond">Plafond annuel (en €) :</label>
+    <input type="number" id="plafond" value="10320.07" required>
+
+    <button type="button" onclick="calculerASI()">Calculer</button>
+</form>
+<div class="result" id="result"></div>
