@@ -1,3 +1,32 @@
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0 0 10px;
+    color: #007BFF;
+    text-align: center;
+}
+
+header p {
+    text-align: center;
+    color: #555;
+}
+
 .mois {
     background-color: #f8f8f8;
     padding: 15px;
@@ -12,8 +41,30 @@
     color: #007BFF;
 }
 
-#ressourcesContainer {
-    margin-top: 20px;
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    background: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
 }
 
 .result {
