@@ -1,134 +1,26 @@
-/* Global Styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
-    color: #333;
-}
-
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-}
-
-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-header h1 {
-    color: #007BFF;
-}
-
-header p {
-    color: #666;
-}
-
-/* Form Sections */
-section {
-    margin-bottom: 20px;
+.mois {
+    background-color: #f8f8f8;
     padding: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    background-color: #fdfdfd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
 }
 
-section h2 {
-    margin-top: 0;
+.mois h3 {
+    margin: 0;
     color: #007BFF;
 }
 
-/* Inputs and Labels */
-label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-input, select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-input[type="number"] {
-    text-align: right;
-}
-
-/* Resources Section */
 #ressourcesContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.trimestre {
-    background-color: #f8f8f8;
-    padding: 15px;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.trimestre h3 {
-    margin: 0;
-    color: #555;
-}
-
-/* Button */
-.btn {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #007BFF;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    transition: background-color 0.3s;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-}
-
-/* Results Section */
-.result {
     margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
+}
+
+.result {
+    margin-top: 30px;
+    padding: 15px;
     border-radius: 8px;
-    background-color: #f8f8f8;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.result h3 {
-    margin-top: 0;
-    color: #007BFF;
-}
-
-.result strong {
-    color: #333;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-    #ressourcesContainer {
-        grid-template-columns: 1fr;
-    }
-
-    .btn {
-        font-size: 14px;
-    }
+    border: 2px solid #ddd;
+    background-color: #fdfdfd;
+    font-size: 16px;
 }
