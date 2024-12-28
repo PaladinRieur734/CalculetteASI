@@ -55,6 +55,15 @@ function calculerASI() {
     if (isNaN(dateEffet.getTime())) {
         alert("Veuillez entrer une date d'effet valide.");
         return;
+        // Style dynamique des résultats
+if (droitsTotal > 0) {
+    resultDiv.style.border = "2px solid green";
+    resultDiv.style.backgroundColor = "#e8f5e9";
+} else {
+    resultDiv.style.border = "2px solid red";
+    resultDiv.style.backgroundColor = "#fdecea";
+}
+
     }
 
     const resultDiv = document.getElementById("result");
