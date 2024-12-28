@@ -3,48 +3,47 @@ const plafonds = {
     "2024": { seul: 10536.50, couple: 16890.35 },
 };
 
-// Fonction pour générer les trimestres en fonction de la date d'effet
-function genererTrimestres() {
+// Fonction pour générer les mois précédant la date d'effet
+function genererMoisPrecedents() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
     if (isNaN(dateEffet.getTime())) return; // Si la date est invalide, ne rien faire
 
     const ressourcesContainer = document.getElementById("ressourcesContainer");
     ressourcesContainer.innerHTML = ""; // Réinitialise les champs
 
-    let trimestreCourant = Math.floor((dateEffet.getMonth() - 1) / 3); // Trimestre précédent
-    let annee = dateEffet.getFullYear();
+    const moisPrecedents = [];
+    for (let i = 1; i <= 3; i++) {
+        const date = new Date(dateEffet);
+        date.setMonth(dateEffet.getMonth() - i);
+        moisPrecedents.push(date);
+    }
 
-    // Générer les champs pour les 4 trimestres précédents
-    for (let i = 0; i < 4; i++) {
-        if (trimestreCourant < 0) {
-            trimestreCourant = 3; // Revenir au dernier trimestre de l'année précédente
-            annee--;
-        }
+    moisPrecedents.reverse(); // Afficher dans l'ordre chronologique
 
-        const trimestreDiv = document.createElement("div");
-        trimestreDiv.className = "trimestre";
-        trimestreDiv.innerHTML = `
-            <h3>Trimestre ${trimestreCourant + 1} (${annee})</h3>
-            <label for="invaliditeT${i + 1}">Pension d'invalidité :</label>
-            <input type="number" id="invaliditeT${i + 1}" placeholder="Montant en €">
+    // Crée les champs pour chaque mois
+    moisPrecedents.forEach((mois, index) => {
+        const moisDiv = document.createElement("div");
+        moisDiv.className = "mois";
+        moisDiv.innerHTML = `
+            <h3>${mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })}</h3>
+            <label for="salairesM${index + 1}">Salaires :</label>
+            <input type="number" id="salairesM${index + 1}" placeholder="Montant en €">
 
-            <label for="salairesT${i + 1}">Salaires :</label>
-            <input type="number" id="salairesT${i + 1}" placeholder="Montant en €">
+            <label for="indemnitesM${index + 1}">Indemnités journalières :</label>
+            <input type="number" id="indemnitesM${index + 1}" placeholder="Montant en €">
 
-            <label for="indemnitesT${i + 1}">Indemnités journalières :</label>
-            <input type="number" id="indemnitesT${i + 1}" placeholder="Montant en €">
+            <label for="chomageM${index + 1}">Chômage :</label>
+            <input type="number" id="chomageM${index + 1}" placeholder="Montant en €">
 
-            <label for="chomageT${i + 1}">Chômage :</label>
-            <input type="number" id="chomageT${i + 1}" placeholder="Montant en €">
+            <label for="invaliditeM${index + 1}">Pension d'invalidité :</label>
+            <input type="number" id="invaliditeM${index + 1}" placeholder="Montant en €">
 
-            <label for="autresT${i + 1}">Autres ressources :</label>
-            <input type="number" id="autresT${i + 1}" placeholder="Montant en €">
+            <label for="autresM${index + 1}">Autres ressources :</label>
+            <input type="number" id="autresM${index + 1}" placeholder="Montant en €">
         `;
 
-        ressourcesContainer.appendChild(trimestreDiv);
-
-        trimestreCourant--;
-    }
+        ressourcesContainer.appendChild(moisDiv);
+    });
 }
 
 // Fonction pour calculer les droits ASI
@@ -55,54 +54,34 @@ function calculerASI() {
     if (isNaN(dateEffet.getTime())) {
         alert("Veuillez entrer une date d'effet valide.");
         return;
-        // Style dynamique des résultats
-if (droitsTotal > 0) {
-    resultDiv.style.border = "2px solid green";
-    resultDiv.style.backgroundColor = "#e8f5e9";
-} else {
-    resultDiv.style.border = "2px solid red";
-    resultDiv.style.backgroundColor = "#fdecea";
-}
-
     }
 
     const resultDiv = document.getElementById("result");
-    resultDiv.innerHTML = "<h3>Résultats trimestriels :</h3>";
+    resultDiv.innerHTML = "<h3>Résultats mensuels :</h3>";
 
-    let trimestreCourant = Math.floor((dateEffet.getMonth() - 1) / 3); // Trimestre précédent
-    let annee = dateEffet.getFullYear();
     let droitsTotal = 0;
 
-    // Calcul des droits pour chaque trimestre
-    for (let i = 0; i < 4; i++) {
-        if (trimestreCourant < 0) {
-            trimestreCourant = 3;
-            annee--;
-        }
-
-        const plafond = plafonds[annee][statut] / 4;
-
-        // Somme des ressources pour ce trimestre
+    for (let i = 1; i <= 3; i++) {
         const ressources = [
-            parseFloat(document.getElementById(`invaliditeT${i + 1}`).value) || 0,
-            parseFloat(document.getElementById(`salairesT${i + 1}`).value) || 0,
-            parseFloat(document.getElementById(`indemnitesT${i + 1}`).value) || 0,
-            parseFloat(document.getElementById(`chomageT${i + 1}`).value) || 0,
-            parseFloat(document.getElementById(`autresT${i + 1}`).value) || 0,
+            parseFloat(document.getElementById(`salairesM${i}`).value) || 0,
+            parseFloat(document.getElementById(`indemnitesM${i}`).value) || 0,
+            parseFloat(document.getElementById(`chomageM${i}`).value) || 0,
+            parseFloat(document.getElementById(`invaliditeM${i}`).value) || 0,
+            parseFloat(document.getElementById(`autresM${i}`).value) || 0,
         ];
 
         const totalRessources = ressources.reduce((sum, value) => sum + value, 0);
+        const plafondMensuel = plafonds[dateEffet.getFullYear()][statut] / 12;
 
-        if (totalRessources <= plafond) {
-            const droit = plafond - totalRessources;
-            droitsTotal += droit;
-            resultDiv.innerHTML += `✅ Trimestre ${trimestreCourant + 1} (${annee}) : Droits ASI = <strong>${droit.toFixed(2)} €</strong>.<br>`;
+        if (totalRessources <= plafondMensuel) {
+            const droit = plafondMensuel - totalRessources;
+            droitsTotal += droit * 3; // Mois vers trimestre
+            resultDiv.innerHTML += `✅ ${i} mois avant : Droits = <strong>${droit.toFixed(2)} €</strong>.<br>`;
         } else {
-            resultDiv.innerHTML += `❌ Trimestre ${trimestreCourant + 1} (${annee}) : Pas de droits (Ressources : ${totalRessources.toFixed(2)} €).<br>`;
+            resultDiv.innerHTML += `❌ ${i} mois avant : Pas de droits (Ressources : ${totalRessources.toFixed(2)} €).<br>`;
         }
-
-        trimestreCourant--;
     }
 
-    resultDiv.innerHTML += `<br><strong>Droits totaux sur 12 mois :</strong> ${droitsTotal.toFixed(2)} €`;
+    resultDiv.innerHTML += `<br><strong>Droits totaux sur 3 mois :</strong> ${droitsTotal.toFixed(2)} €`;
 }
+
