@@ -1,25 +1,67 @@
-<form id="asiForm">
-    <label for="pension">Pension d'invalidité (annuelle en €) :</label>
-    <input type="number" id="pension" placeholder="Exemple : 4056.96" required>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcul des Droits ASI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Calcul des Droits ASI</h1>
+            <p>Remplissez les informations pour calculer les droits trimestriels à l'ASI.</p>
+        </header>
 
-    <label for="salaire">Salaire (annuel en €) :</label>
-    <input type="number" id="salaire" placeholder="Exemple : 15000" required>
+        <form id="asiForm">
+            <section>
+                <h2>Date d'effet de l'ASI</h2>
+                <label for="dateEffet">Date d'effet :</label>
+                <input type="date" id="dateEffet" required>
+            </section>
 
-    <label for="indemnites">Indemnités journalières (annuelles en €) :</label>
-    <input type="number" id="indemnites" placeholder="Exemple : 2664.48" required>
+            <section>
+                <h2>Ressources trimestrielles</h2>
+                <p>Entrez les ressources trimestrielles précédant la date d'effet :</p>
 
-    <label for="foncier">Revenus fonciers (annuels en €) :</label>
-    <input type="number" id="foncier" placeholder="Exemple : 3600">
+                <div class="ressources-trimestrielles">
+                    <div class="trimestre">
+                        <label for="ressourceT1">Trimestre 1 :</label>
+                        <input type="number" id="ressourceT1" placeholder="Montant en €">
+                    </div>
+                    <div class="trimestre">
+                        <label for="ressourceT2">Trimestre 2 :</label>
+                        <input type="number" id="ressourceT2" placeholder="Montant en €">
+                    </div>
+                    <div class="trimestre">
+                        <label for="ressourceT3">Trimestre 3 :</label>
+                        <input type="number" id="ressourceT3" placeholder="Montant en €">
+                    </div>
+                    <div class="trimestre">
+                        <label for="ressourceT4">Trimestre 4 :</label>
+                        <input type="number" id="ressourceT4" placeholder="Montant en €">
+                    </div>
+                </div>
+            </section>
 
-    <label for="autres">Autres ressources (annuelles en €) :</label>
-    <input type="number" id="autres" placeholder="Exemple : 1200">
+            <section>
+                <h2>Abattement et Statut</h2>
+                <label for="abattement">Abattement annuel (en €) :</label>
+                <input type="number" id="abattement" placeholder="Exemple : 2000">
 
-    <label for="abattement">Abattement à appliquer (en €) :</label>
-    <input type="number" id="abattement" placeholder="Exemple : 2000">
+                <label for="statut">Statut :</label>
+                <select id="statut">
+                    <option value="seul">Personne seule</option>
+                    <option value="couple">Couple</option>
+                </select>
+            </section>
 
-    <label for="plafond">Plafond annuel (en €) :</label>
-    <input type="number" id="plafond" value="10320.07" required>
+            <button type="button" class="btn" onclick="calculerASI()">Calculer</button>
+        </form>
 
-    <button type="button" onclick="calculerASI()">Calculer</button>
-</form>
-<div class="result" id="result"></div>
+        <div id="result" class="result"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
