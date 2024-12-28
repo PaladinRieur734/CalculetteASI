@@ -1,101 +1,134 @@
-/* Style global */
+/* Global Styles */
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
     margin: 0;
     padding: 0;
     background-color: #f9f9f9;
     color: #333;
 }
 
-/* Conteneur principal */
 .container {
     max-width: 800px;
-    margin: 20px auto;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
     padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
 }
 
-/* En-tête */
 header {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 header h1 {
-    color: #4CAF50;
-    font-size: 24px;
-    margin-bottom: 10px;
+    color: #007BFF;
 }
 
 header p {
-    font-size: 16px;
     color: #666;
 }
 
-/* Sections */
+/* Form Sections */
 section {
     margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fdfdfd;
 }
 
 section h2 {
-    color: #4CAF50;
-    font-size: 20px;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #4CAF50;
-    padding-bottom: 5px;
+    margin-top: 0;
+    color: #007BFF;
 }
 
-/* Période */
-.ressources-trimestrielles .trimestre {
-    background: #f1f1f1;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
-/* Formulaire */
+/* Inputs and Labels */
 label {
     display: block;
-    margin: 5px 0;
     font-weight: bold;
+    margin-bottom: 5px;
 }
 
 input, select {
     width: 100%;
-    padding: 8px;
+    padding: 10px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
-/* Bouton */
+input[type="number"] {
+    text-align: right;
+}
+
+/* Resources Section */
+#ressourcesContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.trimestre {
+    background-color: #f8f8f8;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.trimestre h3 {
+    margin: 0;
+    color: #555;
+}
+
+/* Button */
 .btn {
     display: block;
     width: 100%;
-    background: #4CAF50;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
+    padding: 15px;
     font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s;
 }
 
 .btn:hover {
-    background: #45a049;
+    background-color: #0056b3;
 }
 
-/* Résultats */
+/* Results Section */
 .result {
     margin-top: 20px;
-    padding: 15px;
-    background: #e8f5e9;
-    border: 1px solid #4CAF50;
-    border-radius: 5px;
-    color: #2e7d32;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.result h3 {
+    margin-top: 0;
+    color: #007BFF;
+}
+
+.result strong {
+    color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    #ressourcesContainer {
+        grid-template-columns: 1fr;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
 }
