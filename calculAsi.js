@@ -1,101 +1,49 @@
-/* Style global */
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
-    color: #333;
-}
+const plafonds = {
+    "2023": { seul: 10320.07, couple: 16548.23 },
+    "2024": { seul: 10536.50, couple: 16890.35 },
+};
 
-/* Conteneur principal */
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-}
+// Fonction pour calculer les droits ASI
+function calculerASI() {
+    const dateEffet = new Date(document.getElementById("dateEffet").value);
+    const statut = document.getElementById("statut").value; // "seul" ou "couple"
+    const abattement = parseFloat(document.getElementById("abattement").value) || 0;
 
-/* En-tête */
-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
+    // Récupération des ressources trimestrielles
+    const ressourcesTrimestrielles = [
+        parseFloat(document.getElementById("ressourceT1").value) || 0,
+        parseFloat(document.getElementById("ressourceT2").value) || 0,
+        parseFloat(document.getElementById("ressourceT3").value) || 0,
+        parseFloat(document.getElementById("ressourceT4").value) || 0,
+    ];
 
-header h1 {
-    color: #4CAF50;
-    font-size: 24px;
-    margin-bottom: 10px;
-}
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerHTML = "<h3>Résultats trimestriels :</h3>";
 
-header p {
-    font-size: 16px;
-    color: #666;
-}
+    // Calculer les plafonds et droits pour chaque trimestre (12 mois après la date d'effet)
+    let trimestreCourant = Math.floor(dateEffet.getMonth() / 3); // Trimestre d'effet
+    let annee = dateEffet.getFullYear();
+    let droitsTotal = 0;
 
-/* Sections */
-section {
-    margin-bottom: 20px;
-}
+    for (let i = 0; i < 4; i++) {
+        // Déterminer le plafond trimestriel
+        const plafond = plafonds[annee][statut] / 4;
+        const ressourceTrimestre = ressourcesTrimestrielles[trimestreCourant] || 0;
+        const netTrimestriel = Math.max(0, ressourceTrimestre - abattement / 4);
 
-section h2 {
-    color: #4CAF50;
-    font-size: 20px;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #4CAF50;
-    padding-bottom: 5px;
-}
+        // Calcul des droits
+        if (netTrimestriel <= plafond) {
+            const droit = plafond - netTrimestriel;
+            droitsTotal += droit;
+            resultDiv.innerHTML += `✅ Trimestre ${i + 1} (${annee}) : Droits ASI = <strong>${droit.toFixed(2)} €</strong>.<br>`;
+        } else {
+            resultDiv.innerHTML += `❌ Trimestre ${i + 1} (${annee}) : Pas de droits (Ressources : ${netTrimestriel.toFixed(2)} €).<br>`;
+        }
 
-/* Période */
-.ressources-trimestrielles .trimestre {
-    background: #f1f1f1;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
+        // Passer au trimestre suivant
+        trimestreCourant = (trimestreCourant + 1) % 4;
+        if (trimestreCourant === 0) annee++; // Nouvelle année
+    }
 
-/* Formulaire */
-label {
-    display: block;
-    margin: 5px 0;
-    font-weight: bold;
-}
-
-input, select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-/* Bouton */
-.btn {
-    display: block;
-    width: 100%;
-    background: #4CAF50;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.btn:hover {
-    background: #45a049;
-}
-
-/* Résultats */
-.result {
-    margin-top: 20px;
-    padding: 15px;
-    background: #e8f5e9;
-    border: 1px solid #4CAF50;
-    border-radius: 5px;
-    color: #2e7d32;
+    resultDiv.innerHTML += `<br><strong>Droits totaux sur 12 mois :</strong> ${droitsTotal.toFixed(2)} €`;
 }
