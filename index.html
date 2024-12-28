@@ -10,45 +10,26 @@
     <div class="container">
         <header>
             <h1>Calcul des Droits ASI</h1>
-            <p>Remplissez les informations pour calculer les droits trimestriels à l'ASI.</p>
+            <p>Entrez la date d'effet et les ressources trimestrielles pour calculer les droits ASI.</p>
         </header>
 
         <form id="asiForm">
             <section>
                 <h2>Date d'effet de l'ASI</h2>
                 <label for="dateEffet">Date d'effet :</label>
-                <input type="date" id="dateEffet" required>
+                <input type="date" id="dateEffet" required onchange="genererTrimestres()">
             </section>
 
             <section>
                 <h2>Ressources trimestrielles</h2>
-                <p>Entrez les ressources trimestrielles précédant la date d'effet :</p>
-
-                <div class="ressources-trimestrielles">
-                    <div class="trimestre">
-                        <label for="ressourceT1">Trimestre 1 :</label>
-                        <input type="number" id="ressourceT1" placeholder="Montant en €">
-                    </div>
-                    <div class="trimestre">
-                        <label for="ressourceT2">Trimestre 2 :</label>
-                        <input type="number" id="ressourceT2" placeholder="Montant en €">
-                    </div>
-                    <div class="trimestre">
-                        <label for="ressourceT3">Trimestre 3 :</label>
-                        <input type="number" id="ressourceT3" placeholder="Montant en €">
-                    </div>
-                    <div class="trimestre">
-                        <label for="ressourceT4">Trimestre 4 :</label>
-                        <input type="number" id="ressourceT4" placeholder="Montant en €">
-                    </div>
+                <div id="ressourcesContainer">
+                    <p>Entrez les ressources pour chaque trimestre précédent la date d'effet :</p>
+                    <!-- Les trimestres seront générés dynamiquement ici -->
                 </div>
             </section>
 
             <section>
-                <h2>Abattement et Statut</h2>
-                <label for="abattement">Abattement annuel (en €) :</label>
-                <input type="number" id="abattement" placeholder="Exemple : 2000">
-
+                <h2>Statut</h2>
                 <label for="statut">Statut :</label>
                 <select id="statut">
                     <option value="seul">Personne seule</option>
