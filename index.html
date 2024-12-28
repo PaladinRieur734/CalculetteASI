@@ -10,20 +10,20 @@
     <div class="container">
         <header>
             <h1>Calcul des Droits ASI</h1>
-            <p>Remplissez les champs pour calculer automatiquement les droits à l'ASI.</p>
+            <p>Entrez la date d'effet et complétez les ressources mois par mois.</p>
         </header>
 
         <form id="asiForm">
             <section class="date-section">
                 <h2>Date d'effet</h2>
                 <label for="dateEffet">Date d'effet :</label>
-                <input type="date" id="dateEffet" required onchange="genererTrimestres()">
+                <input type="date" id="dateEffet" required onchange="genererMoisPrecedents()">
             </section>
 
             <section class="ressources-section">
-                <h2>Ressources trimestrielles</h2>
+                <h2>Ressources mois par mois</h2>
                 <div id="ressourcesContainer">
-                    <p>Les trimestres précédant la date d'effet apparaîtront ici :</p>
+                    <p>Les mois précédant la date d'effet apparaîtront ici :</p>
                 </div>
             </section>
 
@@ -34,4 +34,13 @@
                     <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
-   
+            </section>
+
+            <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
+        </form>
+
+        <div id="result" class="result"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
