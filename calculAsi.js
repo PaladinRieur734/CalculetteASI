@@ -12,7 +12,7 @@ function generateResourceTable() {
     const table = document.createElement("table");
     const headerRow = document.createElement("tr");
 
-    const headers = ["Mois", "Pension d'invalidité", "Salaires", "IJ", "Chômage", "BIM", "Autres", "Total"];
+    const headers = ["Mois", "Pension d'invalidité", "Salaires (avec abattement)", "IJ", "Chômage", "BIM", "Autres", "Total"];
     headers.forEach(header => {
         const th = document.createElement("th");
         th.textContent = header;
@@ -27,7 +27,7 @@ function generateResourceTable() {
         monthCell.textContent = months[currentMonth.getMonth()] + " " + currentMonth.getFullYear();
         row.appendChild(monthCell);
 
-        for (let j = 0; j < headers.length - 2; j++) {
+        for (let j = 1; j < headers.length - 1; j++) {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
