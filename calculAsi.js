@@ -57,4 +57,3 @@ function calculateASI() {
         resultatsContainer.innerHTML = "<p>Calcul terminé. Résultats disponibles ici.</p>";
     }, 1000);
 }
-
