@@ -118,3 +118,4 @@ function calculateASI() {
     resultHTML += `<h4>Montant Total ASI sur la période de 12 mois : ${totalASI.toFixed(2)} €</h4>`;
     document.getElementById('result').innerHTML = resultHTML;
 }
+
