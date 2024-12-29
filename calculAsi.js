@@ -1,81 +1,82 @@
-const plafonds = {
-    "2023": { seul: 10320.07, couple: 16548.23 },
-    "2024": { seul: 10536.50, couple: 16890.35 },
+const ceilings = {
+    seul: { 2017: 2300, 2018: 2400, 2019: 2500, 2020: 2600, 2021: 2700, 2022: 2800, 2023: 2900, 2024: 3000 },
+    couple: { 2017: 3700, 2018: 3800, 2019: 3900, 2020: 4000, 2021: 4100, 2022: 4200, 2023: 4300, 2024: 4400 }
 };
 
-// Fonction pour générer les mois précédant la date d'effet
-function genererMoisPrecedents() {
-    const dateEffet = new Date(document.getElementById("dateEffet").value);
-    if (isNaN(dateEffet.getTime())) {
-        alert("Veuillez entrer une date d'effet valide.");
-        return;
+function generateTable() {
+    const dateEffet = document.getElementById('dateEffet').value;
+    if (!dateEffet) return;
+
+    const tableContainer = document.getElementById('tableContainer');
+    tableContainer.innerHTML = '';
+    const table = document.createElement('table');
+
+    const headerRow = document.createElement('tr');
+    ['Mois', 'Salaires (€)', 'Indemnités journalières (€)', 'Chômage (€)', 'Autres ressources (€)', 'Total (€)'].forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+    });
+    table.appendChild(headerRow);
+
+    for (let i = 0; i < 12; i++) {
+        const row = document.createElement('tr');
+        const monthCell = document.createElement('td');
+        const date = new Date(dateEffet);
+        date.setMonth(date.getMonth() - i - 1);
+        monthCell.textContent = date.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' });
+        row.appendChild(monthCell);
+
+        ['salaires', 'indemnites', 'chomage', 'autres'].forEach(type => {
+            const cell = document.createElement('td');
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.name = `${type}_${i}`;
+            input.min = 0;
+            input.oninput = () => calculateRowTotal(row);
+            cell.appendChild(input);
+            row.appendChild(cell);
+        });
+
+        const totalCell = document.createElement('td');
+        totalCell.className = 'row-total';
+        totalCell.textContent = '0';
+        row.appendChild(totalCell);
+
+        table.appendChild(row);
     }
 
-    const ressourcesContainer = document.getElementById("ressourcesContainer");
-    ressourcesContainer.innerHTML = ""; // Réinitialise les champs
-
-    for (let i = 1; i <= 3; i++) {
-        const mois = new Date(dateEffet);
-        mois.setMonth(mois.getMonth() - i);
-
-        const moisDiv = document.createElement("div");
-        moisDiv.className = "mois";
-        moisDiv.innerHTML = `
-            <h3>${mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })}</h3>
-            <label for="salairesM${i}">Salaires :</label>
-            <input type="number" id="salairesM${i}" placeholder="Montant en €">
-
-            <label for="indemnitesM${i}">Indemnités journalières :</label>
-            <input type="number" id="indemnitesM${i}" placeholder="Montant en €">
-
-            <label for="chomageM${i}">Chômage :</label>
-            <input type="number" id="chomageM${i}" placeholder="Montant en €">
-
-            <label for="invaliditeM${i}">Pension d'invalidité :</label>
-            <input type="number" id="invaliditeM${i}" placeholder="Montant en €">
-
-            <label for="autresM${i}">Autres ressources :</label>
-            <input type="number" id="autresM${i}" placeholder="Montant en €">
-        `;
-        ressourcesContainer.appendChild(moisDiv);
-    }
+    tableContainer.appendChild(table);
 }
 
-// Fonction pour calculer les droits ASI
-function calculerASI() {
-    const statut = document.getElementById("statut").value;
-    const dateEffet = new Date(document.getElementById("dateEffet").value);
+function calculateRowTotal(row) {
+    const inputs = row.querySelectorAll('input');
+    const total = Array.from(inputs).reduce((sum, input) => sum + Number(input.value || 0), 0);
+    row.querySelector('.row-total').textContent = total.toFixed(2);
+}
 
-    if (isNaN(dateEffet.getTime())) {
-        alert("Veuillez entrer une date d'effet valide.");
-        return;
+function calculateASI() {
+    const statut = document.getElementById('statut').value;
+    const dateEffet = new Date(document.getElementById('dateEffet').value);
+    const year = dateEffet.getFullYear();
+
+    const plafond = ceilings[statut][year] / 4; // Plafond trimestriel
+    const rows = document.querySelectorAll('table tr');
+
+    let resultHTML = '<h3>Résultats :</h3>';
+    let hasRights = false;
+
+    rows.forEach((row, index) => {
+        if (index === 0) return; // Skip header row
+        const total = parseFloat(row.querySelector('.row-total').textContent || '0');
+        const eligible = plafond > total;
+        if (eligible) hasRights = true;
+        resultHTML += `<p>Mois ${index}: Total des ressources : ${total} € | ASI : ${eligible ? 'Oui' : 'Non'}</p>`;
+    });
+
+    if (!hasRights) {
+        resultHTML += '<p>Le bénéficiaire n’a pas droit à l’ASI pour cette période.</p>';
     }
 
-    const resultDiv = document.getElementById("result");
-    resultDiv.innerHTML = "<h3>Résultats mensuels :</h3>";
-
-    let droitsTotal = 0;
-
-    for (let i = 1; i <= 3; i++) {
-        const ressources = [
-            parseFloat(document.getElementById(`salairesM${i}`).value) || 0,
-            parseFloat(document.getElementById(`indemnitesM${i}`).value) || 0,
-            parseFloat(document.getElementById(`chomageM${i}`).value) || 0,
-            parseFloat(document.getElementById(`invaliditeM${i}`).value) || 0,
-            parseFloat(document.getElementById(`autresM${i}`).value) || 0,
-        ];
-
-        const totalRessources = ressources.reduce((sum, value) => sum + value, 0);
-        const plafondMensuel = plafonds[dateEffet.getFullYear()][statut] / 12;
-
-        if (totalRessources <= plafondMensuel) {
-            const droit = plafondMensuel - totalRessources;
-            droitsTotal += droit * 3; // Mois vers trimestre
-            resultDiv.innerHTML += `✅ ${i} mois avant : Droits = <strong>${droit.toFixed(2)} €</strong>.<br>`;
-        } else {
-            resultDiv.innerHTML += `❌ ${i} mois avant : Pas de droits (Ressources : ${totalRessources.toFixed(2)} €).<br>`;
-        }
-    }
-
-    resultDiv.innerHTML += `<br><strong>Droits totaux sur 3 mois :</strong> ${droitsTotal.toFixed(2)} €`;
+    document.getElementById('result').innerHTML = resultHTML;
 }
