@@ -10,7 +10,7 @@ function updatePlafond() {
     const statut = document.getElementById('statut').value;
     const dateEffet = new Date(document.getElementById('dateEffet').value);
     const year = dateEffet.getFullYear();
-    const plafond = ceilings[statut][year] / 4 || 0;
+    const plafond = ceilings[statut][year] / 4 || 0; // Plafond trimestriel
     document.getElementById('plafond').value = plafond.toFixed(2);
 }
 
@@ -23,7 +23,7 @@ function generateTable() {
     const table = document.createElement('table');
 
     const headerRow = document.createElement('tr');
-    ['Mois', 'Salaires (€)', 'Abattement (€)', 'Indemnités journalières (€)', 'Chômage (€)', 'BIM (€)', 'Autres ressources (€)', 'Total (€)'].forEach(header => {
+    ['Mois', 'Pension Invalidité (€)', 'Salaires (€)', 'Abattement (€)', 'Indemnités journalières (€)', 'Chômage (€)', 'BIM (€)', 'Autres ressources (€)', 'Total (€)'].forEach(header => {
         const th = document.createElement('th');
         th.textContent = header;
         headerRow.appendChild(th);
@@ -37,7 +37,7 @@ function generateTable() {
         monthCell.textContent = month;
         row.appendChild(monthCell);
 
-        ['salaires', 'abattement', 'indemnites', 'chomage', 'bim', 'autres'].forEach(type => {
+        ['invalidite', 'salaires', 'abattement', 'indemnites', 'chomage', 'bim', 'autres'].forEach(type => {
             const cell = document.createElement('td');
             const input = document.createElement('input');
             input.type = 'number';
@@ -73,15 +73,16 @@ function generateMonths(dateEffet) {
 
 function calculateRowTotal(row) {
     const inputs = row.querySelectorAll('input');
-    const salaire = Number(inputs[0].value || 0);
-    const abattement = Number(inputs[1].value || 0);
-    const indemnites = Number(inputs[2].value || 0);
-    const chomage = Number(inputs[3].value || 0);
-    const bim = Number(inputs[4].value || 0);
-    const autres = Number(inputs[5].value || 0);
+    const invalidite = Number(inputs[0].value || 0);
+    const salaire = Number(inputs[1].value || 0);
+    const abattement = Number(inputs[2].value || 0);
+    const indemnites = Number(inputs[3].value || 0);
+    const chomage = Number(inputs[4].value || 0);
+    const bim = Number(inputs[5].value || 0);
+    const autres = Number(inputs[6].value || 0);
 
     const bimCalculated = (bim * 0.03) / 4; // BIM calculation
-    const total = salaire - abattement + indemnites + chomage + bimCalculated + autres;
+    const total = invalidite + salaire - abattement + indemnites + chomage + bimCalculated + autres;
 
     row.querySelector('.row-total').textContent = total.toFixed(2);
 }
@@ -89,21 +90,28 @@ function calculateRowTotal(row) {
 function calculateASI() {
     const plafond = parseFloat(document.getElementById('plafond').value || '0');
     const rows = document.querySelectorAll('table tr');
-    let resultHTML = '<h3>Résultats :</h3>';
-    let hasRights = false;
+    let resultHTML = '<h3>Résultats Trimestriels :</h3>';
+    let totalASI = 0;
 
     rows.forEach((row, index) => {
         if (index === 0) return; // Skip header row
+
         const total = parseFloat(row.querySelector('.row-total').textContent || '0');
-        const eligible = plafond > total;
-        if (eligible) hasRights = true;
-        resultHTML += `<p>${row.cells[0].textContent}: Total des ressources : ${total} € | ASI : ${eligible ? 'Oui' : 'Non'}</p>`;
+        const difference = plafond - total;
+        const asiAmount = difference > 0 ? difference : 0;
+        totalASI += asiAmount;
+
+        resultHTML += `
+            <p>
+                <b>${row.cells[0].textContent}</b>: 
+                Total des ressources : ${total.toFixed(2)} € | 
+                Plafond : ${plafond.toFixed(2)} € | 
+                ASI : ${asiAmount.toFixed(2)} €
+            </p>
+        `;
     });
 
-    if (!hasRights) {
-        resultHTML += '<p>Le bénéficiaire n’a pas droit à l’ASI pour cette période.</p>';
-    }
-
+    resultHTML += `<h4>Montant Total ASI sur la période de 12 mois : ${totalASI.toFixed(2)} €</h4>`;
     document.getElementById('result').innerHTML = resultHTML;
 }
 
