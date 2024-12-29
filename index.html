@@ -3,22 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcul des droits ASI</title>
+    <title>Calculateur des Droits ASI</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Calculateur des droits ASI</h1>
+        <h1>Calculateur des Droits ASI</h1>
     </header>
-
     <main>
-        <section>
+        <section class="date-statut-section">
             <div class="form-group">
                 <label for="dateEffet">Date d'effet :</label>
                 <input type="date" id="dateEffet">
             </div>
-
-            <div class="form-group">
+            <div class="form-group statut-group">
                 <h2>Statut</h2>
                 <label>
                     <input type="radio" name="statut" id="statutSeul" value="seul">
@@ -46,7 +44,6 @@
             <div id="resultatsContainer"></div>
         </section>
     </main>
-
     <script src="script.js"></script>
 </body>
 </html>
