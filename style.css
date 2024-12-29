@@ -47,6 +47,15 @@ input, select {
     font-size: 14px;
 }
 
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    text-align: right;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
