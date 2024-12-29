@@ -13,42 +13,43 @@
 
     <main>
         <section>
-            <label for="dateEffet">Date d'effet :</label>
-            <input type="date" id="dateEffet">
-        </section>
+            <div class="form-group">
+                <label for="dateEffet">Date d'effet :</label>
+                <input type="date" id="dateEffet">
+            </div>
 
-        <section>
-            <h2>Statut</h2>
-            <div>
-                <input type="radio" id="statutSeul" name="statut" value="seul">
-                <label for="statutSeul">Personne seule</label>
-                <span id="plafondSeul">Plafond trimestriel : 3600 €</span>
+            <div class="form-group">
+                <h2>Statut</h2>
+                <label>
+                    <input type="radio" name="statut" id="statutSeul" value="seul">
+                    Personne seule
+                </label>
+                <span id="plafondSeul" class="plafond">Plafond trimestriel : 3600 €</span>
                 <br>
-                <input type="radio" id="statutCouple" name="statut" value="couple">
-                <label for="statutCouple">En couple</label>
-                <span id="plafondCouple">Plafond trimestriel : 5800 €</span>
+                <label>
+                    <input type="radio" name="statut" id="statutCouple" value="couple">
+                    En couple
+                </label>
+                <span id="plafondCouple" class="plafond">Plafond trimestriel : 5800 €</span>
             </div>
         </section>
 
         <section>
             <h2>Ressources</h2>
-            <div id="ressourcesContainer">
-                <!-- Tableau dynamique ajouté ici par JavaScript -->
-            </div>
+            <div id="ressourcesContainer"></div>
         </section>
 
         <button id="calculateBtn">Calculer ASI</button>
 
         <section>
             <h2>Résultats</h2>
-            <div id="resultatsContainer">
-                <!-- Résultats affichés ici -->
-            </div>
+            <div id="resultatsContainer"></div>
         </section>
     </main>
 
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
