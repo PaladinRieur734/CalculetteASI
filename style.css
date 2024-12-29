@@ -1,95 +1,95 @@
-/* Styles de base */
 body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background: #f0f4f8;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f9;
     color: #333;
 }
 
-.container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-header h1 {
-    font-size: 2em;
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-header p {
-    text-align: center;
-    color: #7f8c8d;
-    font-size: 1em;
-}
-
-h2 {
-    color: #34495e;
-    font-size: 1.5em;
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
-
-label {
-    font-weight: bold;
-    display: block;
-    margin-top: 10px;
-    color: #2c3e50;
-}
-
-input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
-}
-
-button {
-    background: #3498db;
+header {
+    background-color: #0056b3;
     color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s ease;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-button:hover {
-    background: #2980b9;
+main {
+    padding: 20px;
 }
 
-.mois {
+.form-section {
+    margin-bottom: 20px;
+    background: white;
     padding: 15px;
-    margin-bottom: 15px;
-    background: #ecf0f1;
     border-radius: 8px;
-    border: 1px solid #bdc3c7;
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.mois h3 {
-    margin: 0;
-    color: #2980b9;
+.form-section h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #0056b3;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(odd) {
+    background-color: white;
+}
+
+button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #003f7f;
+    transition: background-color 0.3s ease;
 }
 
 .result {
-    margin-top: 30px;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #f7f9fa;
-    border: 2px solid #dcdfe3;
-    font-size: 1.2em;
-    color: #2c3e50;
-}
-
-.info {
-    color: #7f8c8d;
-    font-style: italic;
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
 }
