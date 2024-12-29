@@ -1,17 +1,21 @@
 const ceilings = {
-    seul: { 2023: 2900, 2024: 3000 },
-    couple: { 2023: 4300, 2024: 4400 }
+    seul: { 2017: 2300, 2018: 2400, 2019: 2500, 2020: 2600, 2021: 2700, 2022: 2800, 2023: 2900, 2024: 3000 },
+    couple: { 2017: 3500, 2018: 3600, 2019: 3700, 2020: 3800, 2021: 3900, 2022: 4000, 2023: 4300, 2024: 4400 }
 };
 
 document.getElementById('statut').addEventListener('change', updatePlafond);
-document.getElementById('dateEffet').addEventListener('change', generateTable);
+document.getElementById('dateEffet').addEventListener('change', () => {
+    updatePlafond();
+    generateTable();
+});
 
 function updatePlafond() {
     const statut = document.getElementById('statut').value;
     const dateEffet = new Date(document.getElementById('dateEffet').value);
     const year = dateEffet.getFullYear();
     const plafond = ceilings[statut][year] / 4 || 0; // Plafond trimestriel
-    document.getElementById('plafond').value = plafond.toFixed(2);
+    const plafondInput = document.getElementById('plafond');
+    plafondInput.value = plafond.toFixed(2);
 }
 
 function generateTable() {
@@ -114,4 +118,3 @@ function calculateASI() {
     resultHTML += `<h4>Montant Total ASI sur la période de 12 mois : ${totalASI.toFixed(2)} €</h4>`;
     document.getElementById('result').innerHTML = resultHTML;
 }
-
