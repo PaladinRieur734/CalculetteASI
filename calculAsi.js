@@ -1,6 +1,6 @@
 const ceilings = {
-    seul: { 2017: 2300, 2018: 2400, 2019: 2500, 2020: 2600, 2021: 2700, 2022: 2800, 2023: 2900, 2024: 3000 },
-    couple: { 2017: 3700, 2018: 3800, 2019: 3900, 2020: 4000, 2021: 4100, 2022: 4200, 2023: 4300, 2024: 4400 }
+    seul: { 2023: 2900, 2024: 3000 },
+    couple: { 2023: 4300, 2024: 4400 }
 };
 
 document.getElementById('statut').addEventListener('change', updatePlafond);
@@ -10,8 +10,8 @@ function updatePlafond() {
     const statut = document.getElementById('statut').value;
     const dateEffet = new Date(document.getElementById('dateEffet').value);
     const year = dateEffet.getFullYear();
-    const plafond = ceilings[statut][year] / 4;
-    document.getElementById('plafond').value = plafond;
+    const plafond = ceilings[statut][year] / 4 || 0;
+    document.getElementById('plafond').value = plafond.toFixed(2);
 }
 
 function generateTable() {
@@ -23,56 +23,65 @@ function generateTable() {
     const table = document.createElement('table');
 
     const headerRow = document.createElement('tr');
-    ['Mois', 'Salaires (€)', 'Abattement (€)', 'Indemnités journalières (€)', 'Chômage (€)', 'Autres ressources (€)', 'BIM (€)', 'Total (€)'].forEach(header => {
+    ['Mois', 'Salaires (€)', 'Abattement (€)', 'Indemnités journalières (€)', 'Chômage (€)', 'BIM (€)', 'Autres ressources (€)', 'Total (€)'].forEach(header => {
         const th = document.createElement('th');
         th.textContent = header;
         headerRow.appendChild(th);
     });
     table.appendChild(headerRow);
 
-    for (let i = 0; i < 12; i++) {
+    const months = generateMonths(new Date(dateEffet));
+    months.forEach((month, index) => {
         const row = document.createElement('tr');
         const monthCell = document.createElement('td');
-        const date = new Date(dateEffet);
-        date.setMonth(date.getMonth() - i - 1);
-        monthCell.textContent = date.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' });
+        monthCell.textContent = month;
         row.appendChild(monthCell);
 
-        // Add resource input cells
-        ['salaires', 'abattement', 'indemnites', 'chomage', 'autres', 'bim'].forEach(type => {
+        ['salaires', 'abattement', 'indemnites', 'chomage', 'bim', 'autres'].forEach(type => {
             const cell = document.createElement('td');
             const input = document.createElement('input');
             input.type = 'number';
-            input.name = `${type}_${i}`;
+            input.name = `${type}_${index}`;
             input.min = 0;
-            input.oninput = () => calculateRowTotal(row, type);
+            input.step = 0.01;
+            input.oninput = () => calculateRowTotal(row);
             cell.appendChild(input);
             row.appendChild(cell);
         });
 
-        // Total column
         const totalCell = document.createElement('td');
         totalCell.className = 'row-total';
-        totalCell.textContent = '0';
+        totalCell.textContent = '0.00';
         row.appendChild(totalCell);
 
         table.appendChild(row);
-    }
+    });
 
     tableContainer.appendChild(table);
 }
 
+function generateMonths(dateEffet) {
+    const months = [];
+    const start = new Date(dateEffet);
+    start.setMonth(start.getMonth() - 3); // Trimestre précédent
+    for (let i = 0; i < 15; i++) { // Trimestre précédent + 12 mois suivants
+        months.push(start.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' }));
+        start.setMonth(start.getMonth() + 1);
+    }
+    return months;
+}
+
 function calculateRowTotal(row) {
     const inputs = row.querySelectorAll('input');
-    const abattement = Number(inputs[1].value || 0);
     const salaire = Number(inputs[0].value || 0);
-    const bim = Number(inputs[5].value || 0);
+    const abattement = Number(inputs[1].value || 0);
+    const indemnites = Number(inputs[2].value || 0);
+    const chomage = Number(inputs[3].value || 0);
+    const bim = Number(inputs[4].value || 0);
+    const autres = Number(inputs[5].value || 0);
 
-    const total = Array.from(inputs).reduce((sum, input, index) => {
-        if (index === 0) return sum + (Number(input.value || 0) - abattement);
-        if (index === 5) return sum + (bim * 0.03) / 4;
-        return sum + Number(input.value || 0);
-    }, 0);
+    const bimCalculated = (bim * 0.03) / 4; // BIM calculation
+    const total = salaire - abattement + indemnites + chomage + bimCalculated + autres;
 
     row.querySelector('.row-total').textContent = total.toFixed(2);
 }
