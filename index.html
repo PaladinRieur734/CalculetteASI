@@ -3,47 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculateur des Droits ASI</title>
+    <title>Calcul des droits ASI</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Calculateur des Droits ASI</h1>
+        <h1>Calculateur des droits ASI</h1>
     </header>
+
     <main>
-        <section class="date-statut-section">
-            <div class="form-group">
-                <label for="dateEffet">Date d'effet :</label>
-                <input type="date" id="dateEffet">
-            </div>
-            <div class="form-group statut-group">
-                <h2>Statut</h2>
-                <label>
-                    <input type="radio" name="statut" id="statutSeul" value="seul">
-                    Personne seule
-                </label>
-                <span id="plafondSeul" class="plafond">Plafond trimestriel : 3600 €</span>
+        <section>
+            <label for="dateEffet">Date d'effet :</label>
+            <input type="date" id="dateEffet">
+        </section>
+
+        <section>
+            <h2>Statut</h2>
+            <div>
+                <input type="radio" id="statutSeul" name="statut" value="seul">
+                <label for="statutSeul">Personne seule</label>
+                <span id="plafondSeul">Plafond : 3600 €</span>
                 <br>
-                <label>
-                    <input type="radio" name="statut" id="statutCouple" value="couple">
-                    En couple
-                </label>
-                <span id="plafondCouple" class="plafond">Plafond trimestriel : 5800 €</span>
+                <input type="radio" id="statutCouple" name="statut" value="couple">
+                <label for="statutCouple">En couple</label>
+                <span id="plafondCouple">Plafond : 5800 €</span>
             </div>
         </section>
 
         <section>
             <h2>Ressources</h2>
-            <div id="ressourcesContainer"></div>
+            <div id="ressourcesContainer">
+                <!-- Tableau dynamique ajouté ici par JavaScript -->
+            </div>
         </section>
 
         <button id="calculateBtn">Calculer ASI</button>
 
         <section>
             <h2>Résultats</h2>
-            <div id="resultatsContainer"></div>
+            <div id="resultatsContainer">
+                <!-- Résultats affichés ici -->
+            </div>
         </section>
     </main>
+
     <script src="script.js"></script>
 </body>
 </html>
