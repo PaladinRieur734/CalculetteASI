@@ -11,8 +11,15 @@ const plafonds = {
 
 function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
+    const statut = document.getElementById("statut").value;
+
     if (isNaN(dateEffet.getTime())) {
         alert("Veuillez entrer une date d'effet valide.");
+        return;
+    }
+
+    if (!statut) {
+        alert("Veuillez sélectionner un statut.");
         return;
     }
 
@@ -62,6 +69,11 @@ function calculerASI() {
         return;
     }
 
+    if (!statut) {
+        alert("Veuillez sélectionner un statut.");
+        return;
+    }
+
     const annee = dateEffet.getFullYear();
     const plafondAnnuel = plafonds[annee]?.[statut];
     if (!plafondAnnuel) {
@@ -71,25 +83,59 @@ function calculerASI() {
     const plafondTrimestriel = plafondAnnuel / 4;
 
     let totalRessources = 0;
+    const result = document.getElementById("result");
+    result.innerHTML = ""; // Réinitialise les résultats
+
+    const trimestreDetails = [];
+
     for (let i = 1; i <= 3; i++) {
+        const mois = new Date(dateEffet);
+        mois.setMonth(mois.getMonth() - i);
+
         const salaires = parseFloat(document.getElementById(`salairesM${i}`).value) || 0;
         const indemnites = parseFloat(document.getElementById(`indemnitesM${i}`).value) || 0;
         const chomage = parseFloat(document.getElementById(`chomageM${i}`).value) || 0;
         const invalidite = parseFloat(document.getElementById(`invaliditeM${i}`).value) || 0;
         const autres = parseFloat(document.getElementById(`autresM${i}`).value) || 0;
 
-        totalRessources += salaires + indemnites + chomage + invalidite + autres;
+        const moisTotal = salaires + indemnites + chomage + invalidite + autres;
+        totalRessources += moisTotal;
+
+        trimestreDetails.push({
+            mois: mois.toLocaleString("fr-FR", { month: "long", year: "numeric" }),
+            salaires,
+            indemnites,
+            chomage,
+            invalidite,
+            autres,
+            moisTotal
+        });
     }
 
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     totalRessources -= abattement;
 
-    const result = document.getElementById("result");
-    result.innerHTML = "";
+    trimestreDetails.forEach(detail => {
+        result.innerHTML += `
+            <h3>Calcul au mois (${detail.mois})</h3>
+            <ul>
+                <li>Salaires : <strong>${detail.salaires.toFixed(2)} €</strong></li>
+                <li>Indemnités journalières : <strong>${detail.indemnites.toFixed(2)} €</strong></li>
+                <li>Chômage : <strong>${detail.chomage.toFixed(2)} €</strong></li>
+                <li>Pension d'invalidité : <strong>${detail.invalidite.toFixed(2)} €</strong></li>
+                <li>Autres ressources : <strong>${detail.autres.toFixed(2)} €</strong></li>
+                <li>Total du mois : <strong>${detail.moisTotal.toFixed(2)} €</strong></li>
+            </ul>`;
+    });
+
+    result.innerHTML += `
+        <p><strong>Total des ressources trimestrielles : ${totalRessources.toFixed(2)} €</strong></p>
+        <p>Plafond trimestriel applicable : <strong>${plafondTrimestriel.toFixed(2)} €</strong></p>
+    `;
 
     if (totalRessources <= plafondTrimestriel) {
-        result.innerHTML = `<p>Droits à l'ASI accordés. Ressources totales : ${totalRessources.toFixed(2)} €</p>`;
+        result.innerHTML += `<p style="color: green;">Droits à l'ASI accordés.</p>`;
     } else {
-        result.innerHTML = `<p>Aucun droit à l'ASI. Ressources totales : ${totalRessources.toFixed(2)} €</p>`;
+        result.innerHTML += `<p style="color: red;">Aucun droit à l'ASI.</p>`;
     }
 }
