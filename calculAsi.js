@@ -8,13 +8,12 @@ function genererMoisPrecedents() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
     if (isNaN(dateEffet.getTime())) {
         alert("Veuillez entrer une date d'effet valide.");
-        return; // Si la date est invalide, ne rien faire
+        return;
     }
 
     const ressourcesContainer = document.getElementById("ressourcesContainer");
     ressourcesContainer.innerHTML = ""; // Réinitialise les champs
 
-    // Génère les 3 mois précédant la date d'effet
     for (let i = 1; i <= 3; i++) {
         const mois = new Date(dateEffet);
         mois.setMonth(mois.getMonth() - i);
@@ -44,7 +43,7 @@ function genererMoisPrecedents() {
 
 // Fonction pour calculer les droits ASI
 function calculerASI() {
-    const statut = document.getElementById("statut").value; // "seul" ou "couple"
+    const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
 
     if (isNaN(dateEffet.getTime())) {
