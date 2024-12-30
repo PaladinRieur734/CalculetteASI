@@ -1,95 +1,98 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
+    background-color: #eef3f8;
     color: #333;
 }
 
 header {
-    background-color: #0056b3;
+    background-color: #0066cc;
     color: white;
-    padding: 20px;
     text-align: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    font-size: 1.8rem;
+    font-weight: bold;
 }
 
 main {
+    max-width: 900px;
+    margin: 20px auto;
+    background-color: white;
     padding: 20px;
-}
-
-.form-section {
-    margin-bottom: 20px;
-    background: white;
-    padding: 15px;
     border-radius: 8px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.form-section h2 {
-    margin-top: 0;
-    font-size: 18px;
+h2 {
+    color: #004080;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 20px;
 }
 
 label {
+    font-size: 1rem;
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 14px;
+    margin-bottom: 8px;
+    color: #333;
 }
 
-input, select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
+input[type="date"], input[type="number"] {
+    padding: 10px;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 300px;
+}
+
+input[type="radio"] {
+    margin-right: 8px;
+}
+
+button {
+    background-color: #0066cc;
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #004080;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
-    font-size: 14px;
-}
-
-th, td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
-
-th {
-    background-color: #0056b3;
-    color: white;
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-tr:nth-child(odd) {
-    background-color: white;
-}
-
-button {
-    background-color: #0056b3;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-button:hover {
-    background-color: #003f7f;
-    transition: background-color 0.3s ease;
-}
-
-.result {
     margin-top: 20px;
-    font-size: 16px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+table th {
+    background-color: #e0f3ff;
     font-weight: bold;
+}
+
+.total-cell {
+    font-weight: bold;
+    background-color: #e6f2ff;
+}
+
+.plafond {
+    font-weight: bold;
+    color: #0066cc;
+    margin-left: 8px;
 }
