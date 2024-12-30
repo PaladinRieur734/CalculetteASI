@@ -82,7 +82,7 @@
     </header>
     <main>
         <div class="form-section">
-            <h2>Informations de base</h2>
+            <h2>Date d'effet de l'ASI</h2>
             <label for="dateEffet">Date d'effet :</label>
             <input type="date" id="dateEffet" onchange="generateTable()" />
 
@@ -106,8 +106,8 @@
 
     <script>
         const ceilings = {
-            seul: { 2023: 2540, 2024: 2600 },
-            couple: { 2023: 4000, 2024: 4100 }
+            seul: { 2023: 9687.96, 2024: 9890.04 },
+            couple: { 2023: 15749.28, 2024: 16103.52 }
         };
 
         function generateTable() {
@@ -172,6 +172,7 @@
 
             let resultHTML = '<h3>Résultats :</h3>';
             const trimestreTotals = [0, 0, 0, 0];
+            const trimestreMonths = ['Janvier - Mars', 'Avril - Juin', 'Juillet - Septembre', 'Octobre - Décembre'];
 
             rows.forEach((row, index) => {
                 if (index === 0) return; // Skip header row
@@ -182,7 +183,7 @@
 
             trimestreTotals.forEach((total, i) => {
                 const eligible = plafond > total;
-                resultHTML += `<p>Trimestre ${i + 1}: Total des ressources : ${total.toFixed(2)} € | Plafond : ${plafond} € | ASI : ${eligible ? 'Oui' : 'Non'}</p>`;
+                resultHTML += `<p>${trimestreMonths[i]} : Total des ressources : ${total.toFixed(2)} € | Plafond : ${plafond.toFixed(2)} € | ASI : ${eligible ? 'Oui' : 'Non'}</p>`;
             });
 
             document.getElementById('result').innerHTML = resultHTML;
