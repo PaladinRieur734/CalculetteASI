@@ -81,6 +81,9 @@ button {
     color: white;
     font-weight: bold;
     cursor: pointer;
+    -webkit-transition: background 0.3s ease;
+    -moz-transition: background 0.3s ease;
+    -o-transition: background 0.3s ease;
     transition: background 0.3s ease;
 }
 
@@ -96,4 +99,8 @@ button:hover {
     border: 2px solid #dcdfe3;
     font-size: 1.2em;
     color: #2c3e50;
+}
+
+section {
+    margin-bottom: 20px;
 }
