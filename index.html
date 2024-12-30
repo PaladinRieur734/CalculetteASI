@@ -1,30 +1,15 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcul des Droits ASI</title>
-    <link rel="stylesheet" href="style.css">
-</head>
 <body>
     <div class="container">
         <header>
             <h1>Calcul des Droits ASI</h1>
-            <p>Indiquez la date d'effet et complétez les ressources pour chaque mois du trimestre précédent.</p>
+            <p>Saisissez la date d’effet, le statut et complétez les ressources pour le trimestre précédent.</p>
         </header>
 
         <form id="asiForm">
             <section class="date-section">
                 <h2>Date d'effet</h2>
                 <label for="dateEffet">Date d'effet :</label>
-                <input type="date" id="dateEffet" required onchange="genererMoisPrecedents()">
-            </section>
-
-            <section class="ressources-section">
-                <h2>Ressources mois par mois</h2>
-                <div id="ressourcesContainer">
-                    <p class="info">Les mois précédant la date d'effet apparaîtront ici :</p>
-                </div>
+                <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
             </section>
 
             <section class="statut-section">
@@ -36,6 +21,19 @@
                 </select>
             </section>
 
+            <section class="ressources-section">
+                <h2>Tableau des ressources trimestrielles</h2>
+                <div id="ressourcesContainer">
+                    <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
+                </div>
+            </section>
+
+            <section class="abattement-section">
+                <h2>Abattement</h2>
+                <label for="abattement">Montant de l'abattement :</label>
+                <input type="number" id="abattement" placeholder="Montant en €">
+            </section>
+
             <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
         </form>
 
@@ -43,4 +41,3 @@
     </div>
     <script src="script.js"></script>
 </body>
-</html>
