@@ -28,7 +28,15 @@ function genererTableauRessources() {
 
     const table = document.createElement("table");
     const header = document.createElement("tr");
-    ["Mois", "Salaires", "Indemnités journalières", "Chômage", "Pension d'invalidité", "Autres ressources"].forEach(col => {
+    [
+        "Mois",
+        "Pension d'invalidité",
+        "Salaires",
+        "Indemnités journalières",
+        "Chômage",
+        "BIM (Capitaux placés)",
+        "Autres ressources",
+    ].forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
         header.appendChild(th);
@@ -44,7 +52,7 @@ function genererTableauRessources() {
         moisCell.textContent = mois.toLocaleString("fr-FR", { month: "long", year: "numeric" });
         row.appendChild(moisCell);
 
-        ["salaires", "indemnites", "chomage", "invalidite", "autres"].forEach(type => {
+        ["invalidite", "salaires", "indemnites", "chomage", "bim", "autres"].forEach(type => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
@@ -93,21 +101,27 @@ function calculerASI() {
         const mois = new Date(dateEffet);
         mois.setMonth(mois.getMonth() - i);
 
+        const invalidite = parseFloat(document.getElementById(`invaliditeM${i}`).value) || 0;
         const salaires = parseFloat(document.getElementById(`salairesM${i}`).value) || 0;
         const indemnites = parseFloat(document.getElementById(`indemnitesM${i}`).value) || 0;
         const chomage = parseFloat(document.getElementById(`chomageM${i}`).value) || 0;
-        const invalidite = parseFloat(document.getElementById(`invaliditeM${i}`).value) || 0;
+
+        // BIM calculé comme 3% des capitaux placés divisé par 4
+        const bimBrut = parseFloat(document.getElementById(`bimM${i}`).value) || 0;
+        const bim = (bimBrut * 0.03) / 4;
+
         const autres = parseFloat(document.getElementById(`autresM${i}`).value) || 0;
 
-        const moisTotal = salaires + indemnites + chomage + invalidite + autres;
+        const moisTotal = invalidite + salaires + indemnites + chomage + bim + autres;
         trimestreTotal += moisTotal;
 
         trimestreDetails.push({
             mois: mois.toLocaleString("fr-FR", { month: "long", year: "numeric" }),
+            invalidite,
             salaires,
             indemnites,
             chomage,
-            invalidite,
+            bim,
             autres,
             moisTotal
         });
@@ -121,10 +135,11 @@ function calculerASI() {
         result.innerHTML += `<h3>${detail.mois}</h3>`;
         result.innerHTML += `
             <table>
+                <tr><td>Pension d'invalidité</td><td>${detail.invalidite.toFixed(2)} €</td></tr>
                 <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
                 <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
                 <tr><td>Chômage</td><td>${detail.chomage.toFixed(2)} €</td></tr>
-                <tr><td>Pension d'invalidité</td><td>${detail.invalidite.toFixed(2)} €</td></tr>
+                <tr><td>BIM (Capitaux placés)</td><td>${detail.bim.toFixed(2)} €</td></tr>
                 <tr><td>Autres ressources</td><td>${detail.autres.toFixed(2)} €</td></tr>
                 <tr><td><strong>Total mensuel</strong></td><td><strong>${detail.moisTotal.toFixed(2)} €</strong></td></tr>
             </table>`;
