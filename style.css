@@ -1,69 +1,95 @@
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #f5f5f5;
     margin: 0;
     padding: 0;
-}
-
-header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 1rem;
-    text-align: center;
-}
-
-main {
-    margin: 20px auto;
-    width: 90%;
-    max-width: 800px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-}
-
-h1, h2 {
+    background-color: #f4f4f9;
     color: #333;
 }
 
-label {
-    font-weight: bold;
-}
-
-input[type="date"], input[type="number"] {
-    padding: 5px;
-    margin: 10px 0;
-    width: calc(100% - 10px);
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-button {
-    background-color: #4CAF50;
+header {
+    background-color: #0056b3;
     color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-button:hover {
-    background-color: #45a049;
+main {
+    padding: 20px;
+}
+
+.form-section {
+    margin-bottom: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-section h2 {
+    margin-top: 0;
+    font-size: 18px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin-bottom: 20px;
+    font-size: 14px;
 }
 
-table th, table td {
-    border: 1px solid #ddd;
+th, td {
     padding: 10px;
     text-align: center;
+    border: 1px solid #ddd;
 }
 
-table th {
-    background-color: #f4f4f4;
+th {
+    background-color: #0056b3;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(odd) {
+    background-color: white;
+}
+
+button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #003f7f;
+    transition: background-color 0.3s ease;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
 }
