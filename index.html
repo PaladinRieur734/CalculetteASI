@@ -1,37 +1,48 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcul des droits ASI</title>
+    <title>Calculateur des Droits ASI</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Calcul des droits ASI</h1>
+        <h1>Calculateur des Droits ASI</h1>
     </header>
     <main>
-        <div class="form-section">
-            <h2>Informations de base</h2>
-            <label for="dateEffet">Date d'effet :</label>
-            <input type="date" id="dateEffet" />
+        <section class="date-statut-section">
+            <div class="form-group">
+                <label for="dateEffet">Date d'effet :</label>
+                <input type="date" id="dateEffet">
+            </div>
+            <div class="form-group statut-group">
+                <h2>Statut</h2>
+                <label>
+                    <input type="radio" name="statut" id="statutSeul" value="seul">
+                    Personne seule
+                </label>
+                <span id="plafondSeul" class="plafond">Plafond trimestriel : 3600 €</span>
+                <br>
+                <label>
+                    <input type="radio" name="statut" id="statutCouple" value="couple">
+                    En couple
+                </label>
+                <span id="plafondCouple" class="plafond">Plafond trimestriel : 5800 €</span>
+            </div>
+        </section>
 
-            <label for="statut">Statut :</label>
-            <select id="statut">
-                <option value="seul">Personne seule</option>
-                <option value="couple">Couple</option>
-            </select>
-        </div>
+        <section>
+            <h2>Ressources</h2>
+            <div id="ressourcesContainer"></div>
+        </section>
 
-        <div class="form-section">
-            <h2>Ressources sur 12 mois</h2>
-            <div id="tableContainer"></div>
-        </div>
+        <button id="calculateBtn">Calculer ASI</button>
 
-        <div class="form-section">
-            <button id="calculateBtn">Calculer ASI</button>
-            <div id="result"></div>
-        </div>
+        <section>
+            <h2>Résultats</h2>
+            <div id="resultatsContainer"></div>
+        </section>
     </main>
     <script src="script.js"></script>
 </body>
