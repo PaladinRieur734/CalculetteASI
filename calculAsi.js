@@ -1,18 +1,30 @@
 const ceilings = {
-    seul: { 2023: 9687.96, 2024: 9890.04 },
-    couple: { 2023: 15749.28, 2024: 16103.52 }
+    seul: { 2023: 2540, 2024: 2600 },
+    couple: { 2023: 4000, 2024: 4100 }
 };
+
+// Initialisation des événements
+document.addEventListener("DOMContentLoaded", () => {
+    const dateEffetInput = document.getElementById('dateEffet');
+    const calculateBtn = document.getElementById('calculateBtn');
+
+    dateEffetInput.addEventListener('change', generateTable);
+    calculateBtn.addEventListener('click', calculateASI);
+});
 
 function generateTable() {
     const dateEffet = document.getElementById('dateEffet').value;
     if (!dateEffet) return;
 
     const tableContainer = document.getElementById('tableContainer');
-    tableContainer.innerHTML = '';
-    const table = document.createElement('table');
+    tableContainer.innerHTML = ''; // Reset table
 
+    const table = document.createElement('table');
     const headerRow = document.createElement('tr');
-    ['Mois', 'Pension (€)', 'Salaires (€)', 'Indemnités journalières (€)', 'Chômage (€)', 'Autres ressources (€)', 'Total (€)'].forEach(header => {
+    const headers = ['Mois', 'Salaires (€)', 'Indemnités journalières (€)', 'Chômage (€)', 'Autres ressources (€)', 'Total (€)'];
+
+    // Crée les en-têtes de table
+    headers.forEach(header => {
         const th = document.createElement('th');
         th.textContent = header;
         headerRow.appendChild(th);
@@ -21,13 +33,16 @@ function generateTable() {
 
     for (let i = 0; i < 12; i++) {
         const row = document.createElement('tr');
+
+        // Colonne des mois
         const monthCell = document.createElement('td');
         const date = new Date(dateEffet);
-        date.setMonth(date.getMonth() - i - 1);
+        date.setMonth(date.getMonth() - i);
         monthCell.textContent = date.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' });
         row.appendChild(monthCell);
 
-        ['pension', 'salaires', 'indemnites', 'chomage', 'autres'].forEach(type => {
+        // Colonnes des ressources
+        ['salaires', 'indemnites', 'chomage', 'autres'].forEach(type => {
             const cell = document.createElement('td');
             const input = document.createElement('input');
             input.type = 'number';
@@ -38,6 +53,7 @@ function generateTable() {
             row.appendChild(cell);
         });
 
+        // Colonne du total
         const totalCell = document.createElement('td');
         totalCell.className = 'row-total';
         totalCell.textContent = '0';
@@ -58,35 +74,36 @@ function calculateRowTotal(row) {
 function calculateASI() {
     const statut = document.getElementById('statut').value;
     const dateEffet = new Date(document.getElementById('dateEffet').value);
-    const year = dateEffet.getFullYear();
+    if (isNaN(dateEffet)) {
+        alert("Veuillez sélectionner une date valide.");
+        return;
+    }
 
-    const plafondAnnuel = ceilings[statut][year];
-    const plafondTrimestriel = plafondAnnuel / 4;
+    const year = dateEffet.getFullYear();
+    const plafond = ceilings[statut]?.[year] || 0;
+
+    if (!plafond) {
+        alert(`Plafond non défini pour l'année ${year} et le statut sélectionné.`);
+        return;
+    }
 
     const rows = document.querySelectorAll('table tr');
-    const trimestreRessources = Array(4).fill(0);
+    let resultHTML = '<h3>Résultats :</h3>';
+    let hasRights = false;
 
     rows.forEach((row, index) => {
-        if (index === 0) return;
+        if (index === 0) return; // Skip header row
         const total = parseFloat(row.querySelector('.row-total').textContent || '0');
-        const trimestreIndex = Math.floor(index / 3);
-        trimestreRessources[trimestreIndex] += total;
+        const eligible = plafond > total;
+
+        if (eligible) hasRights = true;
+
+        resultHTML += `<p>Mois ${index}: Total des ressources : ${total.toFixed(2)} € | ASI : ${eligible ? 'Oui' : 'Non'}</p>`;
     });
 
-    let resultHTML = `<h3>Résultats trimestriels :</h3>`;
-    trimestreRessources.forEach((total, i) => {
-        const trimestreStart = new Date(dateEffet);
-        trimestreStart.setMonth(trimestreStart.getMonth() + i * 3);
-        const trimestreEnd = new Date(trimestreStart);
-        trimestreEnd.setMonth(trimestreEnd.getMonth() + 3);
-        trimestreEnd.setDate(trimestreEnd.getDate() - 1);
-
-        const difference = plafondTrimestriel - total;
-        resultHTML += `
-            <p>Du ${trimestreStart.toLocaleDateString('fr-FR')} au ${trimestreEnd.toLocaleDateString('fr-FR')} :
-            Ressources totales : ${total.toFixed(2)} € (Plafond : ${plafondTrimestriel.toFixed(2)} €)
-            ${difference > 0 ? `Montant ASI : ${difference.toFixed(2)} €` : `Pas d'ASI due`}</p>`;
-    });
+    if (!hasRights) {
+        resultHTML += '<p>Le bénéficiaire n’a pas droit à l’ASI pour cette période.</p>';
+    }
 
     document.getElementById('result').innerHTML = resultHTML;
 }
