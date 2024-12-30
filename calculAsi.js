@@ -9,6 +9,27 @@ const plafonds = {
     "2024": { seul: 10536.50, couple: 16890.35 },
 };
 
+function genererChampsPeriode() {
+    const ressourcesSection = document.getElementById("ressourcesSection");
+
+    // Ajouter les champs pour la période
+    const periodeContainer = document.createElement("div");
+    periodeContainer.id = "periodeContainer";
+    periodeContainer.innerHTML = `
+        <label for="dateDebut">Début de période :</label>
+        <input type="date" id="dateDebut" required>
+        <label for="dateFin">Fin de période :</label>
+        <input type="date" id="dateFin" required>
+        <button type="button" onclick="genererTableauRessources()">Générer le tableau</button>
+    `;
+    ressourcesSection.appendChild(periodeContainer);
+
+    // Ajouter le conteneur pour le tableau
+    const ressourcesContainer = document.createElement("div");
+    ressourcesContainer.id = "ressourcesContainer";
+    ressourcesSection.appendChild(ressourcesContainer);
+}
+
 function genererTableauRessources() {
     const dateDebut = new Date(document.getElementById("dateDebut").value);
     const dateFin = new Date(document.getElementById("dateFin").value);
