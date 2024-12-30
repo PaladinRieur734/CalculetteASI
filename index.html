@@ -10,7 +10,7 @@
     <div class="container">
         <header>
             <h1>Calcul des Droits ASI</h1>
-            <p>Saisissez la date d’effet, le statut, et complétez les ressources pour une période de 12 mois.</p>
+            <p>Saisissez la date d’effet et complétez les ressources pour le trimestre précédent.</p>
         </header>
 
         <form id="asiForm">
@@ -20,6 +20,19 @@
                 <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
             </section>
 
+            <section class="ressources-section">
+                <h2>Tableau des ressources trimestrielles</h2>
+                <div id="ressourcesContainer">
+                    <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
+                </div>
+            </section>
+
+            <section class="abattement-section">
+                <h2>Abattement</h2>
+                <label for="abattement">Montant de l'abattement :</label>
+                <input type="number" id="abattement" placeholder="Montant en €">
+            </section>
+
             <section class="statut-section">
                 <h2>Statut</h2>
                 <label for="statut">Statut :</label>
@@ -27,13 +40,6 @@
                     <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
-            </section>
-
-            <section class="ressources-section">
-                <h2>Tableau des ressources annuelles</h2>
-                <div id="ressourcesContainer">
-                    <p class="info">Le tableau des ressources pour 12 mois apparaîtra ici :</p>
-                </div>
             </section>
 
             <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
