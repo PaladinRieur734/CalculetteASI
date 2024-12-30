@@ -31,7 +31,7 @@ function genererTableauRessources() {
         </tr>`;
     table.innerHTML = header;
 
-    for (let i = 0; i < 12; i++) {
+    for (let i = 1; i <= 3; i++) {
         const mois = new Date(dateEffet);
         mois.setMonth(mois.getMonth() - i);
 
@@ -59,12 +59,13 @@ function calculerASI() {
         return;
     }
 
+    const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const plafondAnnuel = plafonds[dateEffet.getFullYear()][statut];
     const plafondTrimestriel = plafondAnnuel / 4;
 
-    let totalTrimestres = [0, 0, 0, 0];
+    let totalRessources = 0;
 
-    for (let i = 0; i < 12; i++) {
+    for (let i = 1; i <= 3; i++) {
         const moisRessources = [
             parseFloat(document.getElementById(`salairesM${i}`).value) || 0,
             parseFloat(document.getElementById(`indemnitesM${i}`).value) || 0,
@@ -72,19 +73,16 @@ function calculerASI() {
             parseFloat(document.getElementById(`invaliditeM${i}`).value) || 0,
             parseFloat(document.getElementById(`autresM${i}`).value) || 0,
         ];
-        const totalMois = moisRessources.reduce((sum, value) => sum + value, 0);
-        totalTrimestres[Math.floor(i / 3)] += totalMois;
+        totalRessources += moisRessources.reduce((sum, value) => sum + value, 0);
     }
 
-    const droits = totalTrimestres.map(trimestre => 
-        trimestre <= plafondTrimestriel ? plafondTrimestiel - trimestre : 0
-    );
+    totalRessources -= abattement;
+
+    const droits = totalRessources <= plafondTrimestriel ? plafondTrimestriel - totalRessources : 0;
 
     const resultDiv = document.getElementById("result");
     resultDiv.innerHTML = `
-        <p><strong>Droits ASI Trimestre 1 :</strong> ${droits[0].toFixed(2)} €</p>
-        <p><strong>Droits ASI Trimestre 2 :</strong> ${droits[1].toFixed(2)} €</p>
-        <p><strong>Droits ASI Trimestre 3 :</strong> ${droits[2].toFixed(2)} €</p>
-        <p><strong>Droits ASI Trimestre 4 :</strong> ${droits[3].toFixed(2)} €</p>
+        <p><strong>Total des ressources trimestrielles :</strong> ${totalRessources.toFixed(2)} €</p>
+        <p><strong>Droits ASI :</strong> ${droits.toFixed(2)} €</p>
     `;
 }
