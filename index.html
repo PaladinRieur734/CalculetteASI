@@ -3,36 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcul ASI</title>
+    <title>Calcul des droits ASI</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="app">
-        <h1>Calcul de l'Allocation Supplémentaire d'Invalidité (ASI)</h1>
+    <header>
+        <h1>Calcul des droits ASI</h1>
+    </header>
+    <main>
+        <div class="form-section">
+            <h2>Date d'effet de l'ASI</h2>
+            <label for="dateEffet">Date d'effet :</label>
+            <input type="date" id="dateEffet" onchange="generateTable()" />
 
-        <label for="dateEffet">Date d'effet de l'ASI :</label>
-        <input type="date" id="dateEffet">
-
-        <div id="columnConfig">
-            <label for="newColumnName">Ajouter une nouvelle colonne :</label>
-            <input type="text" id="newColumnName" placeholder="Nom de la colonne">
-            <button onclick="addResourceColumn()">Ajouter</button>
+            <label for="statut">Statut :</label>
+            <select id="statut">
+                <option value="seul">Personne seule</option>
+                <option value="couple">Couple</option>
+            </select>
         </div>
 
-        <div>
-            <label for="startDate">Période de ressources - Début :</label>
-            <input type="date" id="startDate">
-            <label for="endDate">Fin :</label>
-            <input type="date" id="endDate">
-            <button onclick="updateTablePeriod()">Mettre à jour</button>
+        <div class="form-section">
+            <h2>Ressources sur 12 mois</h2>
+            <div id="tableContainer"></div>
         </div>
 
-        <div id="tableContainer"></div>
-        <div>
+        <div class="form-section">
             <button onclick="calculateASI()">Calculer ASI</button>
+            <div id="result"></div>
         </div>
-        <div id="result"></div>
-    </div>
+    </main>
     <script src="script.js"></script>
 </body>
 </html>
