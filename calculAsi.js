@@ -1,5 +1,5 @@
-document.getElementById("dateEffet").addEventListener("change", generateResourceTable);
 document.getElementById("calculateBtn").addEventListener("click", calculateASI);
+document.getElementById("dateEffet").addEventListener("change", generateResourceTable);
 
 function generateResourceTable() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
@@ -12,7 +12,7 @@ function generateResourceTable() {
     const table = document.createElement("table");
     const headerRow = document.createElement("tr");
 
-    const headers = ["Mois", "Pension d'invalidité", "Salaires", "Abattement", "IJ", "Chômage", "BIM", "Autres", "Total"];
+    const headers = ["Mois", "Pension d'invalidité", "Salaires", "IJ", "Chômage", "BIM", "Autres", "Total"];
     headers.forEach(header => {
         const th = document.createElement("th");
         th.textContent = header;
@@ -27,7 +27,7 @@ function generateResourceTable() {
         monthCell.textContent = months[currentMonth.getMonth()] + " " + currentMonth.getFullYear();
         row.appendChild(monthCell);
 
-        for (let j = 1; j < headers.length - 1; j++) {
+        for (let j = 0; j < headers.length - 2; j++) {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
@@ -52,8 +52,7 @@ function generateResourceTable() {
 function calculateASI() {
     const resultatsContainer = document.getElementById("resultatsContainer");
     resultatsContainer.innerHTML = "<p>Calcul en cours...</p>";
-
     setTimeout(() => {
-        resultatsContainer.innerHTML = "<p>Calcul terminé. Résultats disponibles ici.</p>";
+        resultatsContainer.innerHTML = "<p>Calcul terminé. Résultats affichés ici.</p>";
     }, 1000);
 }
