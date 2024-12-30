@@ -1,7 +1,6 @@
-/* Styles de base */
 body {
     font-family: 'Roboto', Arial, sans-serif;
-    background: #f0f4f8;
+    background: #f7f8fa;
     margin: 0;
     padding: 0;
     color: #333;
@@ -53,6 +52,29 @@ input, select, button {
     font-size: 1em;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+table th {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+}
+
+.info {
+    color: #7f8c8d;
+    font-style: italic;
+}
+
 button {
     background: #3498db;
     color: white;
@@ -65,20 +87,6 @@ button:hover {
     background: #2980b9;
 }
 
-.mois {
-    padding: 15px;
-    margin-bottom: 15px;
-    background: #ecf0f1;
-    border-radius: 8px;
-    border: 1px solid #bdc3c7;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.mois h3 {
-    margin: 0;
-    color: #2980b9;
-}
-
 .result {
     margin-top: 30px;
     padding: 20px;
@@ -87,9 +95,4 @@ button:hover {
     border: 2px solid #dcdfe3;
     font-size: 1.2em;
     color: #2c3e50;
-}
-
-.info {
-    color: #7f8c8d;
-    font-style: italic;
 }
