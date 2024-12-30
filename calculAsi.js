@@ -1,52 +1,37 @@
-let resourceColumns = ['Pension (€)', 'Salaires (€)', 'Indemnités journalières (€)', 'Chômage (€)', 'BIM (€)', 'Autres ressources (€)'];
+const ceilings = {
+    seul: { 2023: 9687.96, 2024: 9890.04 },
+    couple: { 2023: 15749.28, 2024: 16103.52 }
+};
 
-function updateTablePeriod() {
-    const startDateInput = document.getElementById('startDate').value;
-    const endDateInput = document.getElementById('endDate').value;
-
-    if (!startDateInput || !endDateInput) return;
-
-    const startDate = new Date(startDateInput);
-    const endDate = new Date(endDateInput);
-
-    if (startDate >= endDate) {
-        alert("La date de début doit être antérieure à la date de fin.");
-        return;
-    }
+function generateTable() {
+    const dateEffet = document.getElementById('dateEffet').value;
+    if (!dateEffet) return;
 
     const tableContainer = document.getElementById('tableContainer');
     tableContainer.innerHTML = '';
     const table = document.createElement('table');
 
-    // Header row
     const headerRow = document.createElement('tr');
-    const columnNames = ['Mois', ...resourceColumns, 'Total (€)'];
-    columnNames.forEach(header => {
+    ['Mois', 'Pension (€)', 'Salaires (€)', 'Indemnités journalières (€)', 'Chômage (€)', 'Autres ressources (€)', 'Total (€)'].forEach(header => {
         const th = document.createElement('th');
         th.textContent = header;
         headerRow.appendChild(th);
     });
     table.appendChild(headerRow);
 
-    // Generate rows for each month
-    const months = [];
-    const currentDate = new Date(startDate);
-    while (currentDate <= endDate) {
-        months.push(new Date(currentDate));
-        currentDate.setMonth(currentDate.getMonth() + 1);
-    }
-
-    months.forEach((date, i) => {
+    for (let i = 0; i < 12; i++) {
         const row = document.createElement('tr');
         const monthCell = document.createElement('td');
+        const date = new Date(dateEffet);
+        date.setMonth(date.getMonth() - i - 1);
         monthCell.textContent = date.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' });
         row.appendChild(monthCell);
 
-        resourceColumns.forEach((colName, colIndex) => {
+        ['pension', 'salaires', 'indemnites', 'chomage', 'autres'].forEach(type => {
             const cell = document.createElement('td');
             const input = document.createElement('input');
             input.type = 'number';
-            input.name = `${colName}_${i}`;
+            input.name = `${type}_${i}`;
             input.min = 0;
             input.oninput = () => calculateRowTotal(row);
             cell.appendChild(input);
@@ -59,39 +44,23 @@ function updateTablePeriod() {
         row.appendChild(totalCell);
 
         table.appendChild(row);
-    });
+    }
 
     tableContainer.appendChild(table);
 }
 
-function addResourceColumn() {
-    const newColumnName = document.getElementById('newColumnName').value.trim();
-    if (!newColumnName) {
-        alert("Veuillez entrer un nom pour la nouvelle colonne.");
-        return;
-    }
-
-    resourceColumns.splice(resourceColumns.length - 1, 0, newColumnName + ' (€)'); // Add before "Autres"
-    updateTablePeriod(); // Regenerate the table
-}
-
 function calculateRowTotal(row) {
     const inputs = row.querySelectorAll('input');
-    let total = Array.from(inputs).reduce((sum, input) => {
-        if (input.name.startsWith('BIM')) {
-            // Ajoutez 3 % des BIM rapportés au trimestre
-            return sum + (Number(input.value || 0) * 0.03) / 4;
-        }
-        return sum + Number(input.value || 0);
-    }, 0);
+    const total = Array.from(inputs).reduce((sum, input) => sum + Number(input.value || 0), 0);
     row.querySelector('.row-total').textContent = total.toFixed(2);
 }
 
 function calculateASI() {
+    const statut = document.getElementById('statut').value;
     const dateEffet = new Date(document.getElementById('dateEffet').value);
     const year = dateEffet.getFullYear();
 
-    const plafondAnnuel = 10000; // Exemple de plafond annuel
+    const plafondAnnuel = ceilings[statut][year];
     const plafondTrimestriel = plafondAnnuel / 4;
 
     const rows = document.querySelectorAll('table tr');
@@ -99,13 +68,7 @@ function calculateASI() {
 
     rows.forEach((row, index) => {
         if (index === 0) return;
-        const inputs = row.querySelectorAll('input');
-        const total = Array.from(inputs).reduce((sum, input) => {
-            if (input.name.startsWith('BIM')) {
-                return sum + (Number(input.value || 0) * 0.03) / 4;
-            }
-            return sum + Number(input.value || 0);
-        }, 0);
+        const total = parseFloat(row.querySelector('.row-total').textContent || '0');
         const trimestreIndex = Math.floor(index / 3);
         trimestreRessources[trimestreIndex] += total;
     });
