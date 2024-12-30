@@ -83,10 +83,13 @@ function calculerASI() {
     const plafondTrimestriel = plafondAnnuel / 4;
 
     let totalRessources = 0;
+    const trimestreDetails = [];
     const result = document.getElementById("result");
     result.innerHTML = ""; // Réinitialise les résultats
 
-    const trimestreDetails = [];
+    result.innerHTML += `<h2>Résultats des calculs ASI</h2>`;
+
+    let trimestreTotal = 0;
 
     for (let i = 1; i <= 3; i++) {
         const mois = new Date(dateEffet);
@@ -99,7 +102,7 @@ function calculerASI() {
         const autres = parseFloat(document.getElementById(`autresM${i}`).value) || 0;
 
         const moisTotal = salaires + indemnites + chomage + invalidite + autres;
-        totalRessources += moisTotal;
+        trimestreTotal += moisTotal;
 
         trimestreDetails.push({
             mois: mois.toLocaleString("fr-FR", { month: "long", year: "numeric" }),
@@ -113,29 +116,38 @@ function calculerASI() {
     }
 
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
-    totalRessources -= abattement;
+    totalRessources = trimestreTotal - abattement;
 
-    trimestreDetails.forEach(detail => {
+    // Présentation détaillée des calculs par trimestre
+    trimestreDetails.forEach((detail, index) => {
+        result.innerHTML += `<h3>${detail.mois}</h3>`;
         result.innerHTML += `
-            <h3>Calcul au mois (${detail.mois})</h3>
-            <ul>
-                <li>Salaires : <strong>${detail.salaires.toFixed(2)} €</strong></li>
-                <li>Indemnités journalières : <strong>${detail.indemnites.toFixed(2)} €</strong></li>
-                <li>Chômage : <strong>${detail.chomage.toFixed(2)} €</strong></li>
-                <li>Pension d'invalidité : <strong>${detail.invalidite.toFixed(2)} €</strong></li>
-                <li>Autres ressources : <strong>${detail.autres.toFixed(2)} €</strong></li>
-                <li>Total du mois : <strong>${detail.moisTotal.toFixed(2)} €</strong></li>
-            </ul>`;
+            <table>
+                <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
+                <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
+                <tr><td>Chômage</td><td>${detail.chomage.toFixed(2)} €</td></tr>
+                <tr><td>Pension d'invalidité</td><td>${detail.invalidite.toFixed(2)} €</td></tr>
+                <tr><td>Autres ressources</td><td>${detail.autres.toFixed(2)} €</td></tr>
+                <tr><td><strong>Total mensuel</strong></td><td><strong>${detail.moisTotal.toFixed(2)} €</strong></td></tr>
+            </table>`;
     });
 
     result.innerHTML += `
-        <p><strong>Total des ressources trimestrielles : ${totalRessources.toFixed(2)} €</strong></p>
-        <p>Plafond trimestriel applicable : <strong>${plafondTrimestriel.toFixed(2)} €</strong></p>
-    `;
+        <h3>Résumé du trimestre</h3>
+        <table>
+            <tr><td><strong>Total des ressources trimestrielles</strong></td><td><strong>${trimestreTotal.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Abattement appliqué</strong></td><td><strong>${abattement.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Plafond trimestriel applicable</strong></td><td><strong>${plafondTrimestriel.toFixed(2)} €</strong></td></tr>
+        </table>`;
+
+    // Conclusion
+    result.innerHTML += `
+        <p><strong>Total des ressources après abattement : ${totalRessources.toFixed(2)} €</strong></p>
+        <p>Plafond trimestriel applicable : <strong>${plafondTrimestriel.toFixed(2)} €</strong></p>`;
 
     if (totalRessources <= plafondTrimestriel) {
-        result.innerHTML += `<p style="color: green;">Droits à l'ASI accordés.</p>`;
+        result.innerHTML += `<p style="color: green;"><strong>Droits à l'ASI accordés.</strong></p>`;
     } else {
-        result.innerHTML += `<p style="color: red;">Aucun droit à l'ASI.</p>`;
+        result.innerHTML += `<p style="color: red;"><strong>Aucun droit à l'ASI.</strong></p>`;
     }
 }
