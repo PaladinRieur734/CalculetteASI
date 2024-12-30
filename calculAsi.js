@@ -20,31 +20,35 @@ function genererTableauRessources() {
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
 
     const table = document.createElement("table");
-    const header = `
-        <tr>
-            <th>Mois</th>
-            <th>Salaires</th>
-            <th>Indemnités journalières</th>
-            <th>Chômage</th>
-            <th>Pension d'invalidité</th>
-            <th>Autres ressources</th>
-        </tr>`;
-    table.innerHTML = header;
+    const header = document.createElement("tr");
+    ["Mois", "Salaires", "Indemnités journalières", "Chômage", "Pension d'invalidité", "Autres ressources"].forEach(col => {
+        const th = document.createElement("th");
+        th.textContent = col;
+        header.appendChild(th);
+    });
+    table.appendChild(header);
 
     for (let i = 1; i <= 3; i++) {
         const mois = new Date(dateEffet);
         mois.setMonth(mois.getMonth() - i);
 
-        const row = `
-        <tr>
-            <td>${mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })}</td>
-            <td><input type="number" id="salairesM${i}" placeholder="€"></td>
-            <td><input type="number" id="indemnitesM${i}" placeholder="€"></td>
-            <td><input type="number" id="chomageM${i}" placeholder="€"></td>
-            <td><input type="number" id="invaliditeM${i}" placeholder="€"></td>
-            <td><input type="number" id="autresM${i}" placeholder="€"></td>
-        </tr>`;
-        table.innerHTML += row;
+        const row = document.createElement("tr");
+        const moisCell = document.createElement("td");
+        moisCell.textContent = mois.toLocaleString("fr-FR", { month: "long", year: "numeric" });
+        row.appendChild(moisCell);
+
+        ["salaires", "indemnites", "chomage", "invalidite", "autres"].forEach(type => {
+            const cell = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "number";
+            input.id = `${type}M${i}`;
+            input.placeholder = "€";
+            input.min = 0;
+            cell.appendChild(input);
+            row.appendChild(cell);
+        });
+
+        table.appendChild(row);
     }
 
     ressourcesContainer.appendChild(table);
@@ -53,36 +57,39 @@ function genererTableauRessources() {
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
-
     if (isNaN(dateEffet.getTime())) {
         alert("Veuillez entrer une date d'effet valide.");
         return;
     }
 
-    const abattement = parseFloat(document.getElementById("abattement").value) || 0;
-    const plafondAnnuel = plafonds[dateEffet.getFullYear()][statut];
+    const annee = dateEffet.getFullYear();
+    const plafondAnnuel = plafonds[annee]?.[statut];
+    if (!plafondAnnuel) {
+        alert("Plafond introuvable pour l'année sélectionnée.");
+        return;
+    }
     const plafondTrimestriel = plafondAnnuel / 4;
 
     let totalRessources = 0;
-
     for (let i = 1; i <= 3; i++) {
-        const moisRessources = [
-            parseFloat(document.getElementById(`salairesM${i}`).value) || 0,
-            parseFloat(document.getElementById(`indemnitesM${i}`).value) || 0,
-            parseFloat(document.getElementById(`chomageM${i}`).value) || 0,
-            parseFloat(document.getElementById(`invaliditeM${i}`).value) || 0,
-            parseFloat(document.getElementById(`autresM${i}`).value) || 0,
-        ];
-        totalRessources += moisRessources.reduce((sum, value) => sum + value, 0);
+        const salaires = parseFloat(document.getElementById(`salairesM${i}`).value) || 0;
+        const indemnites = parseFloat(document.getElementById(`indemnitesM${i}`).value) || 0;
+        const chomage = parseFloat(document.getElementById(`chomageM${i}`).value) || 0;
+        const invalidite = parseFloat(document.getElementById(`invaliditeM${i}`).value) || 0;
+        const autres = parseFloat(document.getElementById(`autresM${i}`).value) || 0;
+
+        totalRessources += salaires + indemnites + chomage + invalidite + autres;
     }
 
+    const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     totalRessources -= abattement;
 
-    const droits = totalRessources <= plafondTrimestriel ? plafondTrimestriel - totalRessources : 0;
+    const result = document.getElementById("result");
+    result.innerHTML = "";
 
-    const resultDiv = document.getElementById("result");
-    resultDiv.innerHTML = `
-        <p><strong>Total des ressources trimestrielles :</strong> ${totalRessources.toFixed(2)} €</p>
-        <p><strong>Droits ASI :</strong> ${droits.toFixed(2)} €</p>
-    `;
+    if (totalRessources <= plafondTrimestriel) {
+        result.innerHTML = `<p>Droits à l'ASI accordés. Ressources totales : ${totalRessources.toFixed(2)} €</p>`;
+    } else {
+        result.innerHTML = `<p>Aucun droit à l'ASI. Ressources totales : ${totalRessources.toFixed(2)} €</p>`;
+    }
 }
