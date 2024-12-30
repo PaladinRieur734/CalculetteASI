@@ -27,14 +27,12 @@ main {
 
 .form-section h2 {
     margin-top: 0;
-    font-size: 18px;
 }
 
 label {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
-    font-size: 14px;
 }
 
 input, select {
@@ -43,14 +41,12 @@ input, select {
     margin-bottom: 15px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 14px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
-    font-size: 14px;
 }
 
 th, td {
@@ -79,17 +75,8 @@ button {
     padding: 10px 20px;
     cursor: pointer;
     border-radius: 4px;
-    font-size: 14px;
 }
 
 button:hover {
     background-color: #003f7f;
-    transition: background-color 0.3s ease;
 }
-
-.result {
-    margin-top: 20px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
