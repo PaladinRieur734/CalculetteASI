@@ -1,98 +1,98 @@
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
+    background: #f7f8fa;
     margin: 0;
     padding: 0;
-    background-color: #eef3f8;
     color: #333;
 }
 
-header {
-    background-color: #0066cc;
-    color: white;
-    text-align: center;
+.container {
+    max-width: 900px;
+    margin: 40px auto;
     padding: 20px;
-    font-size: 1.8rem;
-    font-weight: bold;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-main {
-    max-width: 900px;
-    margin: 20px auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+header h1 {
+    font-size: 2em;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+header p {
+    text-align: center;
+    color: #7f8c8d;
+    font-size: 1em;
 }
 
 h2 {
-    color: #004080;
+    color: #34495e;
+    font-size: 1.5em;
+    margin-top: 20px;
     margin-bottom: 10px;
-    font-size: 1.5rem;
-}
-
-.form-group {
-    margin-bottom: 20px;
 }
 
 label {
-    font-size: 1rem;
+    font-weight: bold;
     display: block;
-    margin-bottom: 8px;
-    color: #333;
+    margin-top: 10px;
+    color: #2c3e50;
 }
 
-input[type="date"], input[type="number"], select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
+input, select, button {
     width: 100%;
-    max-width: 300px;
-}
-
-input[type="radio"] {
-    margin-right: 8px;
-}
-
-button {
-    background-color: #0066cc;
-    color: white;
-    font-size: 1rem;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #004080;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-    background-color: #f9f9f9;
-    text-align: center;
+    margin-top: 10px;
 }
 
 table th, table td {
     border: 1px solid #ddd;
-    padding: 10px;
+    padding: 8px;
+    text-align: center;
 }
 
 table th {
-    background-color: #e0f3ff;
+    background-color: #3498db;
+    color: white;
     font-weight: bold;
 }
 
-.total-cell {
-    font-weight: bold;
-    background-color: #e6f2ff;
+.info {
+    color: #7f8c8d;
+    font-style: italic;
 }
 
-.plafond {
+button {
+    background: #3498db;
+    color: white;
     font-weight: bold;
-    color: #0066cc;
-    margin-left: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #2980b9;
+}
+
+.result {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f7f9fa;
+    border: 2px solid #dcdfe3;
+    font-size: 1.2em;
+    color: #2c3e50;
 }
