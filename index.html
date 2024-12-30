@@ -171,19 +171,19 @@
             const rows = document.querySelectorAll('table tr');
 
             let resultHTML = '<h3>Résultats :</h3>';
-            let hasRights = false;
+            const trimestreTotals = [0, 0, 0, 0];
 
             rows.forEach((row, index) => {
                 if (index === 0) return; // Skip header row
                 const total = parseFloat(row.querySelector('.row-total').textContent || '0');
-                const eligible = plafond > total;
-                if (eligible) hasRights = true;
-                resultHTML += `<p>Mois ${index}: Total des ressources : ${total} € | ASI : ${eligible ? 'Oui' : 'Non'}</p>`;
+                const trimestreIndex = Math.floor((index - 1) / 3);
+                trimestreTotals[trimestreIndex] += total;
             });
 
-            if (!hasRights) {
-                resultHTML += '<p>Le bénéficiaire n’a pas droit à l’ASI pour cette période.</p>';
-            }
+            trimestreTotals.forEach((total, i) => {
+                const eligible = plafond > total;
+                resultHTML += `<p>Trimestre ${i + 1}: Total des ressources : ${total.toFixed(2)} € | Plafond : ${plafond} € | ASI : ${eligible ? 'Oui' : 'Non'}</p>`;
+            });
 
             document.getElementById('result').innerHTML = resultHTML;
         }
