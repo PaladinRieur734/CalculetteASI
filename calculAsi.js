@@ -87,8 +87,6 @@ function calculerASI() {
     const result = document.getElementById("result");
     result.innerHTML = ""; // Réinitialise les résultats
 
-    result.innerHTML += `<h2>Résultats des calculs ASI</h2>`;
-
     let trimestreTotal = 0;
 
     for (let i = 1; i <= 3; i++) {
@@ -116,7 +114,7 @@ function calculerASI() {
     }
 
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
-    totalRessources = trimestreTotal - abattement;
+    const totalRessourcesApresAbattement = trimestreTotal - abattement;
 
     // Présentation détaillée des calculs par trimestre
     trimestreDetails.forEach((detail, index) => {
@@ -141,13 +139,11 @@ function calculerASI() {
         </table>`;
 
     // Conclusion
-    result.innerHTML += `
-        <p><strong>Total des ressources après abattement : ${totalRessources.toFixed(2)} €</strong></p>
-        <p>Plafond trimestriel applicable : <strong>${plafondTrimestriel.toFixed(2)} €</strong></p>`;
-
-    if (totalRessources <= plafondTrimestriel) {
-        result.innerHTML += `<p style="color: green;"><strong>Droits à l'ASI accordés.</strong></p>`;
+    if (totalRessourcesApresAbattement > plafondTrimestriel) {
+        result.innerHTML += `<p>Les ressources de l'intéressé(e) au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas lui être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     } else {
-        result.innerHTML += `<p style="color: red;"><strong>Aucun droit à l'ASI.</strong></p>`;
+        const montantASI = plafondTrimestriel - totalRessourcesApresAbattement;
+        const montantMensuelASI = montantASI / 3;
+        result.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir à l'intéressé(e) était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${totalRessourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € lui étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     }
 }
