@@ -17,17 +17,23 @@
             <section class="date-section">
                 <h2>Date d'effet</h2>
                 <label for="dateEffet">Date d'effet :</label>
-                <input type="date" id="dateEffet" onchange="genererTableauRessources()" required>
+                <input type="date" id="dateEffet" onchange="genererTableauRessources()">
             </section>
 
             <section class="statut-section">
                 <h2>Statut</h2>
                 <label for="statut">Statut :</label>
-                <select id="statut" onchange="genererTableauRessources()" required>
+                <select id="statut" onchange="genererTableauRessources()">
                     <option value="" disabled selected>Choisissez le statut</option>
                     <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
+            </section>
+
+            <section class="abattement-section">
+                <h2>Abattement</h2>
+                <label for="abattement">Montant de l'abattement :</label>
+                <input type="number" id="abattement" placeholder="Montant en €">
             </section>
 
             <section class="ressources-section">
