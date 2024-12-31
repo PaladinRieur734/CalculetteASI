@@ -119,12 +119,21 @@ function calculerASI() {
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalRessourcesApresAbattement = totalRessources - abattement;
 
-    let resultHTML = `<h3>Résumé des ressources</h3>`;
+    // Résumé des ressources
+    let resultHTML = `<h3>Détail des ressources mois par mois</h3>`;
+    resultHTML += generateMonthlyDetails(demandeurRessources.details, "Demandeur");
+    if (conjointRessources) {
+        resultHTML += generateMonthlyDetails(conjointRessources.details, "Conjoint");
+    }
+
     resultHTML += `
-        <p>Total avant abattement : ${totalRessources.toFixed(2)} €</p>
-        <p>Abattement appliqué : ${abattement.toFixed(2)} €</p>
-        <p>Total après abattement : ${totalRessourcesApresAbattement.toFixed(2)} €</p>
-        <p>Plafond trimestriel : ${plafondTrimestriel.toFixed(2)} €</p>`;
+        <h3>Résumé du trimestre</h3>
+        <table>
+            <tr><td><strong>Total avant abattement</strong></td><td><strong>${totalRessources.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Abattement appliqué</strong></td><td><strong>${abattement.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Total après abattement</strong></td><td><strong>${totalRessourcesApresAbattement.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Plafond trimestriel applicable</strong></td><td><strong>${plafondTrimestriel.toFixed(2)} €</strong></td></tr>
+        </table>`;
 
     // Conclusion
     if (totalRessourcesApresAbattement > plafondTrimestriel) {
@@ -140,9 +149,13 @@ function calculerASI() {
 }
 
 function calculateRessources(role, dateEffet) {
+    const details = [];
     let total = 0;
 
     for (let i = 3; i >= 1; i--) {
+        const mois = new Date(dateEffet);
+        mois.setMonth(mois.getMonth() - i);
+
         const invalidite = parseFloat(document.getElementById(`${role.toLowerCase()}_invaliditeM${4 - i}`).value) || 0;
         const salaires = parseFloat(document.getElementById(`${role.toLowerCase()}_salairesM${4 - i}`).value) || 0;
         const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${4 - i}`).value) || 0;
@@ -151,8 +164,52 @@ function calculateRessources(role, dateEffet) {
         const bim = (bimBrut * 0.03) / 4;
         const autres = parseFloat(document.getElementById(`${role.toLowerCase()}_autresM${4 - i}`).value) || 0;
 
-        total += invalidite + salaires + indemnites + chomage + bim + autres;
+        const moisTotal = invalidite + salaires + indemnites + chomage + bim + autres;
+        total += moisTotal;
+
+        details.push({
+            mois: mois.toLocaleString("fr-FR", { month: "long", year: "numeric" }),
+            invalidite,
+            salaires,
+            indemnites,
+            chomage,
+            bim,
+            autres,
+            moisTotal,
+        });
     }
 
-    return { total };
+    return { total, details };
+}
+
+function generateMonthlyDetails(details, role) {
+    let html = `<h4>Détails pour ${role}</h4>`;
+    html += `<table>
+        <tr>
+            <th>Mois</th>
+            <th>Pension d'invalidité</th>
+            <th>Salaires</th>
+            <th>Indemnités journalières</th>
+            <th>Chômage</th>
+            <th>BIM</th>
+            <th>Autres ressources</th>
+            <th>Total mensuel</th>
+        </tr>`;
+
+    details.forEach(detail => {
+        html += `
+        <tr>
+            <td>${detail.mois}</td>
+            <td>${detail.invalidite.toFixed(2)} €</td>
+            <td>${detail.salaires.toFixed(2)} €</td>
+            <td>${detail.indemnites.toFixed(2)} €</td>
+            <td>${detail.chomage.toFixed(2)} €</td>
+            <td>${detail.bim.toFixed(2)} €</td>
+            <td>${detail.autres.toFixed(2)} €</td>
+            <td>${detail.moisTotal.toFixed(2)} €</td>
+        </tr>`;
+    });
+
+    html += `</table>`;
+    return html;
 }
