@@ -18,28 +18,19 @@ function genererTableauRessources() {
         return;
     }
 
-    if (!statut) {
-        alert("Veuillez sélectionner un statut.");
-        return;
-    }
-
     const ressourcesContainer = document.getElementById("ressourcesContainer");
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
 
-    // Génération du tableau pour le demandeur
     const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
     ressourcesContainer.appendChild(tableDemandeur);
 
-    // Bouton pour ajouter une colonne pour le demandeur
     const addColumnButtonDemandeur = createAddColumnButton("Demandeur");
     ressourcesContainer.appendChild(addColumnButtonDemandeur);
 
-    // Génération du tableau pour le conjoint si le statut est "couple"
     if (statut === "couple") {
         const tableConjoint = createRessourceTable("Conjoint", dateEffet);
         ressourcesContainer.appendChild(tableConjoint);
 
-        // Bouton pour ajouter une colonne pour le conjoint
         const addColumnButtonConjoint = createAddColumnButton("Conjoint");
         ressourcesContainer.appendChild(addColumnButtonConjoint);
     }
@@ -115,7 +106,6 @@ function addColumnToTable(role) {
 
     const columnIndex = table.rows[0].cells.length;
 
-    // Ajouter une nouvelle colonne dans l'en-tête
     const headerCell = document.createElement("th");
     const headerInput = document.createElement("input");
     headerInput.type = "text";
@@ -123,7 +113,6 @@ function addColumnToTable(role) {
     headerCell.appendChild(headerInput);
     table.rows[0].appendChild(headerCell);
 
-    // Ajouter une nouvelle cellule dans chaque ligne
     for (let i = 1; i < table.rows.length; i++) {
         const cell = document.createElement("td");
         const input = document.createElement("input");
@@ -134,4 +123,78 @@ function addColumnToTable(role) {
         cell.appendChild(input);
         table.rows[i].appendChild(cell);
     }
+}
+
+function calculerASI() {
+    const statut = document.getElementById("statut").value;
+    const dateEffet = new Date(document.getElementById("dateEffet").value);
+
+    if (isNaN(dateEffet.getTime())) return;
+
+    const annee = dateEffet.getFullYear();
+    const plafondAnnuel = plafonds[annee]?.[statut];
+    const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
+
+    const result = document.getElementById("result");
+    const resultSection = document.createElement("div");
+    resultSection.classList.add("result-section");
+
+    const demandeurRessources = calculateRessources("Demandeur", dateEffet);
+    let conjointRessources = null;
+
+    if (statut === "couple") {
+        conjointRessources = calculateRessources("Conjoint", dateEffet);
+    }
+
+    const totalRessources = demandeurRessources.total + (conjointRessources ? conjointRessources.total : 0);
+    const abattement = parseFloat(document.getElementById("abattement").value) || 0;
+    const totalRessourcesApresAbattement = totalRessources - abattement;
+
+    resultSection.innerHTML = `<h2>Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}</h2>`;
+
+    demandeurRessources.details.forEach(detail => {
+        resultSection.innerHTML += `<p>${detail.mois}: ${detail.total.toFixed(2)} €</p>`;
+    });
+
+    if (conjointRessources) {
+        resultSection.innerHTML += `<h3>Ressources du Conjoint</h3>`;
+        conjointRessources.details.forEach(detail => {
+            resultSection.innerHTML += `<p>${detail.mois}: ${detail.total.toFixed(2)} €</p>`;
+        });
+    }
+
+    resultSection.innerHTML += `
+        <h3>Résumé</h3>
+        <p>Total avant abattement : ${totalRessources.toFixed(2)} €</p>
+        <p>Abattement : ${abattement.toFixed(2)} €</p>
+        <p>Total après abattement : ${totalRessourcesApresAbattement.toFixed(2)} €</p>
+        <p>Plafond trimestriel : ${plafondTrimestriel.toFixed(2)} €</p>`;
+
+    if (totalRessourcesApresAbattement > plafondTrimestriel) {
+        resultSection.innerHTML += `<p>Les ressources trimestrielles, soit ${totalRessourcesApresAbattement.toFixed(2)} €, dépassent le plafond de ${plafondTrimestriel.toFixed(2)} €. Pas d’ASI.</p>`;
+    } else {
+        const montantASI = plafondTrimestriel - totalRessourcesApresAbattement;
+        resultSection.innerHTML += `<p>Montant trimestriel ASI : ${montantASI.toFixed(2)} €.</p>`;
+    }
+
+    result.appendChild(resultSection);
+}
+
+function calculateRessources(role, dateEffet) {
+    const details = [];
+    let total = 0;
+
+    for (let i = 3; i >= 1; i--) {
+        const rowTotal = Array.from(document.querySelectorAll(`#${role.toLowerCase()}Table tr:nth-child(${i + 1}) td input`))
+            .reduce((sum, input) => sum + (parseFloat(input.value) || 0), 0);
+
+        total += rowTotal;
+
+        details.push({
+            mois: new Date(dateEffet).setMonth(dateEffet.getMonth() - i),
+            total: rowTotal,
+        });
+    }
+
+    return { total, details };
 }
