@@ -20,11 +20,9 @@ function genererTableauRessources() {
         return; // Ne rien afficher si les champs sont vides
     }
 
-    // Génération du tableau pour le demandeur
     const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
     ressourcesContainer.appendChild(tableDemandeur);
 
-    // Génération du tableau pour le conjoint si le statut est "couple"
     if (statut === "couple") {
         const tableConjoint = createRessourceTable("Conjoint", dateEffet);
         ressourcesContainer.appendChild(tableConjoint);
@@ -39,7 +37,6 @@ function createRessourceTable(role, dateEffet) {
     title.textContent = `Ressources du ${role}`;
     tableContainer.appendChild(title);
 
-    // Bouton d'ajout de colonne
     const addResourceButton = document.createElement("button");
     addResourceButton.textContent = "+ Ajouter une ressource";
     addResourceButton.className = "add-resource-btn";
@@ -111,4 +108,80 @@ function addColumn(table, role) {
         cell.appendChild(input);
         table.rows[i].appendChild(cell);
     }
+}
+
+function calculerASI() {
+    const statut = document.getElementById("statut").value;
+    const dateEffet = new Date(document.getElementById("dateEffet").value);
+
+    if (!statut || isNaN(dateEffet.getTime())) {
+        return; // Ne rien calculer si les champs sont vides
+    }
+
+    const annee = dateEffet.getFullYear();
+    const plafondAnnuel = plafonds[annee]?.[statut];
+    const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
+
+    const result = document.getElementById("result");
+    const resultSection = document.createElement("div");
+    resultSection.classList.add("result-section");
+
+    const titreResultats = document.createElement("h2");
+    titreResultats.textContent = `Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}`;
+    resultSection.appendChild(titreResultats);
+
+    const demandeurRessources = calculateRessources("Demandeur", dateEffet);
+    let conjointRessources = null;
+
+    if (statut === "couple") {
+        conjointRessources = calculateRessources("Conjoint", dateEffet);
+    }
+
+    const totalRessources = demandeurRessources.total + (conjointRessources ? conjointRessources.total : 0);
+    const abattement = parseFloat(document.getElementById("abattement").value) || 0;
+    const totalRessourcesApresAbattement = totalRessources - abattement;
+
+    resultSection.innerHTML += generateMonthlyDetails(demandeurRessources.details, "Demandeur");
+    if (conjointRessources) {
+        resultSection.innerHTML += generateMonthlyDetails(conjointRessources.details, "Conjoint");
+    }
+
+    resultSection.innerHTML += `
+        <h3>Résumé du trimestre</h3>
+        <table>
+            <tr><td><strong>Total avant abattement</strong></td><td><strong>${totalRessources.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Abattement appliqué</strong></td><td><strong>${abattement.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Total après abattement</strong></td><td><strong>${totalRessourcesApresAbattement.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Plafond trimestriel applicable</strong></td><td><strong>${plafondTrimestriel.toFixed(2)} €</strong></td></tr>
+        </table>`;
+
+    result.appendChild(resultSection);
+}
+
+function calculateRessources(role, dateEffet) {
+    const details = [];
+    let total = 0;
+
+    for (let i = 3; i >= 1; i--) {
+        const rowTotal = Array.from(document.querySelectorAll(`#${role.toLowerCase()}_M${4 - i}`))
+            .reduce((sum, input) => sum + (parseFloat(input.value) || 0), 0);
+
+        total += rowTotal;
+
+        details.push({
+            mois: new Date(dateEffet).setMonth(dateEffet.getMonth() - i),
+            total: rowTotal,
+        });
+    }
+
+    return { total, details };
+}
+
+function generateMonthlyDetails(details, role) {
+    let html = `<h4>Détails des ressources pour ${role}</h4>`;
+    details.forEach(detail => {
+        html += `
+            <p>${new Date(detail.mois).toLocaleString("fr-FR", { month: "long", year: "numeric" })} : ${detail.total.toFixed(2)} €</p>`;
+    });
+    return html;
 }
