@@ -17,12 +17,14 @@ function genererTableauRessources() {
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
 
     if (!statut || isNaN(dateEffet.getTime())) {
-        return;
+        return; // Ne rien afficher si les champs sont vides
     }
 
+    // Génération du tableau pour le demandeur
     const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
     ressourcesContainer.appendChild(tableDemandeur);
 
+    // Génération du tableau pour le conjoint si le statut est "couple"
     if (statut === "couple") {
         const tableConjoint = createRessourceTable("Conjoint", dateEffet);
         ressourcesContainer.appendChild(tableConjoint);
@@ -89,7 +91,7 @@ function calculerASI() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
 
     if (!statut || isNaN(dateEffet.getTime())) {
-        return;
+        return; // Ne rien calculer si les champs sont vides
     }
 
     const annee = dateEffet.getFullYear();
@@ -97,6 +99,8 @@ function calculerASI() {
     const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
 
     const result = document.getElementById("result");
+    result.innerHTML = ""; // Réinitialise les résultats
+
     const resultSection = document.createElement("div");
     resultSection.classList.add("result-section");
 
@@ -111,21 +115,23 @@ function calculerASI() {
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalRessourcesApresAbattement = totalRessources - abattement;
 
-    let resultHTML = `<h2>Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}</h2>`;
-
+    // Présentation détaillée mois par mois
+    resultSection.innerHTML = `<h2>Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}</h2>`;
     demandeurRessources.details.forEach(detail => {
-        resultHTML += `
+        resultSection.innerHTML += `
             <p>${detail.mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })} : ${detail.total.toFixed(2)} € (Demandeur)</p>`;
     });
 
     if (conjointRessources) {
+        resultSection.innerHTML += `<h3>Ressources du conjoint</h3>`;
         conjointRessources.details.forEach(detail => {
-            resultHTML += `
+            resultSection.innerHTML += `
                 <p>${detail.mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })} : ${detail.total.toFixed(2)} € (Conjoint)</p>`;
         });
     }
 
-    resultHTML += `
+    // Résumé trimestriel et conclusion
+    resultSection.innerHTML += `
         <h3>Résumé du trimestre</h3>
         <table>
             <tr><td><strong>Total avant abattement</strong></td><td><strong>${totalRessources.toFixed(2)} €</strong></td></tr>
@@ -135,14 +141,13 @@ function calculerASI() {
         </table>`;
 
     if (totalRessourcesApresAbattement > plafondTrimestriel) {
-        resultHTML += `<p>Les ressources de l'intéressé(e) au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas lui être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+        resultSection.innerHTML += `<p>Les ressources de l'intéressé(e) au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas lui être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     } else {
         const montantASI = plafondTrimestriel - totalRessourcesApresAbattement;
         const montantMensuelASI = montantASI / 3;
-        resultHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir à l'intéressé(e) était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${totalRessourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € lui étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+        resultSection.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir à l'intéressé(e) était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${totalRessourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € lui étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     }
 
-    resultSection.innerHTML = resultHTML;
     result.appendChild(resultSection);
 }
 
