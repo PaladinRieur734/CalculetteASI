@@ -13,10 +13,7 @@ function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
     const statut = document.getElementById("statut").value;
 
-    if (isNaN(dateEffet.getTime())) {
-        alert("Veuillez entrer une date d'effet valide.");
-        return;
-    }
+    if (isNaN(dateEffet.getTime())) return;
 
     const ressourcesContainer = document.getElementById("ressourcesContainer");
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
@@ -34,26 +31,9 @@ function createRessourceTable(role, dateEffet) {
     const tableContainer = document.createElement("div");
     tableContainer.classList.add("table-container");
 
-    const titleContainer = document.createElement("div");
-    titleContainer.style.display = "flex";
-    titleContainer.style.justifyContent = "space-between";
-    titleContainer.style.alignItems = "center";
-
     const title = document.createElement("h3");
     title.textContent = `Ressources du ${role}`;
-    titleContainer.appendChild(title);
-
-    const buttonAdd = document.createElement("button");
-    buttonAdd.textContent = "+";
-    buttonAdd.className = "add-column-btn";
-    buttonAdd.title = "Ajouter une ressource";
-    buttonAdd.onclick = event => {
-        event.preventDefault(); // Empêche l'actualisation de la page
-        addColumnToTable(role.toLowerCase());
-    };
-    titleContainer.appendChild(buttonAdd);
-
-    tableContainer.appendChild(titleContainer);
+    tableContainer.appendChild(title);
 
     const table = document.createElement("table");
     table.id = `${role.toLowerCase()}Table`;
@@ -70,10 +50,21 @@ function createRessourceTable(role, dateEffet) {
     ].forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
-        th.style.wordWrap = "break-word"; // Retour à la ligne automatique
-        th.style.whiteSpace = "normal";
         header.appendChild(th);
     });
+
+    const addColumnButton = document.createElement("th");
+    const button = document.createElement("button");
+    button.textContent = "+";
+    button.className = "add-column-btn";
+    button.title = "Ajouter une ressource";
+    button.onclick = event => {
+        event.preventDefault();
+        addColumnToTable(role.toLowerCase());
+    };
+    addColumnButton.appendChild(button);
+    header.appendChild(addColumnButton);
+
     table.appendChild(header);
 
     for (let i = 3; i >= 1; i--) {
@@ -108,16 +99,16 @@ function addColumnToTable(role) {
     const table = document.getElementById(`${role.toLowerCase()}Table`);
     if (!table) return;
 
-    const columnIndex = table.rows[0].cells.length;
+    const columnIndex = table.rows[0].cells.length - 1;
 
     const headerCell = document.createElement("th");
     const headerInput = document.createElement("input");
     headerInput.type = "text";
     headerInput.placeholder = `Ressource ${columnIndex - 6}`;
-    headerInput.style.wordWrap = "break-word"; // Retour à la ligne automatique
+    headerInput.style.wordWrap = "break-word";
     headerInput.style.whiteSpace = "normal";
     headerCell.appendChild(headerInput);
-    table.rows[0].appendChild(headerCell);
+    table.rows[0].insertBefore(headerCell, table.rows[0].lastChild);
 
     for (let i = 1; i < table.rows.length; i++) {
         const cell = document.createElement("td");
@@ -127,7 +118,7 @@ function addColumnToTable(role) {
         input.min = 0;
         input.id = `${role}_custom${columnIndex - 6}M${4 - i}`;
         cell.appendChild(input);
-        table.rows[i].appendChild(cell);
+        table.rows[i].insertBefore(cell, table.rows[i].lastChild);
     }
 }
 
@@ -177,10 +168,11 @@ function calculerASI() {
         <p>Plafond trimestriel : ${plafondTrimestriel.toFixed(2)} €</p>`;
 
     if (totalRessourcesApresAbattement > plafondTrimestriel) {
-        resultSection.innerHTML += `<p>Les ressources trimestrielles, soit ${totalRessourcesApresAbattement.toFixed(2)} €, dépassent le plafond de ${plafondTrimestriel.toFixed(2)} €. Pas d’ASI.</p>`;
+        resultSection.innerHTML += `<p>Les ressources de l'intéressé(e) au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas lui être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     } else {
         const montantASI = plafondTrimestriel - totalRessourcesApresAbattement;
-        resultSection.innerHTML += `<p>Montant trimestriel ASI : ${montantASI.toFixed(2)} €.</p>`;
+        const montantMensuelASI = montantASI / 3;
+        resultSection.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir à l'intéressé(e) était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${totalRessourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € lui étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     }
 
     result.appendChild(resultSection);
