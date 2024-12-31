@@ -10,20 +10,21 @@
     <div class="container">
         <header>
             <h1>Calcul des Droits ASI</h1>
-            <p>Saisissez la date d’effet et complétez les ressources.</p>
+            <p>Saisissez les informations ci-dessous pour générer les tableaux des ressources.</p>
         </header>
 
         <form id="asiForm">
             <section class="date-section">
                 <h2>Date d'effet</h2>
                 <label for="dateEffet">Date d'effet :</label>
-                <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
+                <input type="date" id="dateEffet" onchange="genererTableauRessources()" required>
             </section>
 
             <section class="statut-section">
                 <h2>Statut</h2>
                 <label for="statut">Statut :</label>
-                <select id="statut" onchange="genererTableauRessources()">
+                <select id="statut" onchange="genererTableauRessources()" required>
+                    <option value="" disabled selected>Choisissez le statut</option>
                     <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
@@ -34,17 +35,11 @@
                 <div id="ressourcesContainer"></div>
             </section>
 
-            <section class="abattement-section">
-                <h2>Abattement</h2>
-                <label for="abattement">Montant de l'abattement :</label>
-                <input type="number" id="abattement" placeholder="Montant en €">
-            </section>
-
-            <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
+            <button type="button" onclick="calculerASI()">Calculer les droits</button>
         </form>
 
-        <div id="result" class="result"></div>
+        <div id="result"></div>
     </div>
-    <script src="script.js"></script>
+    <script src="calculAsi.js"></script>
 </body>
 </html>
