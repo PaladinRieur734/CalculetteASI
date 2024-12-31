@@ -24,15 +24,9 @@ function genererTableauRessources() {
     const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
     ressourcesContainer.appendChild(tableDemandeur);
 
-    const addColumnButtonDemandeur = createAddColumnButton("Demandeur");
-    ressourcesContainer.appendChild(addColumnButtonDemandeur);
-
     if (statut === "couple") {
         const tableConjoint = createRessourceTable("Conjoint", dateEffet);
         ressourcesContainer.appendChild(tableConjoint);
-
-        const addColumnButtonConjoint = createAddColumnButton("Conjoint");
-        ressourcesContainer.appendChild(addColumnButtonConjoint);
     }
 }
 
@@ -43,6 +37,13 @@ function createRessourceTable(role, dateEffet) {
     const title = document.createElement("h3");
     title.textContent = `Ressources du ${role}`;
     tableContainer.appendChild(title);
+
+    const buttonAdd = document.createElement("button");
+    buttonAdd.textContent = "+";
+    buttonAdd.className = "add-column-btn";
+    buttonAdd.title = "Ajouter une colonne";
+    buttonAdd.onclick = () => addColumnToTable(role.toLowerCase());
+    tableContainer.appendChild(buttonAdd);
 
     const table = document.createElement("table");
     table.id = `${role.toLowerCase()}Table`;
@@ -89,15 +90,6 @@ function createRessourceTable(role, dateEffet) {
 
     tableContainer.appendChild(table);
     return tableContainer;
-}
-
-function createAddColumnButton(role) {
-    const button = document.createElement("button");
-    button.textContent = "+ Ajouter une ressource";
-    button.type = "button";
-    button.className = "add-column-btn";
-    button.onclick = () => addColumnToTable(role.toLowerCase());
-    return button;
 }
 
 function addColumnToTable(role) {
