@@ -17,8 +17,7 @@ function genererTableauRessources() {
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
 
     if (!statut || isNaN(dateEffet.getTime())) {
-        console.warn("Date d'effet ou statut invalide.");
-        return;
+        return; // Ne rien afficher si les champs sont vides
     }
 
     // Génération du tableau pour le demandeur
@@ -41,14 +40,14 @@ function createRessourceTable(role, dateEffet) {
     tableContainer.appendChild(title);
 
     const addResourceButton = document.createElement("button");
-    addResourceButton.textContent = "+ Ajouter une ressource";
+    addResourceButton.textContent = "+ Ajouter une colonne";
     addResourceButton.className = "add-resource-btn";
-    addResourceButton.type = "button"; // Empêche la soumission du formulaire
+    addResourceButton.type = "button";
     addResourceButton.onclick = () => addColumn(table, role.toLowerCase());
     tableContainer.appendChild(addResourceButton);
 
     const table = document.createElement("table");
-    table.id = `${role.toLowerCase()}Table`; // ID unique pour le tableau
+    table.id = `${role.toLowerCase()}Table`;
 
     const header = document.createElement("tr");
     [
@@ -97,7 +96,11 @@ function createRessourceTable(role, dateEffet) {
 function addColumn(table, role) {
     const newColumnIndex = table.rows[0].cells.length; // Position de la nouvelle colonne
     const headerCell = document.createElement("th");
-    headerCell.textContent = `Ressource personnalisée ${newColumnIndex - 6}`;
+    const headerInput = document.createElement("input");
+    headerInput.type = "text";
+    headerInput.placeholder = `Ressource ${newColumnIndex - 6}`;
+    headerInput.classList.add("header-input");
+    headerCell.appendChild(headerInput);
     table.rows[0].appendChild(headerCell);
 
     for (let i = 1; i < table.rows.length; i++) {
@@ -117,8 +120,7 @@ function calculerASI() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
 
     if (!statut || isNaN(dateEffet.getTime())) {
-        console.warn("Statut ou date d'effet invalide.");
-        return;
+        return; // Ne rien calculer si les champs sont vides
     }
 
     const annee = dateEffet.getFullYear();
@@ -131,10 +133,6 @@ function calculerASI() {
     const resultSection = document.createElement("div");
     resultSection.classList.add("result-section");
 
-    const titreResultats = document.createElement("h2");
-    titreResultats.textContent = `Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}`;
-    resultSection.appendChild(titreResultats);
-
     const demandeurRessources = calculateRessources("Demandeur", dateEffet);
     let conjointRessources = null;
 
@@ -146,20 +144,25 @@ function calculerASI() {
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalRessourcesApresAbattement = totalRessources - abattement;
 
-    resultSection.innerHTML += generateMonthlyDetails(demandeurRessources.details, "Demandeur");
+    let resultHTML = `<h3>Résumé des ressources</h3>`;
+    demandeurRessources.details.forEach(detail => {
+        resultHTML += `<p>${detail.mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })} : ${detail.total.toFixed(2)} €</p>`;
+    });
+
     if (conjointRessources) {
-        resultSection.innerHTML += generateMonthlyDetails(conjointRessources.details, "Conjoint");
+        resultHTML += `<h3>Ressources du conjoint</h3>`;
+        conjointRessources.details.forEach(detail => {
+            resultHTML += `<p>${detail.mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })} : ${detail.total.toFixed(2)} €</p>`;
+        });
     }
 
-    resultSection.innerHTML += `
-        <h3>Résumé du trimestre</h3>
-        <table>
-            <tr><td><strong>Total avant abattement</strong></td><td><strong>${totalRessources.toFixed(2)} €</strong></td></tr>
-            <tr><td><strong>Abattement appliqué</strong></td><td><strong>${abattement.toFixed(2)} €</strong></td></tr>
-            <tr><td><strong>Total après abattement</strong></td><td><strong>${totalRessourcesApresAbattement.toFixed(2)} €</strong></td></tr>
-            <tr><td><strong>Plafond trimestriel applicable</strong></td><td><strong>${plafondTrimestriel.toFixed(2)} €</strong></td></tr>
-        </table>`;
+    resultHTML += `
+        <p>Total avant abattement : ${totalRessources.toFixed(2)} €</p>
+        <p>Abattement appliqué : ${abattement.toFixed(2)} €</p>
+        <p>Total après abattement : ${totalRessourcesApresAbattement.toFixed(2)} €</p>
+        <p>Plafond trimestriel : ${plafondTrimestriel.toFixed(2)} €</p>`;
 
+    resultSection.innerHTML = resultHTML;
     result.appendChild(resultSection);
 }
 
@@ -180,13 +183,4 @@ function calculateRessources(role, dateEffet) {
     }
 
     return { total, details };
-}
-
-function generateMonthlyDetails(details, role) {
-    let html = `<h4>Détails des ressources pour ${role}</h4>`;
-    details.forEach(detail => {
-        html += `
-            <p>${new Date(detail.mois).toLocaleString("fr-FR", { month: "long", year: "numeric" })} : ${detail.total.toFixed(2)} €</p>`;
-    });
-    return html;
 }
