@@ -34,16 +34,26 @@ function createRessourceTable(role, dateEffet) {
     const tableContainer = document.createElement("div");
     tableContainer.classList.add("table-container");
 
+    const titleContainer = document.createElement("div");
+    titleContainer.style.display = "flex";
+    titleContainer.style.justifyContent = "space-between";
+    titleContainer.style.alignItems = "center";
+
     const title = document.createElement("h3");
     title.textContent = `Ressources du ${role}`;
-    tableContainer.appendChild(title);
+    titleContainer.appendChild(title);
 
     const buttonAdd = document.createElement("button");
     buttonAdd.textContent = "+";
     buttonAdd.className = "add-column-btn";
-    buttonAdd.title = "Ajouter une colonne";
-    buttonAdd.onclick = () => addColumnToTable(role.toLowerCase());
-    tableContainer.appendChild(buttonAdd);
+    buttonAdd.title = "Ajouter une ressource";
+    buttonAdd.onclick = event => {
+        event.preventDefault(); // Empêche l'actualisation de la page
+        addColumnToTable(role.toLowerCase());
+    };
+    titleContainer.appendChild(buttonAdd);
+
+    tableContainer.appendChild(titleContainer);
 
     const table = document.createElement("table");
     table.id = `${role.toLowerCase()}Table`;
@@ -60,6 +70,8 @@ function createRessourceTable(role, dateEffet) {
     ].forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
+        th.style.wordWrap = "break-word"; // Retour à la ligne automatique
+        th.style.whiteSpace = "normal";
         header.appendChild(th);
     });
     table.appendChild(header);
@@ -102,6 +114,8 @@ function addColumnToTable(role) {
     const headerInput = document.createElement("input");
     headerInput.type = "text";
     headerInput.placeholder = `Ressource ${columnIndex - 6}`;
+    headerInput.style.wordWrap = "break-word"; // Retour à la ligne automatique
+    headerInput.style.whiteSpace = "normal";
     headerCell.appendChild(headerInput);
     table.rows[0].appendChild(headerCell);
 
@@ -183,7 +197,7 @@ function calculateRessources(role, dateEffet) {
         total += rowTotal;
 
         details.push({
-            mois: new Date(dateEffet).setMonth(dateEffet.getMonth() - i),
+            mois: new Date(dateEffet).toLocaleString("fr-FR", { month: "long", year: "numeric" }),
             total: rowTotal,
         });
     }
