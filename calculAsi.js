@@ -20,9 +20,11 @@ function genererTableauRessources() {
         return; // Ne rien afficher si les champs sont vides
     }
 
+    // Génération du tableau pour le demandeur
     const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
     ressourcesContainer.appendChild(tableDemandeur);
 
+    // Génération du tableau pour le conjoint si le statut est "couple"
     if (statut === "couple") {
         const tableConjoint = createRessourceTable("Conjoint", dateEffet);
         ressourcesContainer.appendChild(tableConjoint);
@@ -37,6 +39,7 @@ function createRessourceTable(role, dateEffet) {
     title.textContent = `Ressources du ${role}`;
     tableContainer.appendChild(title);
 
+    // Bouton d'ajout de colonne
     const addResourceButton = document.createElement("button");
     addResourceButton.textContent = "+ Ajouter une ressource";
     addResourceButton.className = "add-resource-btn";
@@ -94,4 +97,18 @@ function createRessourceTable(role, dateEffet) {
 
 function addColumn(table, role) {
     const newColumnIndex = table.rows[0].cells.length; // Position de la nouvelle colonne
-    const header
+    const headerCell = document.createElement("th");
+    headerCell.textContent = `Ressource personnalisée ${newColumnIndex - 6}`;
+    table.rows[0].appendChild(headerCell);
+
+    for (let i = 1; i < table.rows.length; i++) {
+        const cell = document.createElement("td");
+        const input = document.createElement("input");
+        input.type = "number";
+        input.id = `${role}_custom${newColumnIndex - 6}M${4 - i}`;
+        input.placeholder = "€";
+        input.min = 0;
+        cell.appendChild(input);
+        table.rows[i].appendChild(cell);
+    }
+}
