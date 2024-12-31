@@ -131,14 +131,15 @@ function calculerASI() {
     const totalRessources = demandeurRessources.total + (conjointRessources ? conjointRessources.total : 0);
     const totalRessourcesApresAbattement = totalRessources - demandeurRessources.abattement;
 
-    // Résultat détaillé
-    result.innerHTML += `<h3>Ressources détaillées</h3>`;
+    // Résultat détaillé pour le demandeur
+    result.innerHTML += `<h3>Ressources détaillées pour le demandeur</h3>`;
     demandeurRessources.details.forEach(detail => {
         result.innerHTML += detail;
     });
 
+    // Résultat détaillé pour le conjoint (si applicable)
     if (conjointRessources) {
-        result.innerHTML += `<h3>Ressources du conjoint</h3>`;
+        result.innerHTML += `<h3>Ressources détaillées pour le conjoint</h3>`;
         conjointRessources.details.forEach(detail => {
             result.innerHTML += detail;
         });
@@ -185,13 +186,13 @@ function calculateRessources(role, dateEffet) {
 
         details.push(`
             <table>
+                <tr><td><strong>${mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })}</strong></td><td>${moisTotal.toFixed(2)} €</td></tr>
                 <tr><td>Pension d'invalidité</td><td>${invalidite.toFixed(2)} €</td></tr>
                 <tr><td>Salaires</td><td>${salaires.toFixed(2)} €</td></tr>
                 <tr><td>Indemnités journalières</td><td>${indemnites.toFixed(2)} €</td></tr>
                 <tr><td>Chômage</td><td>${chomage.toFixed(2)} €</td></tr>
                 <tr><td>BIM (Capitaux placés)</td><td>${bim.toFixed(2)} €</td></tr>
                 <tr><td>Autres ressources</td><td>${autres.toFixed(2)} €</td></tr>
-                <tr><td><strong>Total mensuel</strong></td><td><strong>${moisTotal.toFixed(2)} €</strong></td></tr>
             </table>
         `);
     }
