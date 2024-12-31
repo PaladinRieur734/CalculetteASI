@@ -17,14 +17,12 @@ function genererTableauRessources() {
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
 
     if (!statut || isNaN(dateEffet.getTime())) {
-        return; // Ne rien afficher si les champs sont vides
+        return;
     }
 
-    // Génération du tableau pour le demandeur
     const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
     ressourcesContainer.appendChild(tableDemandeur);
 
-    // Génération du tableau pour le conjoint si le statut est "couple"
     if (statut === "couple") {
         const tableConjoint = createRessourceTable("Conjoint", dateEffet);
         ressourcesContainer.appendChild(tableConjoint);
@@ -38,13 +36,6 @@ function createRessourceTable(role, dateEffet) {
     const title = document.createElement("h3");
     title.textContent = `Ressources du ${role}`;
     tableContainer.appendChild(title);
-
-    const addResourceButton = document.createElement("button");
-    addResourceButton.textContent = "+ Ajouter une colonne";
-    addResourceButton.className = "add-resource-btn";
-    addResourceButton.type = "button";
-    addResourceButton.onclick = () => addColumn(table, role.toLowerCase());
-    tableContainer.appendChild(addResourceButton);
 
     const table = document.createElement("table");
     table.id = `${role.toLowerCase()}Table`;
@@ -93,34 +84,12 @@ function createRessourceTable(role, dateEffet) {
     return tableContainer;
 }
 
-function addColumn(table, role) {
-    const newColumnIndex = table.rows[0].cells.length; // Position de la nouvelle colonne
-    const headerCell = document.createElement("th");
-    const headerInput = document.createElement("input");
-    headerInput.type = "text";
-    headerInput.placeholder = `Ressource ${newColumnIndex - 6}`;
-    headerInput.classList.add("header-input");
-    headerCell.appendChild(headerInput);
-    table.rows[0].appendChild(headerCell);
-
-    for (let i = 1; i < table.rows.length; i++) {
-        const cell = document.createElement("td");
-        const input = document.createElement("input");
-        input.type = "number";
-        input.id = `${role}_custom${newColumnIndex - 6}M${4 - i}`;
-        input.placeholder = "€";
-        input.min = 0;
-        cell.appendChild(input);
-        table.rows[i].appendChild(cell);
-    }
-}
-
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
 
     if (!statut || isNaN(dateEffet.getTime())) {
-        return; // Ne rien calculer si les champs sont vides
+        return;
     }
 
     const annee = dateEffet.getFullYear();
@@ -128,8 +97,6 @@ function calculerASI() {
     const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
 
     const result = document.getElementById("result");
-    result.innerHTML = ""; // Réinitialise les résultats
-
     const resultSection = document.createElement("div");
     resultSection.classList.add("result-section");
 
@@ -144,23 +111,36 @@ function calculerASI() {
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalRessourcesApresAbattement = totalRessources - abattement;
 
-    let resultHTML = `<h3>Résumé des ressources</h3>`;
+    let resultHTML = `<h2>Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}</h2>`;
+
     demandeurRessources.details.forEach(detail => {
-        resultHTML += `<p>${detail.mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })} : ${detail.total.toFixed(2)} €</p>`;
+        resultHTML += `
+            <p>${detail.mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })} : ${detail.total.toFixed(2)} € (Demandeur)</p>`;
     });
 
     if (conjointRessources) {
-        resultHTML += `<h3>Ressources du conjoint</h3>`;
         conjointRessources.details.forEach(detail => {
-            resultHTML += `<p>${detail.mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })} : ${detail.total.toFixed(2)} €</p>`;
+            resultHTML += `
+                <p>${detail.mois.toLocaleString("fr-FR", { month: "long", year: "numeric" })} : ${detail.total.toFixed(2)} € (Conjoint)</p>`;
         });
     }
 
     resultHTML += `
-        <p>Total avant abattement : ${totalRessources.toFixed(2)} €</p>
-        <p>Abattement appliqué : ${abattement.toFixed(2)} €</p>
-        <p>Total après abattement : ${totalRessourcesApresAbattement.toFixed(2)} €</p>
-        <p>Plafond trimestriel : ${plafondTrimestriel.toFixed(2)} €</p>`;
+        <h3>Résumé du trimestre</h3>
+        <table>
+            <tr><td><strong>Total avant abattement</strong></td><td><strong>${totalRessources.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Abattement appliqué</strong></td><td><strong>${abattement.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Total après abattement</strong></td><td><strong>${totalRessourcesApresAbattement.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Plafond trimestriel applicable</strong></td><td><strong>${plafondTrimestriel.toFixed(2)} €</strong></td></tr>
+        </table>`;
+
+    if (totalRessourcesApresAbattement > plafondTrimestriel) {
+        resultHTML += `<p>Les ressources de l'intéressé(e) au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas lui être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+    } else {
+        const montantASI = plafondTrimestriel - totalRessourcesApresAbattement;
+        const montantMensuelASI = montantASI / 3;
+        resultHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir à l'intéressé(e) était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${totalRessourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € lui étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+    }
 
     resultSection.innerHTML = resultHTML;
     result.appendChild(resultSection);
