@@ -17,12 +17,15 @@ function genererTableauRessources() {
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
 
     if (!statut || isNaN(dateEffet.getTime())) {
-        return; // Ne rien afficher si les champs sont vides
+        console.warn("Date d'effet ou statut invalide.");
+        return;
     }
 
+    // Génération du tableau pour le demandeur
     const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
     ressourcesContainer.appendChild(tableDemandeur);
 
+    // Génération du tableau pour le conjoint si le statut est "couple"
     if (statut === "couple") {
         const tableConjoint = createRessourceTable("Conjoint", dateEffet);
         ressourcesContainer.appendChild(tableConjoint);
@@ -41,13 +44,12 @@ function createRessourceTable(role, dateEffet) {
     addResourceButton.textContent = "+ Ajouter une ressource";
     addResourceButton.className = "add-resource-btn";
     addResourceButton.type = "button"; // Empêche la soumission du formulaire
-    addResourceButton.onclick = (event) => {
-        event.preventDefault(); // Empêche la réinitialisation de la page
-        addColumn(table, role.toLowerCase());
-    };
+    addResourceButton.onclick = () => addColumn(table, role.toLowerCase());
     tableContainer.appendChild(addResourceButton);
 
     const table = document.createElement("table");
+    table.id = `${role.toLowerCase()}Table`; // ID unique pour le tableau
+
     const header = document.createElement("tr");
     [
         "Mois",
@@ -115,7 +117,8 @@ function calculerASI() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
 
     if (!statut || isNaN(dateEffet.getTime())) {
-        return; // Ne rien calculer si les champs sont vides
+        console.warn("Statut ou date d'effet invalide.");
+        return;
     }
 
     const annee = dateEffet.getFullYear();
@@ -123,6 +126,8 @@ function calculerASI() {
     const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
 
     const result = document.getElementById("result");
+    result.innerHTML = ""; // Réinitialise les résultats
+
     const resultSection = document.createElement("div");
     resultSection.classList.add("result-section");
 
@@ -163,7 +168,7 @@ function calculateRessources(role, dateEffet) {
     let total = 0;
 
     for (let i = 3; i >= 1; i--) {
-        const rowTotal = Array.from(document.querySelectorAll(`#${role.toLowerCase()}_M${4 - i}`))
+        const rowTotal = Array.from(document.querySelectorAll(`#${role.toLowerCase()}Table tr:nth-child(${i + 1}) td input`))
             .reduce((sum, input) => sum + (parseFloat(input.value) || 0), 0);
 
         total += rowTotal;
