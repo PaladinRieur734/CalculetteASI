@@ -9,9 +9,9 @@ const plafonds = {
     "2024": { seul: 10536.50, couple: 16890.35 },
 };
 
-function genererTableauRessources() {
-    const dateEffet = new Date(document.getElementById("dateEffet").value);
+function calculerASI() {
     const statut = document.getElementById("statut").value;
+    const dateEffet = new Date(document.getElementById("dateEffet").value);
 
     if (isNaN(dateEffet.getTime())) {
         alert("Veuillez entrer une date d'effet valide.");
@@ -23,72 +23,55 @@ function genererTableauRessources() {
         return;
     }
 
-    const ressourcesContainer = document.getElementById("ressourcesContainer");
-    ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
+    const annee = dateEffet.getFullYear();
+    const plafondAnnuel = plafonds[annee]?.[statut];
+    if (!plafondAnnuel) {
+        alert("Plafond introuvable pour l'année sélectionnée.");
+        return;
+    }
+    const plafondTrimestriel = plafondAnnuel / 4;
 
-    // Génération du tableau pour le demandeur
-    const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
-    ressourcesContainer.appendChild(tableDemandeur);
+    const result = document.getElementById("result");
+    result.innerHTML = ""; // Réinitialise les résultats
 
-    // Génération du tableau pour le conjoint si le statut est "couple"
+    // Calcul des ressources pour le demandeur
+    const demandeurRessources = calculateRessources("Demandeur", dateEffet);
+
+    // Calcul des ressources pour le conjoint si le statut est "couple"
+    let conjointRessources = null;
     if (statut === "couple") {
-        const tableConjoint = createRessourceTable("Conjoint", dateEffet);
-        ressourcesContainer.appendChild(tableConjoint);
+        conjointRessources = calculateRessources("Conjoint", dateEffet);
     }
-}
 
-function createRessourceTable(role, dateEffet) {
-    const tableContainer = document.createElement("div");
-    tableContainer.classList.add("table-container");
+    // Total des ressources
+    const totalRessources = demandeurRessources.total + (conjointRessources ? conjointRessources.total : 0);
+    const totalRessourcesApresAbattement = totalRessources - demandeurRessources.abattement;
 
-    const title = document.createElement("h3");
-    title.textContent = `Ressources du ${role}`;
-    tableContainer.appendChild(title);
-
-    const table = document.createElement("table");
-    const header = document.createElement("tr");
-    [
-        "Mois",
-        "Pension d'invalidité",
-        "Salaires",
-        "Indemnités journalières",
-        "Chômage",
-        "BIM (Capitaux placés)",
-        "Autres ressources",
-    ].forEach(col => {
-        const th = document.createElement("th");
-        th.textContent = col;
-        header.appendChild(th);
+    // Résultat détaillé
+    result.innerHTML += `<h3>Ressources détaillées</h3>`;
+    demandeurRessources.details.forEach(detail => {
+        result.innerHTML += detail;
     });
-    table.appendChild(header);
 
-    // Génération des mois dans l'ordre inversé
-    for (let i = 3; i >= 1; i--) {
-        const mois = new Date(dateEffet);
-        mois.setMonth(mois.getMonth() - i);
-
-        const row = document.createElement("tr");
-
-        // Colonne pour le mois
-        const moisCell = document.createElement("td");
-        moisCell.textContent = mois.toLocaleString("fr-FR", { month: "long", year: "numeric" });
-        row.appendChild(moisCell);
-
-        // Colonnes pour les ressources
-        ["invalidite", "salaires", "indemnites", "chomage", "bim", "autres"].forEach(type => {
-            const cell = document.createElement("td");
-            const input = document.createElement("input");
-            input.type = "number";
-            input.id = `${role.toLowerCase()}_${type}M${4 - i}`; // Identifiant unique par rôle
-            input.placeholder = "€";
-            input.min = 0;
-            cell.appendChild(input);
-            row.appendChild(cell);
+    if (conjointRessources) {
+        result.innerHTML += `<h3>Ressources du conjoint</h3>`;
+        conjointRessources.details.forEach(detail => {
+            result.innerHTML += detail;
         });
-
-        table.appendChild(row);
     }
 
-    tableContainer.appendChild(table);
-    return tableContainer;
-}
+    // Résumé des calculs
+    result.innerHTML += `
+        <h3>Résumé du trimestre</h3>
+        <table>
+            <tr><td><strong>Total avant abattement</strong></td><td><strong>${totalRessources.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Abattement appliqué</strong></td><td><strong>${demandeurRessources.abattement.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Total après abattement</strong></td><td><strong>${totalRessourcesApresAbattement.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Plafond trimestriel applicable</strong></td><td><strong>${plafondTrimestriel.toFixed(2)} €</strong></td></tr>
+        </table>`;
+
+    // Conclusion
+    if (totalRessourcesApresAbattement > plafondTrimestriel) {
+        result.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+    } else {
+        const montantASI = plafondTrimestriel - totalRessour
