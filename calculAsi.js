@@ -63,6 +63,15 @@ function createRessourceTable(role, dateEffet) {
         header.appendChild(th);
     });
 
+    // Ajouter la colonne "+" pour ajouter de nouvelles colonnes
+    const addColumnButtonCell = document.createElement("th");
+    const addButton = document.createElement("button");
+    addButton.textContent = "+";
+    addButton.classList.add("add-column-btn");
+    addButton.onclick = () => addCustomColumn();
+    addColumnButtonCell.appendChild(addButton);
+    header.appendChild(addColumnButtonCell);
+
     table.appendChild(header);
 
     // Génération des mois dans l'ordre inversé
@@ -105,13 +114,6 @@ function createRessourceTable(role, dateEffet) {
     }
 
     tableContainer.appendChild(table);
-
-    // Ajouter un bouton + pour ajouter une colonne
-    const addButton = document.createElement("button");
-    addButton.textContent = "+";
-    addButton.classList.add("add-column-btn");
-    addButton.onclick = () => addCustomColumn();
-    tableContainer.appendChild(addButton);
 
     return tableContainer;
 }
