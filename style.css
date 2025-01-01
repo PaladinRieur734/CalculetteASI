@@ -1,106 +1,102 @@
-/* Styles de base */
+/* Style global */
 body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background: #f7f8fa;
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f9;
     color: #333;
 }
 
+/* Conteneur principal */
 .container {
-    max-width: 900px;
-    margin: 40px auto;
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* En-tête */
+header {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 header h1 {
-    font-size: 2em;
-    color: #2c3e50;
-    text-align: center;
+    color: #1E90FF; /* Bleu Dodger */
+    font-size: 24px;
     margin-bottom: 10px;
 }
 
 header p {
-    text-align: center;
-    color: #7f8c8d;
-    font-size: 1em;
+    font-size: 14px;
+    color: #555;
 }
 
-h2 {
-    color: #34495e;
-    font-size: 1.5em;
-    margin-top: 20px;
-    margin-bottom: 10px;
+/* Formulaire */
+form section {
+    margin-bottom: 20px;
 }
 
 label {
     font-weight: bold;
     display: block;
-    margin-top: 10px;
-    color: #2c3e50;
+    margin-bottom: 5px;
 }
 
-input, select, button {
+input[type="date"],
+input[type="number"],
+select {
     width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-table th, table td {
-    border: 1px solid #ddd;
     padding: 8px;
-    text-align: center;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
-table th {
-    background-color: #3498db;
-    color: white;
-    font-weight: bold;
+input[type="date"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border-color: #1E90FF;
+    outline: none;
+    box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
 }
 
-.info {
-    color: #7f8c8d;
-    font-style: italic;
-}
-
-button {
-    background: #3498db;
-    color: white;
-    font-weight: bold;
+/* Bouton */
+button.btn {
+    background-color: #1E90FF; /* Bleu Dodger */
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
     cursor: pointer;
-    -webkit-transition: background 0.3s ease;
-    -moz-transition: background 0.3s ease;
-    -o-transition: background 0.3s ease;
-    transition: background 0.3s ease;
+    transition: background-color 0.3s ease;
+    width: 100%;
 }
 
-button:hover {
-    background: #2980b9;
+button.btn:hover {
+    background-color: #187bcd; /* Teinte légèrement plus sombre */
 }
 
+/* Résultats */
 .result {
-    margin-top: 30px;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #f7f9fa;
-    border: 2px solid #dcdfe3;
-    font-size: 1.2em;
-    color: #2c3e50;
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
 }
 
-section {
-    margin-bottom: 20px;
+/* Infos dans le tableau des ressources */
+.info {
+    color: #1E90FF;
+    font-style: italic;
+    margin-top: 10px;
+    text-align: center;
 }
