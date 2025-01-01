@@ -1,68 +1,103 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const statut = document.getElementById("statut");
-    const dateEffet = document.getElementById("dateEffet");
-    const tableContainer = document.getElementById("tableContainer");
-    const addColumnButton = document.createElement("button");
-    const calculateButton = document.getElementById("calculate");
-    const resultats = document.getElementById("resultats");
+document.addEventListener("DOMContentLoaded", function () {
+    const statutSelect = document.getElementById("statut");
+    const dateEffetInput = document.getElementById("date-effet");
+    const tableauSection = document.getElementById("tableau-section");
+    const tableauContainer = document.getElementById("tableau-container");
+    const ajouterColonneBtn = document.getElementById("ajouter-colonne");
+    const calculerDroitsBtn = document.getElementById("calculer-droits");
+    const resultatsContainer = document.getElementById("resultats");
 
-    // Créer le tableau dynamiquement
-    let table;
+    const plafonds = {
+        "Personne seule": 9000,
+        "Couple": 14000,
+    };
 
-    function createTable() {
-        table = document.createElement("table");
+    function afficherTableau() {
+        if (statutSelect.value && dateEffetInput.value) {
+            tableauSection.style.display = "block";
+            creerTableau();
+        } else {
+            tableauSection.style.display = "none";
+        }
+    }
+
+    function creerTableau() {
+        tableauContainer.innerHTML = "";
+
+        const table = document.createElement("table");
         const thead = document.createElement("thead");
         const headerRow = document.createElement("tr");
-        ["Revenus", "Charges"].forEach((headerText) => {
+
+        ["Ressources 1", "Ressources 2", "Ressources 3"].forEach((header) => {
             const th = document.createElement("th");
-            th.textContent = headerText;
+            th.textContent = header;
             headerRow.appendChild(th);
         });
 
         thead.appendChild(headerRow);
-        table.appendChild(thead);
-        tableContainer.appendChild(table);
-
-        // Bouton "+" intégré au tableau
-        addColumnButton.id = "addColumnButton";
-        addColumnButton.textContent = "+";
-        tableContainer.appendChild(addColumnButton);
 
         const tbody = document.createElement("tbody");
-        table.appendChild(tbody);
-    }
+        const bodyRow = document.createElement("tr");
 
-    function clearTable() {
-        tableContainer.innerHTML = "";
-    }
-
-    // Ajouter une colonne
-    addColumnButton.addEventListener("click", () => {
-        const rows = table.querySelectorAll("tr");
-        rows.forEach((row, index) => {
-            const cell = document.createElement(index === 0 ? "th" : "td");
-            cell.textContent = index === 0 ? `Nouvelle colonne` : "";
-            row.appendChild(cell);
+        ["", "", ""].forEach(() => {
+            const td = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "number";
+            input.placeholder = "Valeur";
+            td.appendChild(input);
+            bodyRow.appendChild(td);
         });
-    });
 
-    // Afficher le tableau lorsqu'un statut et une date d'effet sont sélectionnés
-    statut.addEventListener("change", () => {
-        if (statut.value && dateEffet.value) {
-            clearTable();
-            createTable();
+        tbody.appendChild(bodyRow);
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        tableauContainer.appendChild(table);
+    }
+
+    function ajouterColonne() {
+        const table = tableauContainer.querySelector("table");
+
+        if (table) {
+            const thead = table.querySelector("thead tr");
+            const tbody = table.querySelector("tbody tr");
+
+            const newHeader = document.createElement("th");
+            newHeader.textContent = `Nouvelle Ressource`;
+            thead.appendChild(newHeader);
+
+            const newCell = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "number";
+            input.placeholder = "Valeur";
+            newCell.appendChild(input);
+            tbody.appendChild(newCell);
         }
-    });
+    }
 
-    dateEffet.addEventListener("change", () => {
-        if (statut.value && dateEffet.value) {
-            clearTable();
-            createTable();
-        }
-    });
+    function calculerDroits() {
+        resultatsContainer.innerHTML = "";
 
-    // Calculer les droits
-    calculateButton.addEventListener("click", () => {
-        resultats.innerHTML = `<h3>Résultats</h3><p>Les droits ont été calculés.</p>`;
-    });
+        const inputs = tableauContainer.querySelectorAll("tbody tr td input");
+        let totalRessources = 0;
+
+        inputs.forEach((input) => {
+            totalRessources += parseFloat(input.value) || 0;
+        });
+
+        const statut = statutSelect.value;
+        const plafond = plafonds[statut] || 0;
+
+        let droits = plafond - totalRessources;
+        droits = droits < 0 ? 0 : droits;
+
+        const resultMessage = `Total des ressources : ${totalRessources} €. Plafond : ${plafond} €. Droits calculés : ${droits} €.`;
+
+        resultatsContainer.textContent = resultMessage;
+    }
+
+    statutSelect.addEventListener("change", afficherTableau);
+    dateEffetInput.addEventListener("input", afficherTableau);
+    ajouterColonneBtn.addEventListener("click", ajouterColonne);
+    calculerDroitsBtn.addEventListener("click", calculerDroits);
 });
