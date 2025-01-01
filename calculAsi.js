@@ -105,11 +105,6 @@ function calculerASI() {
     const resultSection = document.createElement("div");
     resultSection.classList.add("result-section");
 
-    // Titre des résultats
-    const titreResultats = document.createElement("h2");
-    titreResultats.textContent = `Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}`;
-    resultSection.appendChild(titreResultats);
-
     const demandeurRessources = calculateRessources("Demandeur", dateEffet);
     let conjointRessources = null;
 
@@ -120,6 +115,14 @@ function calculerASI() {
     const totalRessources = demandeurRessources.total + (conjointRessources ? conjointRessources.total : 0);
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalRessourcesApresAbattement = totalRessources - abattement;
+
+    // Présentation des ressources détaillées
+    resultSection.innerHTML += `
+        <h3>Détail des ressources</h3>
+        <ul>
+            ${formatResourceDetails("Demandeur", demandeurRessources.details)}
+            ${conjointRessources ? formatResourceDetails("Conjoint", conjointRessources.details) : ""}
+        </ul>`;
 
     // Résumé trimestriel
     resultSection.innerHTML += `
@@ -133,7 +136,7 @@ function calculerASI() {
 
     // Conclusion
     if (totalRessourcesApresAbattement > plafondTrimestriel) {
-        resultSection.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+        resultSection.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     } else {
         const montantASI = plafondTrimestriel - totalRessourcesApresAbattement;
         const montantMensuelASI = montantASI / 3;
@@ -141,6 +144,14 @@ function calculerASI() {
     }
 
     result.appendChild(resultSection);
+}
+
+function formatResourceDetails(role, details) {
+    return details.map(d => `
+        <li>
+            <strong>${role} - ${d.mois} :</strong>
+            ${d.moisTotal.toFixed(2)} € (Invalidité : ${d.invalidite.toFixed(2)} €, Salaires : ${d.salaires.toFixed(2)} €, IJ : ${d.indemnites.toFixed(2)} €, Chômage : ${d.chomage.toFixed(2)} €, BIM : ${d.bim.toFixed(2)} €, Autres : ${d.autres.toFixed(2)} €)
+        </li>`).join("");
 }
 
 function calculateRessources(role, dateEffet) {
