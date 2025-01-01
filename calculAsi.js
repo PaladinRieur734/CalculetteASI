@@ -1,99 +1,68 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
     const statut = document.getElementById("statut");
     const dateEffet = document.getElementById("dateEffet");
-    const abat = document.getElementById("abat");
-    const calculateButton = document.getElementById("calculate");
     const tableContainer = document.getElementById("tableContainer");
+    const addColumnButton = document.createElement("button");
+    const calculateButton = document.getElementById("calculate");
     const resultats = document.getElementById("resultats");
 
-    // Fonction pour afficher le tableau
-    function afficherTableau() {
-        const table = document.createElement("table");
-        const headerRow = document.createElement("tr");
+    // Créer le tableau dynamiquement
+    let table;
 
-        const columns = ["Ressource", "Montant (€)", "+"];
-        columns.forEach((col) => {
+    function createTable() {
+        table = document.createElement("table");
+        const thead = document.createElement("thead");
+        const headerRow = document.createElement("tr");
+        ["Revenus", "Charges"].forEach((headerText) => {
             const th = document.createElement("th");
-            th.textContent = col;
+            th.textContent = headerText;
             headerRow.appendChild(th);
         });
 
-        table.appendChild(headerRow);
-
-        // Ligne de base
-        const row = document.createElement("tr");
-        for (let i = 0; i < columns.length; i++) {
-            const cell = document.createElement("td");
-            if (i === 0) {
-                cell.textContent = "Nouvelle ressource";
-            } else if (i === 1) {
-                const input = document.createElement("input");
-                input.type = "number";
-                input.placeholder = "Montant";
-                cell.appendChild(input);
-            } else {
-                const addButton = document.createElement("button");
-                addButton.textContent = "+";
-                addButton.onclick = ajouterLigne;
-                cell.appendChild(addButton);
-            }
-            row.appendChild(cell);
-        }
-        table.appendChild(row);
-
-        tableContainer.innerHTML = ""; // Réinitialise le tableau
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
         tableContainer.appendChild(table);
+
+        // Bouton "+" intégré au tableau
+        addColumnButton.id = "addColumnButton";
+        addColumnButton.textContent = "+";
+        tableContainer.appendChild(addColumnButton);
+
+        const tbody = document.createElement("tbody");
+        table.appendChild(tbody);
     }
 
-    // Fonction pour ajouter une ligne
-    function ajouterLigne() {
-        const table = tableContainer.querySelector("table");
-        const newRow = document.createElement("tr");
-
-        for (let i = 0; i < 3; i++) {
-            const cell = document.createElement("td");
-            if (i === 0) {
-                cell.textContent = "Nouvelle ressource";
-            } else if (i === 1) {
-                const input = document.createElement("input");
-                input.type = "number";
-                input.placeholder = "Montant";
-                cell.appendChild(input);
-            } else {
-                const addButton = document.createElement("button");
-                addButton.textContent = "+";
-                addButton.onclick = ajouterLigne;
-                cell.appendChild(addButton);
-            }
-            newRow.appendChild(cell);
-        }
-
-        table.appendChild(newRow);
+    function clearTable() {
+        tableContainer.innerHTML = "";
     }
 
-    // Fonction pour calculer les droits
-    function calculerDroits() {
-        const inputs = tableContainer.querySelectorAll("input[type='number']");
-        let total = 0;
-
-        inputs.forEach((input) => {
-            total += parseFloat(input.value) || 0;
+    // Ajouter une colonne
+    addColumnButton.addEventListener("click", () => {
+        const rows = table.querySelectorAll("tr");
+        rows.forEach((row, index) => {
+            const cell = document.createElement(index === 0 ? "th" : "td");
+            cell.textContent = index === 0 ? `Nouvelle colonne` : "";
+            row.appendChild(cell);
         });
+    });
 
-        const abattement = parseFloat(abat.value) || 0;
-        total -= abattement;
+    // Afficher le tableau lorsqu'un statut et une date d'effet sont sélectionnés
+    statut.addEventListener("change", () => {
+        if (statut.value && dateEffet.value) {
+            clearTable();
+            createTable();
+        }
+    });
 
-        resultats.innerHTML = `
-            <h2>Droits ASI au ${dateEffet.value}</h2>
-            <p>Total après abattement : ${total.toFixed(2)} €</p>
-        `;
-    }
+    dateEffet.addEventListener("change", () => {
+        if (statut.value && dateEffet.value) {
+            clearTable();
+            createTable();
+        }
+    });
 
-    // Événements
-    calculateButton.addEventListener("click", calculerDroits);
-    statut.addEventListener("change", afficherTableau);
-    dateEffet.addEventListener("change", afficherTableau);
-
-    // Initialisation
-    afficherTableau();
+    // Calculer les droits
+    calculateButton.addEventListener("click", () => {
+        resultats.innerHTML = `<h3>Résultats</h3><p>Les droits ont été calculés.</p>`;
+    });
 });
