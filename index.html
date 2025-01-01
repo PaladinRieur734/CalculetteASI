@@ -4,41 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calcul des Droits ASI</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Calcul des Droits ASI</h1>
-        <p>Saisissez la date d’effet et complétez les ressources pour le trimestre précédent.</p>
-    </header>
+    <div class="container">
+        <header>
+            <h1>Calcul des Droits ASI</h1>
+            <p>Saisissez la date d'effet et complétez les ressources.</p>
+        </header>
 
-    <main>
-        <section id="formulaire">
-            <label for="statut">Statut</label>
-            <select id="statut">
-                <option value="">-- Sélectionnez un statut --</option>
-                <option value="Personne seule">Personne seule</option>
-                <option value="Couple">Couple</option>
-            </select>
+        <form id="asiForm">
+            <!-- Section Statut -->
+            <section class="statut-section">
+                <h2>Statut</h2>
+                <select id="statut">
+                    <option value="">-- Sélectionnez un statut --</option>
+                    <option value="Personne seule">Personne seule</option>
+                    <option value="Couple">Couple</option>
+                </select>
+            </section>
 
-            <label for="date-effet">Date d'effet</label>
-            <input type="date" id="date-effet">
-        </section>
+            <!-- Section Date d'effet -->
+            <section class="date-section">
+                <h2>Date d'effet</h2>
+                <input type="date" id="date-effet">
+            </section>
 
-        <section id="tableau-section" style="display: none;">
-            <h2>Tableau des ressources trimestrielles</h2>
-            <div id="tableau-container"></div>
-            <button id="ajouter-colonne">+</button>
-        </section>
+            <!-- Section Tableau des ressources -->
+            <section id="tableau-section" style="display: none;">
+                <h2>
+                    Tableau des Ressources
+                    <button type="button" id="ajouter-colonne" class="ajouter-colonne">+</button>
+                </h2>
+                <div id="tableau-container"></div>
+            </section>
 
-        <section id="resultats-section">
-            <h2>Résultats</h2>
-            <div id="resultats"></div>
-        </section>
+            <!-- Bouton Calcul -->
+            <section class="calcul-section">
+                <button type="button" id="calculer-droits" class="btn">Calculer les droits</button>
+            </section>
+        </form>
 
-        <button id="calculer-droits">Calculer les droits</button>
-    </main>
-
-    <script src="script.js"></script>
+        <!-- Résultats -->
+        <div id="resultats" class="resultats"></div>
+    </div>
+    <script src="calculAsi.js"></script>
 </body>
 </html>
