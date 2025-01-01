@@ -1,94 +1,93 @@
 body {
     font-family: Arial, sans-serif;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
+    background-color: #f8f9fa;
+    color: #212529;
 }
 
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-h1, h2, h3 {
+header {
     text-align: center;
+    padding: 20px;
+    background-color: #007bff;
+    color: #fff;
 }
 
-h2 {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f1f1f1;
+header h1 {
+    margin: 0;
+    font-size: 2rem;
 }
 
-.input-group {
-    margin-bottom: 15px;
+header p {
+    margin: 5px 0 0;
+}
+
+main {
+    padding: 20px;
+}
+
+section {
+    margin-bottom: 20px;
 }
 
 label {
-    font-weight: bold;
     display: block;
     margin-bottom: 5px;
-}
-
-input, select, button {
-    width: 100%;
-    padding: 10px;
-    margin: 5px 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-#tableContainer {
-    margin-top: 20px;
-    position: relative;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-}
-
-th {
-    background-color: #f4f4f4;
     font-weight: bold;
 }
 
-#addColumnButton {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 5px 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-}
-
-#addColumnButton:hover {
-    background-color: #218838;
+input,
+select,
+button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 button {
     background-color: #007bff;
     color: white;
-    border: none;
     cursor: pointer;
+    font-size: 1rem;
+    border: none;
 }
 
 button:hover {
     background-color: #0056b3;
+}
+
+#ajouter-colonne {
+    width: auto;
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+#tableau-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+#tableau-container th,
+#tableau-container td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+#tableau-container th {
+    background-color: #007bff;
+    color: white;
+}
+
+#tableau-container input {
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: center;
 }
