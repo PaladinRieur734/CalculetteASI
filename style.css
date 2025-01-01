@@ -1,22 +1,21 @@
-/* Style global */
+/* Style général */
 body {
     font-family: Arial, sans-serif;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
+    background-color: #f9f9f9;
     color: #333;
 }
 
-/* Conteneur principal */
 .container {
     width: 90%;
     max-width: 800px;
     margin: 20px auto;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: #fff;
     padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
 /* En-tête */
@@ -26,13 +25,13 @@ header {
 }
 
 header h1 {
-    color: #1E90FF; /* Bleu Dodger */
-    font-size: 24px;
-    margin-bottom: 10px;
+    color: #1e90ff; /* Bleu Dodger */
+    font-size: 2rem;
+    margin: 0;
 }
 
 header p {
-    font-size: 14px;
+    font-size: 1rem;
     color: #555;
 }
 
@@ -41,62 +40,120 @@ form section {
     margin-bottom: 20px;
 }
 
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
+form section h2 {
+    font-size: 1.2rem;
+    color: #1e90ff; /* Bleu Dodger */
+    border-bottom: 2px solid #1e90ff;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
 }
 
-input[type="date"],
-input[type="number"],
-select {
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="date"],
+form input[type="number"],
+form select {
     width: 100%;
-    padding: 8px;
-    font-size: 14px;
+    padding: 10px;
+    margin-bottom: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
+    font-size: 1rem;
     box-sizing: border-box;
 }
 
-input[type="date"]:focus,
-input[type="number"]:focus,
-select:focus {
-    border-color: #1E90FF;
-    outline: none;
-    box-shadow: 0 0 5px rgba(30, 144, 255, 0.5);
+form input[type="number"]::placeholder {
+    font-style: italic;
+    color: #aaa;
 }
 
-/* Bouton */
-button.btn {
-    background-color: #1E90FF; /* Bleu Dodger */
+form .btn {
+    display: inline-block;
+    background-color: #1e90ff;
     color: #fff;
-    font-size: 16px;
+    padding: 10px 20px;
     border: none;
     border-radius: 4px;
-    padding: 10px 15px;
+    font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    width: 100%;
+    text-align: center;
 }
 
-button.btn:hover {
-    background-color: #187bcd; /* Teinte légèrement plus sombre */
+form .btn:hover {
+    background-color: #005bb5;
+}
+
+/* Tableau des ressources */
+.table-container {
+    margin-bottom: 20px;
+}
+
+.table-container h3 {
+    color: #1e90ff; /* Bleu Dodger */
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.table-container th,
+.table-container td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table-container th {
+    background-color: #1e90ff;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.9rem;
 }
 
 /* Résultats */
 .result {
     margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-    color: #333;
+    padding: 20px;
+    background-color: #f1faff;
+    border: 1px solid #1e90ff;
+    border-radius: 8px;
 }
 
-/* Infos dans le tableau des ressources */
-.info {
-    color: #1E90FF;
-    font-style: italic;
-    margin-top: 10px;
+.result h2 {
     text-align: center;
+    background-color: #1e90ff;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 0 0 20px 0;
+}
+
+.result h4,
+.result h5 {
+    margin: 10px 0;
+    color: #1e90ff; /* Bleu Dodger */
+}
+
+.result table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.result td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.result td:first-child {
+    font-weight: bold;
 }
