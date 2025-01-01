@@ -13,18 +13,14 @@ function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
     const statut = document.getElementById("statut").value;
 
+    if (isNaN(dateEffet.getTime())) return;
+
     const ressourcesContainer = document.getElementById("ressourcesContainer");
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
 
-    if (!statut || isNaN(dateEffet.getTime())) {
-        return; // Ne rien afficher si les champs sont vides
-    }
-
-    // Génération du tableau pour le demandeur
     const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
     ressourcesContainer.appendChild(tableDemandeur);
 
-    // Génération du tableau pour le conjoint si le statut est "couple"
     if (statut === "couple") {
         const tableConjoint = createRessourceTable("Conjoint", dateEffet);
         ressourcesContainer.appendChild(tableConjoint);
@@ -40,6 +36,8 @@ function createRessourceTable(role, dateEffet) {
     tableContainer.appendChild(title);
 
     const table = document.createElement("table");
+    table.id = `${role.toLowerCase()}Table`;
+
     const header = document.createElement("tr");
     [
         "Mois",
@@ -54,21 +52,32 @@ function createRessourceTable(role, dateEffet) {
         th.textContent = col;
         header.appendChild(th);
     });
+
+    // Bouton + intégré dans le tableau
+    const addColumnButton = document.createElement("th");
+    const button = document.createElement("button");
+    button.textContent = "+";
+    button.className = "add-column-btn";
+    button.title = "Ajouter une ressource";
+    button.onclick = event => {
+        event.preventDefault();
+        addColumnToTable(role.toLowerCase());
+    };
+    addColumnButton.appendChild(button);
+    header.appendChild(addColumnButton);
+
     table.appendChild(header);
 
-    // Génération des mois dans l'ordre inversé
     for (let i = 3; i >= 1; i--) {
         const mois = new Date(dateEffet);
         mois.setMonth(mois.getMonth() - i);
 
         const row = document.createElement("tr");
 
-        // Colonne pour le mois
         const moisCell = document.createElement("td");
         moisCell.textContent = mois.toLocaleString("fr-FR", { month: "long", year: "numeric" });
         row.appendChild(moisCell);
 
-        // Colonnes pour les ressources
         ["invalidite", "salaires", "indemnites", "chomage", "bim", "autres"].forEach(type => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
@@ -87,13 +96,38 @@ function createRessourceTable(role, dateEffet) {
     return tableContainer;
 }
 
+function addColumnToTable(role) {
+    const table = document.getElementById(`${role.toLowerCase()}Table`);
+    if (!table) return;
+
+    const columnIndex = table.rows[0].cells.length - 1;
+
+    const headerCell = document.createElement("th");
+    const headerInput = document.createElement("input");
+    headerInput.type = "text";
+    headerInput.placeholder = `Ressource ${columnIndex - 6}`;
+    headerInput.style.wordWrap = "break-word";
+    headerInput.style.whiteSpace = "normal";
+    headerCell.appendChild(headerInput);
+    table.rows[0].insertBefore(headerCell, table.rows[0].lastChild);
+
+    for (let i = 1; i < table.rows.length; i++) {
+        const cell = document.createElement("td");
+        const input = document.createElement("input");
+        input.type = "number";
+        input.placeholder = "€";
+        input.min = 0;
+        input.id = `${role}_custom${columnIndex - 6}M${4 - i}`;
+        cell.appendChild(input);
+        table.rows[i].insertBefore(cell, table.rows[i].lastChild);
+    }
+}
+
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
 
-    if (!statut || isNaN(dateEffet.getTime())) {
-        return; // Ne rien calculer si les champs sont vides
-    }
+    if (isNaN(dateEffet.getTime())) return;
 
     const annee = dateEffet.getFullYear();
     const plafondAnnuel = plafonds[annee]?.[statut];
@@ -103,7 +137,6 @@ function calculerASI() {
     const resultSection = document.createElement("div");
     resultSection.classList.add("result-section");
 
-    // Titre des résultats
     const titreResultats = document.createElement("h2");
     titreResultats.textContent = `Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}`;
     resultSection.appendChild(titreResultats);
@@ -119,15 +152,12 @@ function calculerASI() {
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalRessourcesApresAbattement = totalRessources - abattement;
 
-    // Détails mois par mois pour le demandeur
     resultSection.innerHTML += generateMonthlyDetails(demandeurRessources.details, "Demandeur");
 
-    // Détails mois par mois pour le conjoint (si applicable)
     if (conjointRessources) {
         resultSection.innerHTML += generateMonthlyDetails(conjointRessources.details, "Conjoint");
     }
 
-    // Résumé trimestriel
     resultSection.innerHTML += `
         <h3>Résumé du trimestre</h3>
         <table>
@@ -137,7 +167,6 @@ function calculerASI() {
             <tr><td><strong>Plafond trimestriel applicable</strong></td><td><strong>${plafondTrimestriel.toFixed(2)} €</strong></td></tr>
         </table>`;
 
-    // Conclusion
     if (totalRessourcesApresAbattement > plafondTrimestriel) {
         resultSection.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     } else {
