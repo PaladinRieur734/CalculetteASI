@@ -1,6 +1,6 @@
 /* Styles de base */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
     background: #f7f8fa;
     margin: 0;
     padding: 0;
@@ -36,49 +36,23 @@ h2 {
     margin-bottom: 10px;
 }
 
-select, input[type="date"], input[type="number"] {
+label {
+    font-weight: bold;
+    display: block;
+    margin-top: 10px;
+    color: #2c3e50;
+}
+
+input, select, button {
     width: 100%;
     padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1em;
 }
 
-/* Style du bouton Calculer */
-.btn {
-    background-color: #0066cc;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1em;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-    background-color: #004080;
-}
-
-/* Style pour le bouton + */
-.ajouter-colonne {
-    background-color: #0066cc;
-    color: white;
-    border: none;
-    font-size: 1.2em;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    float: right;
-    margin-right: 10px;
-}
-
-.ajouter-colonne:hover {
-    background-color: #004080;
-}
-
-/* Tableau */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -95,4 +69,38 @@ table th {
     background-color: #3498db;
     color: white;
     font-weight: bold;
+}
+
+.info {
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+button {
+    background: #3498db;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    -webkit-transition: background 0.3s ease;
+    -moz-transition: background 0.3s ease;
+    -o-transition: background 0.3s ease;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #2980b9;
+}
+
+.result {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f7f9fa;
+    border: 2px solid #dcdfe3;
+    font-size: 1.2em;
+    color: #2c3e50;
+}
+
+section {
+    margin-bottom: 20px;
 }
