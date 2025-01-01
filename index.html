@@ -7,42 +7,47 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
+    <div class="container">
         <h1>Calcul des Droits ASI</h1>
-        <p>Saisissez la date d’effet et complétez les ressources pour le trimestre précédent.</p>
-    </header>
-
-    <main>
-        <section>
+        <p>Saisissez la date d'effet et complétez les ressources pour le trimestre précédent.</p>
+        
+        <!-- Sélection du statut -->
+        <div>
             <label for="statut">Statut</label>
             <select id="statut">
-                <option value="">Sélectionnez un statut</option>
+                <option value="">-- Choisir --</option>
                 <option value="Personne seule">Personne seule</option>
                 <option value="Couple">Couple</option>
             </select>
-        </section>
+        </div>
 
-        <section>
+        <!-- Date d'effet -->
+        <div>
             <label for="date-effet">Date d'effet</label>
             <input type="date" id="date-effet">
-        </section>
+        </div>
 
-        <section id="tableau-section" style="display: none;">
+        <!-- Tableau des ressources -->
+        <div id="tableau-section" style="display: none;">
             <h2>Tableau des ressources trimestrielles</h2>
             <div id="tableau-container"></div>
             <button id="ajouter-colonne">+</button>
-        </section>
+        </div>
 
-        <section>
-            <h2>Abattement</h2>
+        <!-- Abattement -->
+        <div>
+            <label for="abattement">Abattement</label>
             <input type="number" id="abattement" placeholder="Montant en €">
-        </section>
+        </div>
 
-        <section>
+        <!-- Calcul -->
+        <div>
             <button id="calculer-droits">Calculer les droits</button>
-            <div id="resultats"></div>
-        </section>
-    </main>
+        </div>
+
+        <!-- Résultats -->
+        <div id="resultats"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>
