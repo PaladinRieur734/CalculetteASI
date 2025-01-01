@@ -1,148 +1,175 @@
-/* Réinitialisation globale */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
+/* Style général */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
     color: #333;
-    padding: 20px;
 }
 
 .container {
-    max-width: 1000px;
-    margin: 0 auto;
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
+/* En-tête */
 header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 header h1 {
-    font-size: 2.5em;
-    color: #004d99; /* Couleur bleue pour l'entête */
+    color: #1e90ff; /* Bleu Dodger */
+    font-size: 2rem;
+    margin: 0;
 }
 
-.form-section {
+header p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Formulaire */
+form section {
     margin-bottom: 20px;
 }
 
-label {
+form section h2 {
+    font-size: 1.2rem;
+    color: #1e90ff; /* Bleu Dodger */
+    border-bottom: 2px solid #1e90ff;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+form label {
     display: block;
     margin-bottom: 5px;
-    font-size: 1.1em;
+    font-weight: bold;
 }
 
-input, select {
-    padding: 8px;
+form input[type="date"],
+form input[type="number"],
+form select {
+    width: 100%;
+    padding: 10px;
     margin-bottom: 10px;
-    width: 100%;
-    font-size: 1.1em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
 }
 
-button {
+form input[type="number"]::placeholder {
+    font-style: italic;
+    color: #aaa;
+}
+
+/* Focus sur les éléments du formulaire */
+form input:focus,
+form select:focus {
+    border-color: #1e90ff;
+    outline: none;
+}
+
+/* Bouton */
+form .btn {
+    display: block;
+    background-color: #1e90ff;
+    color: #fff;
     padding: 10px 20px;
-    background-color: #004d99; /* Couleur bleue */
-    color: white;
     border: none;
+    border-radius: 4px;
+    font-size: 1rem;
     cursor: pointer;
-    font-size: 1.1em;
-    width: 100%;
+    text-align: center;
+    margin: 20px auto; /* Centre le bouton */
+    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #003366;
+form .btn:hover {
+    background-color: #005bb5;
 }
 
+/* Tableau des ressources */
 .table-container {
-    margin-top: 20px;
-    background-color: white;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 .table-container h3 {
-    font-size: 1.5em;
+    color: #1e90ff; /* Bleu Dodger */
+    font-size: 1.1rem;
     margin-bottom: 10px;
 }
 
-table {
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.table-container th,
+.table-container td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table-container th {
+    background-color: #1e90ff;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+/* Résultats */
+.result {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f1faff;
+    border: 1px solid #1e90ff;
+    border-radius: 8px;
+}
+
+.result h2 {
+    text-align: center;
+    background-color: #1e90ff;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 0 0 20px 0;
+}
+
+.result h4,
+.result h5 {
+    margin: 10px 0;
+    color: #1e90ff; /* Bleu Dodger */
+}
+
+.result table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #ddd;
-}
-
-th {
-    background-color: #f5f5f5;
-}
-
-td input {
-    width: 100%;
-    padding: 5px;
-    font-size: 1em;
-}
-
-.add-column-btn {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    font-size: 1.2em;
     margin-bottom: 20px;
 }
 
-.add-column-btn:hover {
-    background-color: #218838;
-}
-
-.result-section {
-    margin-top: 20px;
-    background-color: white;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-    color: #004d99; /* Couleur bleue pour le titre des résultats */
-    margin-bottom: 15px;
-}
-
-h4, h5 {
-    margin: 5px 0;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table th, table td {
+.result td {
+    padding: 8px;
     border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
 }
 
-table th {
-    background-color: #f5f5f5;
-}
+.result td:first-child {
+    font-weight: bold;
 
-.result-section table {
-    margin-top: 15px;
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.result-section table th, .result-section table td {
-    text-align: center;
+/* Style pour les messages d'erreur */
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 10px;
 }
