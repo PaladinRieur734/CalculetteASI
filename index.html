@@ -4,34 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calcul des Droits ASI</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Simulation des Droits ASI</h1>
+    <div class="container">
+        <header>
+            <h1>Calcul des Droits ASI</h1>
+            <p>Saisissez le statut et complétez les ressources pour le trimestre précédent.</p>
+        </header>
 
-    <div>
-        <label for="dateEffet">Date d'effet :</label>
-        <input type="date" id="dateEffet">
+        <form id="asiForm">
+            <!-- Section Statut -->
+            <section class="statut-section">
+                <select id="statut" onchange="genererTableauRessources()">
+                    <option value="" disabled selected>Choisissez le statut</option>
+                    <option value="seul">Personne seule</option>
+                    <option value="couple">Couple</option>
+                </select>
+            </section>
 
-        <label for="statut">Statut :</label>
-        <select id="statut">
-            <option value="">-- Choisir --</option>
-            <option value="seul">Seul</option>
-            <option value="couple">Couple</option>
-        </select>
+            <!-- Section Date d'effet -->
+            <section class="date-section">
+                <label for="dateEffet">Date d'effet :</label>
+                <input type="date" id="dateEffet" onchange="genererTableauRessources()">
+            </section>
+
+            <!-- Section Tableau des ressources -->
+            <section class="ressources-section">
+                <h2>Tableau des ressources trimestrielles</h2>
+                <div id="ressourcesContainer"></div>
+            </section>
+
+            <!-- Section Abattement -->
+            <section class="abattement-section">
+                <label for="abattement">Montant de l'abattement :</label>
+                <input type="number" id="abattement" placeholder="Montant en €">
+            </section>
+
+            <!-- Bouton Calcul -->
+            <button type="button" onclick="calculerASI()">Calculer les droits</button>
+        </form>
+
+        <!-- Résultats -->
+        <div id="result" class="result"></div>
     </div>
-
-    <div>
-        <label for="abattement">Abattement :</label>
-        <input type="number" id="abattement" placeholder="€">
-    </div>
-
-    <button onclick="genererTableauRessources()">Générer les tableaux</button>
-    <button onclick="calculerASI()">Calculer les droits ASI</button>
-    <button id="exportPDF" onclick="exportToPDF()">Exporter en PDF</button>
-
-    <div id="ressourcesContainer"></div>
-    <div id="result"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
