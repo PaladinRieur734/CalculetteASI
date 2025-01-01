@@ -1,11 +1,13 @@
+/* Global Styles */
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background: #f4f4f9;
+    background-color: #f4f4f9;
 }
 
+/* Container Styles */
 .container {
     width: 90%;
     max-width: 800px;
@@ -13,18 +15,33 @@ body {
     background: #fff;
     padding: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
+/* Headings */
 h1, h2, h3 {
     text-align: center;
     color: #333;
-    margin-bottom: 10px;
+}
+
+h2 {
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background: #f0f0f5;
+    border-radius: 4px;
+}
+
+/* Input Groups */
+.input-group {
+    margin-bottom: 20px;
 }
 
 label {
     display: block;
-    margin: 10px 0 5px;
-    color: #333;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
 }
 
 input, select, button {
@@ -33,18 +50,23 @@ input, select, button {
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
+/* Button Styles */
 button {
-    background: #007bff;
+    background-color: #007bff;
     color: #fff;
+    font-size: 16px;
     cursor: pointer;
+    border: none;
 }
 
 button:hover {
-    background: #0056b3;
+    background-color: #0056b3;
 }
 
+/* Table Styles */
 #tableContainer {
     margin-top: 20px;
     position: relative;
@@ -54,31 +76,32 @@ button:hover {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
+    text-align: center;
 }
 
-#tableContainer table th,
-#tableContainer table td {
+#tableContainer th, #tableContainer td {
     border: 1px solid #ddd;
     padding: 8px;
-    text-align: center;
 }
 
-#tableContainer table th {
-    background: #f4f4f9;
+#tableContainer th {
+    background-color: #f0f0f5;
+    font-weight: bold;
 }
 
+/* Result Section */
 #resultats {
     margin-top: 20px;
-    padding: 10px;
+    padding: 15px;
     background: #f9f9f9;
     border: 1px solid #ddd;
-    text-align: center;
+    border-radius: 4px;
 }
 
 #resultats h2 {
-    text-align: center;
-    border: 1px solid #ddd;
-    background: #e9ecef;
     margin-bottom: 15px;
-    padding: 5px;
+    padding: 10px;
+    text-align: center;
+    background: #e9ecef;
+    border-radius: 4px;
 }
