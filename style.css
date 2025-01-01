@@ -40,8 +40,8 @@ h2 {
 /* Bouton + intégré au tableau */
 .add-column-btn {
     position: absolute;
-    top: -5px;
-    right: -30px;
+    top: 0;
+    right: 10px;
     background-color: #3498db;
     color: white;
     border: none;
