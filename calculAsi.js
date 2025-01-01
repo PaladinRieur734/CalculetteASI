@@ -1,154 +1,99 @@
-const plafonds = {
-    "2017": { seul: 9658.13, couple: 15592.07 },
-    "2018": { seul: 9820.46, couple: 15872.24 },
-    "2019": { seul: 9951.84, couple: 16091.92 },
-    "2020": { seul: 10068.00, couple: 16293.12 },
-    "2021": { seul: 10183.20, couple: 16396.49 },
-    "2022": { seul: 10265.16, couple: 16512.93 },
-    "2023": { seul: 10320.07, couple: 16548.23 },
-    "2024": { seul: 10536.50, couple: 16890.35 },
-};
+document.addEventListener("DOMContentLoaded", function () {
+    const statut = document.getElementById("statut");
+    const dateEffet = document.getElementById("dateEffet");
+    const abat = document.getElementById("abat");
+    const calculateButton = document.getElementById("calculate");
+    const tableContainer = document.getElementById("tableContainer");
+    const resultats = document.getElementById("resultats");
 
-function genererTableauRessources() {
-    const dateEffet = new Date(document.getElementById("dateEffet").value);
-    const statut = document.getElementById("statut").value;
+    // Fonction pour afficher le tableau
+    function afficherTableau() {
+        const table = document.createElement("table");
+        const headerRow = document.createElement("tr");
 
-    const ressourcesContainer = document.getElementById("ressourcesContainer");
-    ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
-
-    if (!statut || isNaN(dateEffet.getTime())) {
-        return; // Ne rien afficher si les champs sont vides
-    }
-
-    // Génération du tableau pour le demandeur
-    const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
-    ressourcesContainer.appendChild(tableDemandeur);
-
-    // Génération du tableau pour le conjoint si le statut est "couple"
-    if (statut === "couple") {
-        const tableConjoint = createRessourceTable("Conjoint", dateEffet);
-        ressourcesContainer.appendChild(tableConjoint);
-    }
-}
-
-function createRessourceTable(role, dateEffet) {
-    const tableContainer = document.createElement("div");
-    tableContainer.classList.add("table-container");
-
-    const title = document.createElement("h3");
-    title.textContent = `Ressources du ${role}`;
-    tableContainer.appendChild(title);
-
-    const table = document.createElement("table");
-    const header = document.createElement("tr");
-
-    // Ajout du bouton "+" pour les colonnes
-    const plusButton = document.createElement("button");
-    plusButton.textContent = "+";
-    plusButton.className = "add-column-btn";
-    plusButton.onclick = (event) => ajouterColonne(event, table);
-
-    [
-        "Mois",
-        "Pension d'invalidité",
-        "Salaires",
-        "Indemnités journalières",
-        "Chômage",
-        "BIM (Capitaux placés)",
-    ].forEach(col => {
-        const th = document.createElement("th");
-        th.textContent = col;
-        header.appendChild(th);
-    });
-    header.appendChild(plusButton);
-    table.appendChild(header);
-
-    // Génération des mois dans l'ordre inversé
-    for (let i = 3; i >= 1; i--) {
-        const mois = new Date(dateEffet);
-        mois.setMonth(mois.getMonth() - i);
-
-        const row = document.createElement("tr");
-
-        // Colonne pour le mois
-        const moisCell = document.createElement("td");
-        moisCell.textContent = mois.toLocaleString("fr-FR", { month: "long", year: "numeric" });
-        row.appendChild(moisCell);
-
-        // Colonnes pour les ressources
-        ["invalidite", "salaires", "indemnites", "chomage", "bim"].forEach(type => {
-            const cell = document.createElement("td");
-            const input = document.createElement("input");
-            input.type = "number";
-            input.id = `${role.toLowerCase()}_${type}M${4 - i}`;
-            input.placeholder = "€";
-            input.min = 0;
-            cell.appendChild(input);
-            row.appendChild(cell);
+        const columns = ["Ressource", "Montant (€)", "+"];
+        columns.forEach((col) => {
+            const th = document.createElement("th");
+            th.textContent = col;
+            headerRow.appendChild(th);
         });
 
+        table.appendChild(headerRow);
+
+        // Ligne de base
+        const row = document.createElement("tr");
+        for (let i = 0; i < columns.length; i++) {
+            const cell = document.createElement("td");
+            if (i === 0) {
+                cell.textContent = "Nouvelle ressource";
+            } else if (i === 1) {
+                const input = document.createElement("input");
+                input.type = "number";
+                input.placeholder = "Montant";
+                cell.appendChild(input);
+            } else {
+                const addButton = document.createElement("button");
+                addButton.textContent = "+";
+                addButton.onclick = ajouterLigne;
+                cell.appendChild(addButton);
+            }
+            row.appendChild(cell);
+        }
         table.appendChild(row);
+
+        tableContainer.innerHTML = ""; // Réinitialise le tableau
+        tableContainer.appendChild(table);
     }
 
-    tableContainer.appendChild(table);
-    return tableContainer;
-}
+    // Fonction pour ajouter une ligne
+    function ajouterLigne() {
+        const table = tableContainer.querySelector("table");
+        const newRow = document.createElement("tr");
 
-function ajouterColonne(event, table) {
-    event.preventDefault(); // Empêche le rafraîchissement de la page
+        for (let i = 0; i < 3; i++) {
+            const cell = document.createElement("td");
+            if (i === 0) {
+                cell.textContent = "Nouvelle ressource";
+            } else if (i === 1) {
+                const input = document.createElement("input");
+                input.type = "number";
+                input.placeholder = "Montant";
+                cell.appendChild(input);
+            } else {
+                const addButton = document.createElement("button");
+                addButton.textContent = "+";
+                addButton.onclick = ajouterLigne;
+                cell.appendChild(addButton);
+            }
+            newRow.appendChild(cell);
+        }
 
-    // Ajouter une nouvelle colonne à l'en-tête
-    const headerRow = table.querySelector("tr");
-    const newHeader = document.createElement("th");
-    const input = document.createElement("input");
-    input.type = "text";
-    input.placeholder = "Nouvelle ressource";
-    input.oninput = function () {
-        newHeader.textContent = input.value || "Nouvelle ressource";
-    };
-    newHeader.appendChild(input);
-    headerRow.appendChild(newHeader);
-
-    // Ajouter une cellule correspondante à chaque ligne
-    const rows = table.querySelectorAll("tr:not(:first-child)");
-    rows.forEach((row, index) => {
-        const newCell = document.createElement("td");
-        const input = document.createElement("input");
-        input.type = "number";
-        input.placeholder = "€";
-        input.min = 0;
-        input.id = `extra_${index + 1}_${headerRow.children.length}`;
-        newCell.appendChild(input);
-        row.appendChild(newCell);
-    });
-}
-
-function calculerASI() {
-    const statut = document.getElementById("statut").value;
-    const dateEffet = new Date(document.getElementById("dateEffet").value);
-
-    if (!statut || isNaN(dateEffet.getTime())) {
-        return; // Ne rien calculer si les champs sont vides
+        table.appendChild(newRow);
     }
 
-    const annee = dateEffet.getFullYear();
-    const plafondAnnuel = plafonds[annee]?.[statut];
-    const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
+    // Fonction pour calculer les droits
+    function calculerDroits() {
+        const inputs = tableContainer.querySelectorAll("input[type='number']");
+        let total = 0;
 
-    const result = document.getElementById("result");
-    const resultSection = document.createElement("div");
-    resultSection.classList.add("result-section");
+        inputs.forEach((input) => {
+            total += parseFloat(input.value) || 0;
+        });
 
-    // Titre des résultats
-    const titreResultats = document.createElement("h2");
-    titreResultats.textContent = `Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}`;
-    resultSection.appendChild(titreResultats);
+        const abattement = parseFloat(abat.value) || 0;
+        total -= abattement;
 
-    const demandeurRessources = calculateRessources("Demandeur", dateEffet);
-    let conjointRessources = null;
-
-    if (statut === "couple") {
-        conjointRessources = calculateRessources("Conjoint", dateEffet);
+        resultats.innerHTML = `
+            <h2>Droits ASI au ${dateEffet.value}</h2>
+            <p>Total après abattement : ${total.toFixed(2)} €</p>
+        `;
     }
 
-    const totalRessources = demandeurRessources.total + (conjointRessources
+    // Événements
+    calculateButton.addEventListener("click", calculerDroits);
+    statut.addEventListener("change", afficherTableau);
+    dateEffet.addEventListener("change", afficherTableau);
+
+    // Initialisation
+    afficherTableau();
+});
