@@ -134,7 +134,16 @@ function calculerASI() {
         return; // Ne rien calculer si les champs sont vides
     }
 
-    const annee = dateEffet.getFullYear();
+    // Obtenir l'année de la date d'effet
+    let annee = dateEffet.getFullYear();
+
+    // Si la date d'effet est après le 1er avril, utiliser l'année suivante pour les plafonds
+    const premierAvril = new Date(annee, 3, 1); // 1er avril de l'année
+    if (dateEffet >= premierAvril) {
+        annee += 1; // Utiliser l'année suivante
+    }
+
+    // Récupérer le plafond de l'année
     const plafondAnnuel = plafonds[annee]?.[statut];
     const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
 
@@ -238,11 +247,10 @@ function generateMonthlyDetails(details, role) {
                 <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
                 <tr><td>Chômage</td><td>${detail.chomage.toFixed(2)} €</td></tr>
                 <tr><td>BIM (Capitaux placés)</td><td>${detail.bim.toFixed(2)} €</td></tr>
-                ${customColumns.map((col, index) => `
-                    <tr><td>${col}</td><td>${detail.customTotal.toFixed(2)} €</td></tr>
-                `).join('')}
-                <tr><td><strong>Total mensuel</strong></td><td><strong>${detail.moisTotal.toFixed(2)} €</strong></td></tr>
-            </table>`;
+                ${detail.customTotal > 0 ? `<tr><td>Colonnes personnalisées</td><td>${detail.customTotal.toFixed(2)} €</td></tr>` : ''}
+                <tr><td><strong>Total du mois</strong></td><td><strong>${detail.moisTotal.toFixed(2)} €</strong></td></tr>
+            </table>
+        `;
     });
     return html;
 }
