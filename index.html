@@ -10,17 +10,19 @@
     <div class="container">
         <h1>Calcul des Droits ASI</h1>
 
-        <!-- Statut et Date d'effet -->
-        <div class="form-group">
-            <label for="statut">Statut</label>
-            <select id="statut">
-                <option value="seule">Personne seule</option>
-                <option value="couple">Couple</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="dateEffet">Date d'effet</label>
-            <input type="date" id="dateEffet">
+        <!-- Formulaire -->
+        <div class="form-section">
+            <div class="form-group">
+                <label for="statut">Statut</label>
+                <select id="statut">
+                    <option value="seule">Personne seule</option>
+                    <option value="couple">Couple</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dateEffet">Date d'effet</label>
+                <input type="date" id="dateEffet">
+            </div>
         </div>
 
         <!-- Tableau des ressources -->
@@ -48,6 +50,7 @@
                         <td><input type="number" placeholder="€"></td>
                         <td><input type="number" placeholder="€"></td>
                         <td><input type="number" placeholder="€"></td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
