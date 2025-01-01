@@ -216,4 +216,9 @@ function generateMonthlyDetails(details, role) {
                 <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
                 <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
                 <tr><td>Chômage</td><td>${detail.chomage.toFixed(2)} €</td></tr>
-                <tr><
+                <tr><td>BIM (Capitaux placés)</td><td>${detail.bim.toFixed(2)} €</td></tr>
+                <tr><td><strong>Total mensuel</strong></td><td><strong>${detail.moisTotal.toFixed(2)} €</strong></td></tr>
+            </table>`;
+    });
+    return html;
+}
