@@ -7,21 +7,29 @@ document.addEventListener("DOMContentLoaded", function () {
     const calculerDroitsBtn = document.getElementById("calculer-droits");
     const resultatsContainer = document.getElementById("resultats");
 
-    // Plafonds détaillés selon le statut et la date
     const plafonds = {
         "Personne seule": [
-            { date: "2024-01-01", valeur: 9000 },
-            { date: "2024-04-01", valeur: 9100 },
-            { date: "2024-07-01", valeur: 9200 },
+            { date: "2017-04-01", valeur: 9658.13 },
+            { date: "2018-04-01", valeur: 9820.46 },
+            { date: "2019-04-01", valeur: 9951.84 },
+            { date: "2020-04-01", valeur: 10068.00 },
+            { date: "2021-04-01", valeur: 10183.20 },
+            { date: "2022-04-01", valeur: 10265.16 },
+            { date: "2023-04-01", valeur: 10320.07 },
+            { date: "2024-04-01", valeur: 10536.50 },
         ],
         "Couple": [
-            { date: "2024-01-01", valeur: 14000 },
-            { date: "2024-04-01", valeur: 14100 },
-            { date: "2024-07-01", valeur: 14200 },
+            { date: "2017-04-01", valeur: 15592.07 },
+            { date: "2018-04-01", valeur: 15872.24 },
+            { date: "2019-04-01", valeur: 16091.92 },
+            { date: "2020-04-01", valeur: 16293.12 },
+            { date: "2021-04-01", valeur: 16396.49 },
+            { date: "2022-04-01", valeur: 16512.93 },
+            { date: "2023-04-01", valeur: 16548.23 },
+            { date: "2024-04-01", valeur: 16890.35 },
         ],
     };
 
-    // Trouve le plafond applicable en fonction de la date
     function getPlafond(statut, dateEffet) {
         if (!plafonds[statut]) return 0;
 
@@ -33,7 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return plafond ? plafond.valeur : 0;
     }
 
-    // Affiche ou masque le tableau en fonction des champs remplis
     function afficherTableau() {
         if (statutSelect.value && dateEffetInput.value) {
             tableauSection.style.display = "block";
@@ -43,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Crée un tableau avec des colonnes par défaut
     function creerTableau() {
         tableauContainer.innerHTML = "";
 
@@ -78,7 +84,6 @@ document.addEventListener("DOMContentLoaded", function () {
         tableauContainer.appendChild(table);
     }
 
-    // Ajoute dynamiquement une colonne au tableau
     function ajouterColonne() {
         const table = tableauContainer.querySelector("table");
 
@@ -99,7 +104,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Calcule les droits en fonction des ressources saisies
     function calculerDroits() {
         resultatsContainer.innerHTML = "";
 
@@ -122,7 +126,6 @@ document.addEventListener("DOMContentLoaded", function () {
         resultatsContainer.textContent = resultMessage;
     }
 
-    // Événements
     statutSelect.addEventListener("change", afficherTableau);
     dateEffetInput.addEventListener("input", afficherTableau);
     ajouterColonneBtn.addEventListener("click", ajouterColonne);
