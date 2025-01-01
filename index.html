@@ -3,72 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
     <title>Calcul des Droits ASI</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <h1>Calcul des Droits ASI</h1>
-        <form>
-            <!-- Section Statut -->
-            <div class="form-group">
-                <label for="statut">Statut</label>
-                <select id="statut" name="statut">
-                    <option value="personne_seule">Personne seule</option>
-                    <option value="couple">Couple</option>
-                </select>
-            </div>
 
-            <!-- Section Date d'effet -->
-            <div class="form-group">
-                <label for="date-effet">Date d'effet</label>
-                <input type="date" id="date-effet" name="date-effet">
-            </div>
+        <!-- Statut et Date d'effet -->
+        <div class="form-group">
+            <label for="statut">Statut</label>
+            <select id="statut">
+                <option value="seule">Personne seule</option>
+                <option value="couple">Couple</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="dateEffet">Date d'effet</label>
+            <input type="date" id="dateEffet">
+        </div>
 
-            <!-- Tableau des ressources trimestrielles -->
+        <!-- Tableau des ressources -->
+        <div class="table-container">
             <h2>Tableau des ressources trimestrielles</h2>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Mois</th>
-                            <th>Pension d'invalidité</th>
-                            <th>Salaire</th>
-                            <th>Indemnités journalières</th>
-                            <th>Chômage</th>
-                            <th>BIM (Capitaux placés)</th>
-                            <th>Autres ressources</th>
-                            <th>
-                                <button type="button" class="add-row">+</button>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Septembre 2024</td>
-                            <td><input type="number" step="0.01" placeholder="€"></td>
-                            <td><input type="number" step="0.01" placeholder="€"></td>
-                            <td><input type="number" step="0.01" placeholder="€"></td>
-                            <td><input type="number" step="0.01" placeholder="€"></td>
-                            <td><input type="number" step="0.01" placeholder="€"></td>
-                            <td><input type="number" step="0.01" placeholder="€"></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mois</th>
+                        <th>Pension d'invalidité</th>
+                        <th>Salaire</th>
+                        <th>Indemnités journalières</th>
+                        <th>Chômage</th>
+                        <th>BIM (Capitaux placés)</th>
+                        <th>Autres ressources</th>
+                        <th><button class="add-row">+</button></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Septembre 2024</td>
+                        <td><input type="number" placeholder="€"></td>
+                        <td><input type="number" placeholder="€"></td>
+                        <td><input type="number" placeholder="€"></td>
+                        <td><input type="number" placeholder="€"></td>
+                        <td><input type="number" placeholder="€"></td>
+                        <td><input type="number" placeholder="€"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-            <!-- Champ Abattement -->
-            <div class="form-group">
-                <label for="abattement">Abattement</label>
-                <input type="number" id="abattement" name="abattement" placeholder="Montant en €">
-            </div>
+        <!-- Abattement -->
+        <div class="form-group">
+            <label for="abattement">Abattement</label>
+            <input type="number" id="abattement" placeholder="Montant en €">
+        </div>
 
-            <!-- Résultats -->
-            <div class="results">
-                <h3 class="results-title">Droits ASI au</h3>
-                <p id="resultats">Montant calculé : 0 €</p>
-            </div>
-        </form>
+        <!-- Résultats -->
+        <div class="results">
+            <div class="results-title">Droits ASI au</div>
+            <p id="resultats">Montant calculé : 0 €</p>
+        </div>
     </div>
 </body>
 </html>
