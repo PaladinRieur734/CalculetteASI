@@ -125,7 +125,6 @@ function addCustomColumn() {
         genererTableauRessources(); // Regénérer le tableau avec la nouvelle colonne
     }
 }
-
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
@@ -141,6 +140,12 @@ function calculerASI() {
     const premierAvril = new Date(annee, 3, 1); // 1er avril de l'année
     if (dateEffet >= premierAvril) {
         annee += 1; // Utiliser l'année suivante
+    }
+
+    // Vérifier si l'année existe dans les plafonds
+    if (!plafonds[annee]) {
+        alert("Le plafond pour l'année " + annee + " n'est pas défini.");
+        return; // Sortir si l'année n'a pas de plafond défini
     }
 
     // Récupérer le plafond de l'année
