@@ -10,23 +10,24 @@
     <div class="container">
         <header>
             <h1>Calcul des Droits ASI</h1>
-            <p>Saisissez le statut et complétez les ressources pour le trimestre précédent.</p>
+            <p>Saisissez les informations ci-dessous pour générer les tableaux des ressources et calculer les droits.</p>
         </header>
 
         <form id="asiForm">
+            <!-- Section Date d'effet -->
+            <section class="date-section">
+                <label for="dateEffet">Date d'effet :</label>
+                <input type="date" id="dateEffet" onchange="genererTableauRessources()">
+            </section>
+
             <!-- Section Statut -->
             <section class="statut-section">
+                <label for="statut">Statut :</label>
                 <select id="statut" onchange="genererTableauRessources()">
                     <option value="" disabled selected>Choisissez le statut</option>
                     <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
-            </section>
-
-            <!-- Section Date d'effet -->
-            <section class="date-section">
-                <label for="dateEffet">Date d'effet :</label>
-                <input type="date" id="dateEffet" onchange="genererTableauRessources()">
             </section>
 
             <!-- Section Tableau des ressources -->
@@ -42,13 +43,12 @@
             </section>
 
             <!-- Bouton Calcul -->
-            <button type="button" onclick="calculerASI()">Calculer les droits</button>
+            <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
         </form>
 
         <!-- Résultats -->
         <div id="result" class="result"></div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
