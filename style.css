@@ -1,107 +1,94 @@
-/* Global Styles */
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
+    background-color: #f9f9f9;
 }
 
-/* Container Styles */
 .container {
-    width: 90%;
     max-width: 800px;
     margin: 20px auto;
-    background: #fff;
     padding: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: white;
     border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Headings */
 h1, h2, h3 {
     text-align: center;
-    color: #333;
 }
 
 h2 {
     margin-top: 20px;
-    border: 1px solid #ccc;
     padding: 10px;
-    background: #f0f0f5;
+    border: 1px solid #ccc;
     border-radius: 4px;
+    background-color: #f1f1f1;
 }
 
-/* Input Groups */
 .input-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 label {
+    font-weight: bold;
     display: block;
     margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
 }
 
 input, select, button {
     width: 100%;
     padding: 10px;
-    margin-bottom: 10px;
+    margin: 5px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
 }
 
-/* Button Styles */
-button {
-    background-color: #007bff;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-/* Table Styles */
 #tableContainer {
     margin-top: 20px;
     position: relative;
 }
 
-#tableContainer table {
+table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
     text-align: center;
 }
 
-#tableContainer th, #tableContainer td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-#tableContainer th {
-    background-color: #f0f0f5;
+th {
+    background-color: #f4f4f4;
     font-weight: bold;
 }
 
-/* Result Section */
-#resultats {
-    margin-top: 20px;
-    padding: 15px;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+#addColumnButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
 }
 
-#resultats h2 {
-    margin-bottom: 15px;
-    padding: 10px;
-    text-align: center;
-    background: #e9ecef;
-    border-radius: 4px;
+#addColumnButton:hover {
+    background-color: #218838;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
 }
