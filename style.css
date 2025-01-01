@@ -1,120 +1,84 @@
-/* Styles de base */
 body {
-    font-family: 'Arial', sans-serif;
-    background: #f7f8fa;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
-    color: #333;
+    background: #f4f4f9;
 }
 
 .container {
-    max-width: 900px;
-    margin: 40px auto;
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
     padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-header h1 {
-    font-size: 2em;
-    color: #2c3e50;
+h1, h2, h3 {
     text-align: center;
+    color: #333;
     margin-bottom: 10px;
 }
 
-header p {
-    text-align: center;
-    color: #7f8c8d;
-    font-size: 1em;
-}
-
-h2 {
-    color: #34495e;
-    font-size: 1.5em;
-    margin-top: 20px;
-    margin-bottom: 10px;
+label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #333;
 }
 
 input, select, button {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
     margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 button {
-    background: #3498db;
-    color: white;
-    font-weight: bold;
+    background: #007bff;
+    color: #fff;
     cursor: pointer;
-    transition: background 0.3s ease;
 }
 
 button:hover {
-    background: #2980b9;
+    background: #0056b3;
 }
 
-/* Tableau des ressources */
-.table-container {
+#tableContainer {
     margin-top: 20px;
+    position: relative;
 }
 
-table {
+#tableContainer table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
-    text-align: center;
-    table-layout: auto; /* Permet l'ajustement dynamique des colonnes */
 }
 
-table th, table td {
+#tableContainer table th,
+#tableContainer table td {
     border: 1px solid #ddd;
-    padding: 10px;
-}
-
-table th {
-    background-color: #3498db;
-    color: white;
-    font-weight: bold;
-}
-
-button.add-column-btn {
-    background: #27ae60;
-    color: white;
-    font-size: 1em;
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    cursor: pointer;
-    margin-left: 10px;
-    vertical-align: middle;
-}
-
-button.add-column-btn:hover {
-    background: #1e8449;
-}
-
-/* Résultats */
-.result {
-    margin-top: 30px;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #f7f9fa;
-    border: 2px solid #dcdfe3;
-    font-size: 1.2em;
-    color: #2c3e50;
-}
-
-.result h2 {
+    padding: 8px;
     text-align: center;
-    background: #3498db;
-    color: white;
+}
+
+#tableContainer table th {
+    background: #f4f4f9;
+}
+
+#resultats {
+    margin-top: 20px;
     padding: 10px;
-    border-radius: 5px;
-    margin: 0;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+#resultats h2 {
+    text-align: center;
+    border: 1px solid #ddd;
+    background: #e9ecef;
+    margin-bottom: 15px;
+    padding: 5px;
 }
