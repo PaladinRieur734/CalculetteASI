@@ -8,52 +8,29 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Calcul des Droits ASI</h1>
-            <p>Saisissez la date d’effet et complétez les ressources pour le trimestre précédent.</p>
-        </header>
-
-        <form id="asiForm">
-            <!-- Section Statut -->
-            <section class="statut-section">
-                <h2>Statut</h2>
-                <select id="statut" onchange="genererTableauRessources()">
-                    <option value="">-- Sélectionnez --</option>
-                    <option value="seul">Personne seule</option>
-                    <option value="couple">Couple</option>
-                </select>
-            </section>
-
-            <!-- Section Date d'effet -->
-            <section class="date-section">
-                <h2>Date d'effet</h2>
-                <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
-            </section>
-
-            <!-- Section Tableau des ressources -->
-            <section class="ressources-section">
-                <h2>
-                    Tableau des ressources trimestrielles
-                    <button type="button" class="add-column-btn" onclick="ajouterColonne(event)">+</button>
-                </h2>
-                <div id="ressourcesContainer">
-                    <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
-                </div>
-            </section>
-
-            <!-- Section Abattement -->
-            <section class="abattement-section">
-                <h2>Abattement</h2>
-                <input type="number" id="abattement" placeholder="Montant en €" min="0">
-            </section>
-
-            <!-- Bouton Calcul -->
-            <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
-        </form>
-
-        <!-- Résultats -->
-        <div id="result" class="result"></div>
+        <h1>Calcul des Droits ASI</h1>
+        <p>Saisissez la date d’effet et complétez les ressources pour le trimestre précédent.</p>
+        <label for="statut">Statut</label>
+        <select id="statut">
+            <option value="personne_seule">Personne seule</option>
+            <option value="couple">Couple</option>
+        </select>
+        <label for="dateEffet">Date d'effet</label>
+        <input type="date" id="dateEffet">
+        
+        <h2>Tableau des ressources trimestrielles</h2>
+        <div id="tableContainer">
+            <!-- Tableau dynamique -->
+        </div>
+        
+        <h3>Abattement</h3>
+        <input type="number" id="abat" placeholder="Montant en €">
+        
+        <button id="calculate">Calculer les droits</button>
+        <div id="resultats">
+            <!-- Résultats apparaîtront ici -->
+        </div>
     </div>
-    <script src="calculAsi.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
