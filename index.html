@@ -3,52 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcul des Droits ASI</title>
+    <title>Calcul de l'ASI</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Calcul des Droits ASI</h1>
-            <p>Saisissez le statut et complétez les ressources pour le trimestre précédent.</p>
+            <h1>Calcul de l'ASI</h1>
         </header>
 
-        <form id="asiForm">
-            <!-- Section Statut -->
-            <section class="statut-section">
-                <label for="statut">Statut :</label>
-                <select id="statut">
-                    <option value="seul">Personne seule</option>
-                    <option value="couple">Couple</option>
-                </select>
-            </section>
+        <section class="form-section">
+            <label for="dateEffet">Date d'effet :</label>
+            <input type="month" id="dateEffet">
 
-            <!-- Section Date d'effet -->
-            <section class="date-section">
-                <label for="dateEffet">Date d'effet :</label>
-                <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
-            </section>
+            <label for="statut">Statut :</label>
+            <select id="statut">
+                <option value="seul">Seul</option>
+                <option value="couple">Couple</option>
+            </select>
 
-            <!-- Section Tableau des ressources -->
-            <section class="ressources-section">
-                <div id="ressourcesContainer">
-                    <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
-                </div>
-            </section>
+            <label for="abattement">Abattement :</label>
+            <input type="number" id="abattement" min="0" placeholder="Abattement en €">
 
-            <!-- Section Abattement -->
-            <section class="abattement-section">
-                <label for="abattement">Montant de l'abattement :</label>
-                <input type="number" id="abattement" placeholder="Montant en €" min="0">
-            </section>
+            <button onclick="genererTableauRessources()">Générer les ressources</button>
+        </section>
 
-            <!-- Bouton Calcul -->
-            <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
-        </form>
+        <section id="ressourcesContainer"></section>
 
-        <!-- Résultats -->
-        <div id="result" class="result"></div>
+        <section class="result" id="result"></section>
     </div>
-    <script src="calculAsi.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
