@@ -72,7 +72,7 @@ form input[type="number"]::placeholder {
 }
 
 form .btn {
-    display: inline-block;
+    display: block;
     background-color: #1e90ff;
     color: #fff;
     padding: 10px 20px;
@@ -81,6 +81,7 @@ form .btn {
     font-size: 1rem;
     cursor: pointer;
     text-align: center;
+    margin: 20px auto; /* Centre le bouton */
 }
 
 form .btn:hover {
