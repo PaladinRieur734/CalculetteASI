@@ -1,106 +1,99 @@
-/* Styles de base */
+/* Styles généraux */
 body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background: #f7f8fa;
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
     margin: 0;
     padding: 0;
-    color: #333;
 }
 
 .container {
-    max-width: 900px;
-    margin: 40px auto;
+    max-width: 800px;
+    margin: 0 auto;
     padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
-header h1 {
-    font-size: 2em;
-    color: #2c3e50;
+h1 {
     text-align: center;
-    margin-bottom: 10px;
+    color: dodgerblue;
 }
 
-header p {
-    text-align: center;
-    color: #7f8c8d;
-    font-size: 1em;
-}
-
-h2 {
-    color: #34495e;
-    font-size: 1.5em;
-    margin-top: 20px;
-    margin-bottom: 10px;
+/* Formulaires */
+.form-group {
+    margin-bottom: 20px;
 }
 
 label {
     font-weight: bold;
     display: block;
-    margin-top: 10px;
-    color: #2c3e50;
+    margin-bottom: 5px;
 }
 
-input, select, button {
+input, select {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* Tableau des ressources */
+.table-container {
+    margin-top: 20px;
+    overflow-x: auto;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
 }
 
 table th, table td {
-    border: 1px solid #ddd;
-    padding: 8px;
+    padding: 10px;
+    border: 1px solid dodgerblue;
     text-align: center;
 }
 
-table th {
-    background-color: #3498db;
+thead th {
+    background-color: dodgerblue;
     color: white;
-    font-weight: bold;
 }
 
-.info {
-    color: #7f8c8d;
-    font-style: italic;
-}
-
-button {
-    background: #3498db;
+.add-row {
+    background-color: dodgerblue;
     color: white;
-    font-weight: bold;
+    font-size: 18px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
-    -webkit-transition: background 0.3s ease;
-    -moz-transition: background 0.3s ease;
-    -o-transition: background 0.3s ease;
-    transition: background 0.3s ease;
+    padding: 5px 10px;
 }
 
-button:hover {
-    background: #2980b9;
+.add-row:hover {
+    background-color: #1e90ff;
 }
 
-.result {
+/* Section Résultats */
+.results {
     margin-top: 30px;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #f7f9fa;
-    border: 2px solid #dcdfe3;
-    font-size: 1.2em;
-    color: #2c3e50;
+    text-align: center;
 }
 
-section {
-    margin-bottom: 20px;
+.results-title {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: dodgerblue;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+#resultats {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #333;
 }
