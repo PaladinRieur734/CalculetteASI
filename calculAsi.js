@@ -48,8 +48,7 @@ function createRessourceTable(role, dateEffet) {
         "Pension d'invalidité",
         "Salaires",
         "Indemnités journalières",
-        "Chômage",
-        "BIM (Capitaux placés)"
+        "Chômage"
     ].forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
@@ -88,7 +87,7 @@ function createRessourceTable(role, dateEffet) {
         row.appendChild(moisCell);
 
         // Colonnes pour les ressources
-        ["invalidite", "salaires", "indemnites", "chomage", "bim"].forEach(type => {
+        ["invalidite", "salaires", "indemnites", "chomage"].forEach(type => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
@@ -227,8 +226,6 @@ function calculateRessources(role, dateEffet) {
         const salaires = parseFloat(document.getElementById(`${role.toLowerCase()}_salairesM${i + 1}`).value) || 0;
         const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${i + 1}`).value) || 0;
         const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${i + 1}`).value) || 0;
-        const bimBrut = parseFloat(document.getElementById(`${role.toLowerCase()}_bimM${i + 1}`).value) || 0;
-        const bim = (bimBrut * 0.03) / 4;
 
         let customTotal = 0;
         customColumns.forEach((col, index) => {
@@ -236,7 +233,7 @@ function calculateRessources(role, dateEffet) {
             customTotal += customInput;
         });
 
-        const moisTotal = invalidite + salaires + indemnites + chomage + bim + customTotal;
+        const moisTotal = invalidite + salaires + indemnites + chomage + customTotal;
         total += moisTotal;
 
         details.push({
@@ -245,7 +242,6 @@ function calculateRessources(role, dateEffet) {
             salaires,
             indemnites,
             chomage,
-            bim,
             customTotal,
             moisTotal,
         });
@@ -264,7 +260,6 @@ function generateMonthlyDetails(details, role) {
                 <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
                 <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
                 <tr><td>Chômage</td><td>${detail.chomage.toFixed(2)} €</td></tr>
-                <tr><td>BIM (Capitaux placés)</td><td>${detail.bim.toFixed(2)} €</td></tr>
                 ${detail.customTotal > 0 ? `<tr><td>Colonnes personnalisées</td><td>${detail.customTotal.toFixed(2)} €</td></tr>` : ''}
                 <tr><td><strong>Total du mois</strong></td><td><strong>${detail.moisTotal.toFixed(2)} €</strong></td></tr>
             </table>
