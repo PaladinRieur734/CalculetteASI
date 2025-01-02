@@ -12,15 +12,14 @@ const plafonds = {
 let customColumns = [];
 
 function genererTableauRessources() {
-    const dateEffet = new Date(document.getElementById("dateEffet").value);
-    const statut = document.getElementById("statut").value;
     const debutPeriode = new Date(document.getElementById("debutPeriode").value);
     const finPeriode = new Date(document.getElementById("finPeriode").value);
+    const statut = document.getElementById("statut").value;
 
     const ressourcesContainer = document.getElementById("ressourcesContainer");
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
 
-    if (!statut || isNaN(dateEffet.getTime()) || isNaN(debutPeriode.getTime()) || isNaN(finPeriode.getTime())) {
+    if (!statut || isNaN(debutPeriode.getTime()) || isNaN(finPeriode.getTime())) {
         return; // Ne rien afficher si les champs sont vides ou invalides
     }
 
@@ -142,13 +141,13 @@ function calculerASI() {
 
     let current = new Date(debutPeriode);
     while (current <= finPeriode) {
-        const trimestre = getTrimester(current, dateEffet, statut);
-        result.appendChild(trimestre);
+        const trimestreResult = getTrimesterResult(current, statut, dateEffet);
+        result.appendChild(trimestreResult);
         current.setMonth(current.getMonth() + 3);
     }
 }
 
-function getTrimester(startMonth, dateEffet, statut) {
+function getTrimesterResult(startMonth, statut, dateEffet) {
     const resultSection = document.createElement("div");
     resultSection.classList.add("result-section");
 
@@ -156,8 +155,18 @@ function getTrimester(startMonth, dateEffet, statut) {
     const plafondAnnuel = plafonds[annee]?.[statut];
     const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
 
-    const trimestreDetails = []; // Ajouter les détails mois par mois ici
-    const totalRessources = 0; // Calcul à compléter pour chaque trimestre
+    let trimestreDetails = []; // Ajouter les détails mois par mois ici
+    let totalRessources = 0;
+
+    // Calcul des ressources pour le trimestre
+    for (let i = 0; i < 3; i++) {
+        const mois = new Date(startMonth);
+        mois.setMonth(mois.getMonth() + i);
+        const ressourcesMois = calculateMonthlyResources("Demandeur", mois);
+        totalRessources += ressourcesMois.total;
+        trimestreDetails.push({ mois: mois.toLocaleString("fr-FR", { month: "long", year: "numeric" }), ...ressourcesMois });
+    }
+
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalApresAbattement = totalRessources - abattement;
 
@@ -165,18 +174,24 @@ function getTrimester(startMonth, dateEffet, statut) {
     titreResultats.textContent = `Droits ASI au ${startMonth.toLocaleDateString("fr-FR")}`;
     resultSection.appendChild(titreResultats);
 
-    // Ajoutez ici les détails des ressources mois par mois...
+    trimestreDetails.forEach(detail => {
+        resultSection.innerHTML += `
+            <h4>${detail.mois}</h4>
+            <table>
+                <tr><td>Pension d'invalidité</td><td>${detail.invalidite.toFixed(2)} €</td></tr>
+                <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
+                <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
+                <tr><td>Chômage</td><td>${detail.chomage.toFixed(2)} €</td></tr>
+                <tr><td>BIM</td><td>${detail.bim.toFixed(2)} €</td></tr>
+                <tr><td><strong>Total mensuel</strong></td><td><strong>${detail.total.toFixed(2)} €</strong></td></tr>
+            </table>
+        `;
+    });
 
     // Conclusion
     const conclusion = document.createElement("p");
     if (totalApresAbattement > plafondTrimestriel) {
-        conclusion.textContent = `Les ressources trimestrielles, soit ${totalApresAbattement.toFixed(2)} €, dépassent le plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €. Aucun droit à l’ASI n’est attribué.`;
+        conclusion.textContent = `Les ressources de l'intéressé(e) au cours du trimestre de référence, soit ${totalApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas lui être attribuée à effet du ${startMonth.toLocaleDateString("fr-FR")}.`;
     } else {
         const montantASI = plafondTrimestriel - totalApresAbattement;
-        const montantMensuelASI = montantASI / 3;
-        conclusion.textContent = `Le montant trimestriel de l’ASI est de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € - ${totalApresAbattement.toFixed(2)} €). Montant mensuel dû : ${montantMensuelASI.toFixed(2)} €.`;
-    }
-    resultSection.appendChild(conclusion);
-
-    return resultSection;
-}
+        const montantMensuelASI = montant
