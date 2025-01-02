@@ -50,11 +50,6 @@ function createRessourceTable(role, periodeDebut, periodeFin) {
         header.appendChild(th);
     });
 
-    // Colonne BIM
-    const bimHeader = document.createElement("th");
-    bimHeader.textContent = "BIM (Capitaux placés)";
-    header.appendChild(bimHeader);
-
     table.appendChild(header);
 
     let currentMonth = new Date(periodeDebut);
@@ -75,16 +70,6 @@ function createRessourceTable(role, periodeDebut, periodeFin) {
             cell.appendChild(input);
             row.appendChild(cell);
         });
-
-        // Ajouter le champ BIM pour chaque mois
-        const bimCell = document.createElement("td");
-        const bimInput = document.createElement("input");
-        bimInput.type = "number";
-        bimInput.id = `${role.toLowerCase()}_bim_${currentMonth.getMonth()}_${currentMonth.getFullYear()}`;
-        bimInput.placeholder = "€";
-        bimInput.min = 0;
-        bimCell.appendChild(bimInput);
-        row.appendChild(bimCell);
 
         table.appendChild(row);
         currentMonth.setMonth(currentMonth.getMonth() + 1);
@@ -123,30 +108,28 @@ function calculerASI() {
     }
     const plafondTrimestriel = plafondAnnuel / 4;
 
+    // Calcul du trimestre de la date d'effet
     let currentQuarterStart = new Date(dateEffet);
     currentQuarterStart.setMonth(currentQuarterStart.getMonth() - 3);
 
-    while (currentQuarterStart <= periodeFin) {
-        const trimestreTotal = calculateQuarterlyResources(currentQuarterStart, statut, trimestreDetails);
-        const abattement = parseFloat(document.getElementById("abattement").value) || 0;
-        const totalAfterDeduction = trimestreTotal - abattement;
+    // Calcul des ressources sur 3 mois seulement
+    const trimestreTotal = calculateQuarterlyResources(currentQuarterStart, statut, trimestreDetails);
+    const abattement = parseFloat(document.getElementById("abattement").value) || 0;
+    const totalAfterDeduction = trimestreTotal - abattement;
 
-        result.innerHTML += `
-            <h2 class="result-title">Droits ASI au ${currentQuarterStart.toLocaleDateString("fr-FR")}</h2>
-            ${generateMonthlyDetails(trimestreDetails)}
-            <h3>Résumé du trimestre</h3>
-            <p>Total trimestriel avant abattement : ${trimestreTotal.toFixed(2)} €</p>
-            <p>Total après abattement : ${totalAfterDeduction.toFixed(2)} €</p>
-            <p>Plafond trimestriel : ${plafondTrimestriel.toFixed(2)} €</p>`;
+    result.innerHTML += `
+        <h2 class="result-title">Droits ASI au ${currentQuarterStart.toLocaleDateString("fr-FR")}</h2>
+        ${generateMonthlyDetails(trimestreDetails)}
+        <h3>Résumé du trimestre</h3>
+        <p>Total trimestriel avant abattement : ${trimestreTotal.toFixed(2)} €</p>
+        <p>Total après abattement : ${totalAfterDeduction.toFixed(2)} €</p>
+        <p>Plafond trimestriel : ${plafondTrimestriel.toFixed(2)} €</p>`;
 
-        if (totalAfterDeduction > plafondTrimestriel) {
-            result.innerHTML += `<p>Les ressources combinées, soit ${totalAfterDeduction.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l'allocation supplémentaire d'invalidité n'est pas attribuée à effet du ${currentQuarterStart.toLocaleDateString("fr-FR")}.</p>`;
-        } else {
-            const montantASI = plafondTrimestriel - totalAfterDeduction;
-            result.innerHTML += `<p>Montant trimestriel de l'ASI : ${montantASI.toFixed(2)} €.</p>`;
-        }
-
-        currentQuarterStart.setMonth(currentQuarterStart.getMonth() + 3);
+    if (totalAfterDeduction > plafondTrimestriel) {
+        result.innerHTML += `<p>Les ressources combinées, soit ${totalAfterDeduction.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l'allocation supplémentaire d'invalidité n'est pas attribuée à effet du ${currentQuarterStart.toLocaleDateString("fr-FR")}.</p>`;
+    } else {
+        const montantASI = plafondTrimestriel - totalAfterDeduction;
+        result.innerHTML += `<p>Montant trimestriel de l'ASI : ${montantASI.toFixed(2)} €.</p>`;
     }
 }
 
