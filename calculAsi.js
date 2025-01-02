@@ -133,30 +133,36 @@ function calculerASI() {
     }
     const plafondTrimestriel = plafondAnnuel / 4;
 
+    // Correction de la date de début du trimestre : prendre le trimestre précédent la date d'effet
     let currentQuarterStart = new Date(dateEffet);
     currentQuarterStart.setMonth(currentQuarterStart.getMonth() - 3);
+    currentQuarterStart.setDate(1); // Assurer que c'est le premier jour du mois du trimestre précédent
+    let currentQuarterEnd = new Date(currentQuarterStart);
+    currentQuarterEnd.setMonth(currentQuarterEnd.getMonth() + 2); // Fin du trimestre
 
-    while (currentQuarterStart <= periodeFin) {
-        const trimestreTotal = calculateQuarterlyResources(currentQuarterStart, statut, trimestreDetails);
-        const abattement = parseFloat(document.getElementById("abattement").value) || 0;
-        const totalAfterDeduction = trimestreTotal - abattement;
+    // Vérifier si la période de début de l'ASI inclut le trimestre précédent
+    if (currentQuarterStart > periodeFin || currentQuarterEnd < periodeDebut) {
+        alert("La période sélectionnée ne couvre pas le trimestre précédent la date d'effet.");
+        return;
+    }
 
-        result.innerHTML += `
-            <h2 class="result-title">Droits ASI au ${currentQuarterStart.toLocaleDateString("fr-FR")}</h2>
-            ${generateMonthlyDetails(trimestreDetails)}
-            <h3>Résumé du trimestre</h3>
-            <p>Total trimestriel avant abattement : ${trimestreTotal.toFixed(2)} €</p>
-            <p>Total après abattement : ${totalAfterDeduction.toFixed(2)} €</p>
-            <p>Plafond trimestriel : ${plafondTrimestriel.toFixed(2)} €</p>`;
+    const trimestreTotal = calculateQuarterlyResources(currentQuarterStart, statut, trimestreDetails);
+    const abattement = parseFloat(document.getElementById("abattement").value) || 0;
+    const totalAfterDeduction = trimestreTotal - abattement;
 
-        if (totalAfterDeduction > plafondTrimestriel) {
-            result.innerHTML += `<p>Les ressources combinées, soit ${totalAfterDeduction.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l'allocation supplémentaire d'invalidité n'est pas attribuée à effet du ${currentQuarterStart.toLocaleDateString("fr-FR")}.</p>`;
-        } else {
-            const montantASI = plafondTrimestriel - totalAfterDeduction;
-            result.innerHTML += `<p>Montant trimestriel de l'ASI : ${montantASI.toFixed(2)} €.</p>`;
-        }
+    result.innerHTML += `
+        <h2 class="result-title">Droits ASI au ${currentQuarterStart.toLocaleDateString("fr-FR")}</h2>
+        ${generateMonthlyDetails(trimestreDetails)}
+        <h3>Résumé du trimestre</h3>
+        <p>Total trimestriel avant abattement : ${trimestreTotal.toFixed(2)} €</p>
+        <p>Total après abattement : ${totalAfterDeduction.toFixed(2)} €</p>
+        <p>Plafond trimestriel : ${plafondTrimestriel.toFixed(2)} €</p>`;
 
-        currentQuarterStart.setMonth(currentQuarterStart.getMonth() + 3);
+    if (totalAfterDeduction > plafondTrimestriel) {
+        result.innerHTML += `<p>Les ressources combinées, soit ${totalAfterDeduction.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l'allocation supplémentaire d'invalidité n'est pas attribuée à effet du ${currentQuarterStart.toLocaleDateString("fr-FR")}.</p>`;
+    } else {
+        const montantASI = plafondTrimestriel - totalAfterDeduction;
+        result.innerHTML += `<p>Montant trimestriel de l'ASI : ${montantASI.toFixed(2)} €.</p>`;
     }
 }
 
