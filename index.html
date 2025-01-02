@@ -10,14 +10,15 @@
     <div class="container">
         <header>
             <h1>Calcul des Droits ASI</h1>
-            <p>Saisissez le statut et complétez les ressources pour le trimestre précédent.</p>
+            <p>Saisissez les informations nécessaires pour calculer les droits ASI.</p>
         </header>
 
         <form id="asiForm">
             <!-- Section Statut -->
             <section class="statut-section">
                 <label for="statut">Statut :</label>
-                <select id="statut">
+                <select id="statut" onchange="genererTableauRessources()">
+                    <option value="" disabled selected>Choisissez le statut</option>
                     <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
@@ -29,11 +30,19 @@
                 <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
             </section>
 
+            <!-- Section Période des ressources -->
+            <section class="periode-section">
+                <label for="debutPeriode">Début de la période :</label>
+                <input type="date" id="debutPeriode">
+                <label for="finPeriode">Fin de la période :</label>
+                <input type="date" id="finPeriode">
+                <button type="button" onclick="genererTableauRessources()">Valider la période</button>
+            </section>
+
             <!-- Section Tableau des ressources -->
             <section class="ressources-section">
-                <div id="ressourcesContainer">
-                    <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
-                </div>
+                <h2>Tableau des ressources trimestrielles</h2>
+                <div id="ressourcesContainer"></div>
             </section>
 
             <!-- Section Abattement -->
