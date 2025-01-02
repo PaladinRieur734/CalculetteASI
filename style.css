@@ -25,7 +25,7 @@ header {
 }
 
 header h1 {
-    color: #1e90ff; /* Bleu Dodger */
+    color: #1e90ff;
     font-size: 2rem;
     margin: 0;
 }
@@ -38,14 +38,6 @@ header p {
 /* Formulaire */
 form section {
     margin-bottom: 20px;
-}
-
-form section h2 {
-    font-size: 1.2rem;
-    color: #1e90ff; /* Bleu Dodger */
-    border-bottom: 2px solid #1e90ff;
-    padding-bottom: 5px;
-    margin-bottom: 10px;
 }
 
 form label {
@@ -66,19 +58,6 @@ form select {
     box-sizing: border-box;
 }
 
-form input[type="number"]::placeholder {
-    font-style: italic;
-    color: #aaa;
-}
-
-/* Focus sur les éléments du formulaire */
-form input:focus,
-form select:focus {
-    border-color: #1e90ff;
-    outline: none;
-}
-
-/* Bouton */
 form .btn {
     display: block;
     background-color: #1e90ff;
@@ -89,7 +68,7 @@ form .btn {
     font-size: 1rem;
     cursor: pointer;
     text-align: center;
-    margin: 20px auto; /* Centre le bouton */
+    margin: 20px auto;
     transition: background-color 0.3s ease;
 }
 
@@ -97,15 +76,9 @@ form .btn:hover {
     background-color: #005bb5;
 }
 
-/* Tableau des ressources */
+/* Tableau */
 .table-container {
     margin-bottom: 20px;
-}
-
-.table-container h3 {
-    color: #1e90ff; /* Bleu Dodger */
-    font-size: 1.1rem;
-    margin-bottom: 10px;
 }
 
 .table-container table {
@@ -143,33 +116,5 @@ form .btn:hover {
     color: #fff;
     padding: 10px;
     border-radius: 4px;
-    margin: 0 0 20px 0;
-}
-
-.result h4,
-.result h5 {
-    margin: 10px 0;
-    color: #1e90ff; /* Bleu Dodger */
-}
-
-.result table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
     margin-bottom: 20px;
-}
-
-.result td {
-    padding: 8px;
-    border: 1px solid #ddd;
-}
-
-.result td:first-child {
-    font-weight: bold;
-
-/* Style pour les messages d'erreur */
-.error-message {
-    color: red;
-    font-size: 0.9rem;
-    margin-top: 10px;
 }
