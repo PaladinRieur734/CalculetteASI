@@ -165,7 +165,18 @@ function getTrimester(startMonth, dateEffet, statut) {
     titreResultats.textContent = `Droits ASI au ${startMonth.toLocaleDateString("fr-FR")}`;
     resultSection.appendChild(titreResultats);
 
-    // Détail mensuel et autres calculs...
+    // Ajoutez ici les détails des ressources mois par mois...
+
+    // Conclusion
+    const conclusion = document.createElement("p");
+    if (totalApresAbattement > plafondTrimestriel) {
+        conclusion.textContent = `Les ressources trimestrielles, soit ${totalApresAbattement.toFixed(2)} €, dépassent le plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €. Aucun droit à l’ASI n’est attribué.`;
+    } else {
+        const montantASI = plafondTrimestriel - totalApresAbattement;
+        const montantMensuelASI = montantASI / 3;
+        conclusion.textContent = `Le montant trimestriel de l’ASI est de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € - ${totalApresAbattement.toFixed(2)} €). Montant mensuel dû : ${montantMensuelASI.toFixed(2)} €.`;
+    }
+    resultSection.appendChild(conclusion);
 
     return resultSection;
 }
