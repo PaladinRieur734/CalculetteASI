@@ -195,3 +195,27 @@ function getTrimesterResult(startMonth, statut, dateEffet) {
     } else {
         const montantASI = plafondTrimestriel - totalApresAbattement;
         const montantMensuelASI = montant
+                const montantMensuelASI = montantASI / 3;
+        conclusion.textContent = `Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${totalApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${startMonth.toLocaleDateString("fr-FR")}.`;
+    }
+
+    resultSection.appendChild(conclusion);
+    return resultSection;
+}
+
+function calculateMonthlyResources(role, mois) {
+    const invalidite = parseFloat(document.getElementById(`${role.toLowerCase()}_invalidite_${mois.getMonth()}_${mois.getFullYear()}`)?.value) || 0;
+    const salaires = parseFloat(document.getElementById(`${role.toLowerCase()}_salaires_${mois.getMonth()}_${mois.getFullYear()}`)?.value) || 0;
+    const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnites_${mois.getMonth()}_${mois.getFullYear()}`)?.value) || 0;
+    const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomage_${mois.getMonth()}_${mois.getFullYear()}`)?.value) || 0;
+    const bim = (parseFloat(document.getElementById(`${role.toLowerCase()}_bim_${mois.getMonth()}_${mois.getFullYear()}`)?.value) || 0) * 0.03 / 4;
+
+    let customTotal = 0;
+    customColumns.forEach((col, index) => {
+        customTotal += parseFloat(document.getElementById(`${role.toLowerCase()}_custom${index}_${mois.getMonth()}_${mois.getFullYear()}`)?.value) || 0;
+    });
+
+    const total = invalidite + salaires + indemnites + chomage + bim + customTotal;
+    return { invalidite, salaires, indemnites, chomage, bim, customTotal, total };
+}
+
