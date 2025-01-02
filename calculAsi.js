@@ -44,7 +44,7 @@ function createRessourceTable(role, periodeDebut, periodeFin) {
     const table = document.createElement("table");
     const header = document.createElement("tr");
 
-    ["Mois", "Pension d'invalidité", "Salaires", "Indemnités journalières", "Chômage"].forEach(col => {
+    ["Mois", "Pension d'invalidité", "Salaires", "Indemnités journalières", "Chômage", "BIM (Capitaux placés)"].forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
         header.appendChild(th);
@@ -74,7 +74,7 @@ function createRessourceTable(role, periodeDebut, periodeFin) {
         moisCell.textContent = currentMonth.toLocaleString("fr-FR", { month: "long", year: "numeric" });
         row.appendChild(moisCell);
 
-        ["invalidite", "salaires", "indemnites", "chomage"].forEach(type => {
+        ["invalidite", "salaires", "indemnites", "chomage", "bim"].forEach(type => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
@@ -134,7 +134,7 @@ function calculerASI() {
     const plafondTrimestriel = plafondAnnuel / 4;
 
     let currentQuarterStart = new Date(dateEffet);
-    currentQuarterStart.setMonth(currentQuarterStart.getMonth() - 3); // Commence au trimestre précédent
+    currentQuarterStart.setMonth(currentQuarterStart.getMonth() - 3);
 
     while (currentQuarterStart <= periodeFin) {
         const trimestreTotal = calculateQuarterlyResources(currentQuarterStart, statut, trimestreDetails);
@@ -170,14 +170,16 @@ function calculateQuarterlyResources(quarterStart, statut, trimestreDetails) {
         const invalidite = parseFloat(document.getElementById(`demandeur_invalidite_${mois.getMonth()}_${mois.getFullYear()}`).value) || 0;
         const salaires = parseFloat(document.getElementById(`demandeur_salaires_${mois.getMonth()}_${mois.getFullYear()}`).value) || 0;
         const indemnites = parseFloat(document.getElementById(`demandeur_indemnites_${mois.getMonth()}_${mois.getFullYear()}`).value) || 0;
+        const bim = parseFloat(document.getElementById(`demandeur_bim_${mois.getMonth()}_${mois.getFullYear()}`).value) || 0;
 
-        trimestreTotal += invalidite + salaires + indemnites;
+        trimestreTotal += invalidite + salaires + indemnites + bim;
 
         trimestreDetails.push({
             mois: mois.toLocaleString("fr-FR", { month: "long", year: "numeric" }),
             invalidite,
             salaires,
             indemnites,
+            bim,
         });
     }
 
@@ -193,7 +195,8 @@ function generateMonthlyDetails(details) {
                 <tr><td>Pension d'invalidité</td><td>${detail.invalidite.toFixed(2)} €</td></tr>
                 <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
                 <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
-                <tr><td><strong>Total mensuel</strong></td><td><strong>${(detail.invalidite + detail.salaires + detail.indemnites).toFixed(2)} €</strong></td></tr>
+                <tr><td>BIM</td><td>${detail.bim.toFixed(2)} €</td></tr>
+                <tr><td><strong>Total mensuel</strong></td><td><strong>${(detail.invalidite + detail.salaires + detail.indemnites + detail.bim).toFixed(2)} €</strong></td></tr>
             </table>`;
     });
     return html;
