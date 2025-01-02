@@ -44,25 +44,16 @@ function createRessourceTable(role, periodeDebut, periodeFin) {
     const table = document.createElement("table");
     const header = document.createElement("tr");
 
-    ["Mois", "Pension d'invalidité", "Salaires", "Indemnités journalières", "Chômage", "BIM (Capitaux placés)"].forEach(col => {
+    ["Mois", "Pension d'invalidité", "Salaires", "Indemnités journalières"].forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
         header.appendChild(th);
     });
 
-    customColumns.forEach(col => {
-        const th = document.createElement("th");
-        th.textContent = col;
-        header.appendChild(th);
-    });
-
-    const thPlus = document.createElement("th");
-    const btnPlus = document.createElement("button");
-    btnPlus.textContent = "+";
-    btnPlus.classList.add("add-column-btn");
-    btnPlus.onclick = () => addCustomColumn();
-    thPlus.appendChild(btnPlus);
-    header.appendChild(thPlus);
+    // Colonne BIM
+    const bimHeader = document.createElement("th");
+    bimHeader.textContent = "BIM (Capitaux placés)";
+    header.appendChild(bimHeader);
 
     table.appendChild(header);
 
@@ -74,7 +65,7 @@ function createRessourceTable(role, periodeDebut, periodeFin) {
         moisCell.textContent = currentMonth.toLocaleString("fr-FR", { month: "long", year: "numeric" });
         row.appendChild(moisCell);
 
-        ["invalidite", "salaires", "indemnites", "chomage", "bim"].forEach(type => {
+        ["invalidite", "salaires", "indemnites"].forEach(type => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
@@ -85,16 +76,15 @@ function createRessourceTable(role, periodeDebut, periodeFin) {
             row.appendChild(cell);
         });
 
-        customColumns.forEach((col, index) => {
-            const cell = document.createElement("td");
-            const input = document.createElement("input");
-            input.type = "number";
-            input.id = `${role.toLowerCase()}_custom${index}_${currentMonth.getMonth()}_${currentMonth.getFullYear()}`;
-            input.placeholder = "€";
-            input.min = 0;
-            cell.appendChild(input);
-            row.appendChild(cell);
-        });
+        // Ajouter le champ BIM pour chaque mois
+        const bimCell = document.createElement("td");
+        const bimInput = document.createElement("input");
+        bimInput.type = "number";
+        bimInput.id = `${role.toLowerCase()}_bim_${currentMonth.getMonth()}_${currentMonth.getFullYear()}`;
+        bimInput.placeholder = "€";
+        bimInput.min = 0;
+        bimCell.appendChild(bimInput);
+        row.appendChild(bimCell);
 
         table.appendChild(row);
         currentMonth.setMonth(currentMonth.getMonth() + 1);
@@ -181,6 +171,10 @@ function calculateQuarterlyResources(quarterStart, statut, trimestreDetails) {
         });
     }
 
+    const bimPreviousYear = parseFloat(document.getElementById("bimPreviousYear").value) || 0;
+    const bimsPercentage = (bimPreviousYear * 0.03) / 4;
+    trimestreTotal += bimsPercentage;
+
     return trimestreTotal;
 }
 
@@ -191,10 +185,8 @@ function generateMonthlyDetails(details) {
             <table>
                 <tr><td>${detail.mois}</td></tr>
                 <tr><td>Pension d'invalidité</td><td>${detail.invalidite.toFixed(2)} €</td></tr>
-                <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)}
                 <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
                 <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
-                <tr><td><strong>Total mensuel</strong></td><td><strong>${(detail.invalidite + detail.salaires + detail.indemnites).toFixed(2)} €</strong></td></tr>
             </table>`;
     });
     return html;
