@@ -125,7 +125,6 @@ function calculerASI() {
     const result = document.getElementById("result");
     result.innerHTML = "";
 
-    const trimestreDetails = [];
     const plafondAnnuel = plafonds[dateEffet.getFullYear()]?.[statut];
     if (!plafondAnnuel) {
         alert("Plafond introuvable pour l'année sélectionnée.");
@@ -133,19 +132,21 @@ function calculerASI() {
     }
     const plafondTrimestriel = plafondAnnuel / 4;
 
-    // Correction de la date de début du trimestre : prendre le trimestre précédent la date d'effet
+    // Calcul du trimestre précédent la date d'effet
     let currentQuarterStart = new Date(dateEffet);
-    currentQuarterStart.setMonth(currentQuarterStart.getMonth() - 3);
-    currentQuarterStart.setDate(1); // Assurer que c'est le premier jour du mois du trimestre précédent
+    currentQuarterStart.setMonth(currentQuarterStart.getMonth() - 3); // Début du trimestre
+    currentQuarterStart.setDate(1); // Premier jour du mois du trimestre précédent
+
     let currentQuarterEnd = new Date(currentQuarterStart);
     currentQuarterEnd.setMonth(currentQuarterEnd.getMonth() + 2); // Fin du trimestre
 
-    // Vérifier si la période de début de l'ASI inclut le trimestre précédent
+    // Vérifier que la période sélectionnée couvre ce trimestre
     if (currentQuarterStart > periodeFin || currentQuarterEnd < periodeDebut) {
         alert("La période sélectionnée ne couvre pas le trimestre précédent la date d'effet.");
         return;
     }
 
+    const trimestreDetails = [];
     const trimestreTotal = calculateQuarterlyResources(currentQuarterStart, statut, trimestreDetails);
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalAfterDeduction = trimestreTotal - abattement;
@@ -159,7 +160,7 @@ function calculerASI() {
         <p>Plafond trimestriel : ${plafondTrimestriel.toFixed(2)} €</p>`;
 
     if (totalAfterDeduction > plafondTrimestriel) {
-        result.innerHTML += `<p>Les ressources combinées, soit ${totalAfterDeduction.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l'allocation supplémentaire d'invalidité n'est pas attribuée à effet du ${currentQuarterStart.toLocaleDateString("fr-FR")}.</p>`;
+        result.innerHTML += `<p>Les ressources combinées, soit ${totalAfterDeduction.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l'allocation supplémentaire d'invalidité n'est pas attribuée.</p>`;
     } else {
         const montantASI = plafondTrimestriel - totalAfterDeduction;
         result.innerHTML += `<p>Montant trimestriel de l'ASI : ${montantASI.toFixed(2)} €.</p>`;
