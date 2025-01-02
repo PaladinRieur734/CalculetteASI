@@ -73,11 +73,10 @@ function createRessourceTable(role, dateEffet) {
 
     table.appendChild(header);
 
-    // Génération des mois dans l'ordre inversé pour le trimestre
-    const moisStart = getPreviousQuarter(dateEffet);
-    for (let i = 0; i < 3; i++) {
-        const mois = new Date(moisStart);
-        mois.setMonth(mois.getMonth() + i);
+    // Génération des mois dans l'ordre inversé
+    for (let i = 3; i >= 1; i--) {
+        const mois = new Date(dateEffet);
+        mois.setMonth(mois.getMonth() - i);
 
         const row = document.createElement("tr");
 
@@ -91,7 +90,7 @@ function createRessourceTable(role, dateEffet) {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
-            input.id = `${role.toLowerCase()}_${type}M${i + 1}`;
+            input.id = `${role.toLowerCase()}_${type}M${4 - i}`;
             input.placeholder = "€";
             input.min = 0;
             cell.appendChild(input);
@@ -103,7 +102,7 @@ function createRessourceTable(role, dateEffet) {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
-            input.id = `${role.toLowerCase()}_custom${index}M${i + 1}`;
+            input.id = `${role.toLowerCase()}_custom${index}M${4 - i}`;
             input.placeholder = "€";
             input.min = 0;
             cell.appendChild(input);
@@ -126,13 +125,6 @@ function addCustomColumn() {
     }
 }
 
-function getPreviousQuarter(dateEffet) {
-    const mois = dateEffet.getMonth();
-    const trimestre = Math.floor(mois / 3);
-    const moisStart = trimestre * 3 - 3;
-    return new Date(dateEffet.getFullYear(), moisStart, 1);
-}
-
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
@@ -144,11 +136,11 @@ function calculerASI() {
     // Obtenir l'année de la date d'effet
     let annee = dateEffet.getFullYear();
 
-    // Vérifier si la date d'effet est dans le premier trimestre
+    // Vérifier si la date d'effet est entre le 1er janvier et le 31 mars
     const premierJanvier = new Date(annee, 0, 1); // 1er janvier de l'année
     const premierAvril = new Date(annee, 3, 1); // 1er avril de l'année
 
-    // Si la date est dans le premier trimestre, on utilise l'année précédente
+    // Si la date est entre le 1er janvier et le 31 mars, on utilise l'année précédente
     if (dateEffet >= premierJanvier && dateEffet < premierAvril) {
         annee -= 1; // Utiliser l'année précédente
     }
@@ -217,23 +209,26 @@ function calculateRessources(role, dateEffet) {
     const details = [];
     let total = 0;
 
-    const moisStart = getPreviousQuarter(dateEffet);
-    for (let i = 0; i < 3; i++) {
-        const mois = new Date(moisStart);
-        mois.setMonth(mois.getMonth() + i);
+    for (let i = 3; i >= 1; i--) {
+        const mois = new Date(dateEffet);
+        mois.setMonth(mois.getMonth() - i);
 
-        const invalidite = parseFloat(document.getElementById(`${role.toLowerCase()}_invaliditeM${i + 1}`).value) || 0;
-        const salaires = parseFloat(document.getElementById(`${role.toLowerCase()}_salairesM${i + 1}`).value) || 0;
-        const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${i + 1}`).value) || 0;
-        const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${i + 1}`).value) || 0;
+        const invalidite = parseFloat(document.getElementById(`${role.toLowerCase()}_invaliditeM${4 - i}`).value) || 0;
+        const salaires = parseFloat(document.getElementById(`${role.toLowerCase()}_salairesM${4 - i}`).value) || 0;
+        const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${4 - i}`).value) || 0;
+        const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${4 - i}`).value) || 0;
+
+        // Récupérer le montant BIM et appliquer les 3% du montant annuel, ramené au trimestre
+        const bimBrut = parseFloat(document.getElementById(`${role.toLowerCase()}_bimM${4 - i}`).value) || 0;
+        const bim = (bimBrut * 0.03) / 4;
 
         let customTotal = 0;
         customColumns.forEach((col, index) => {
-            const customInput = parseFloat(document.getElementById(`${role.toLowerCase()}_custom${index}M${i + 1}`).value) || 0;
+            const customInput = parseFloat(document.getElementById(`${role.toLowerCase()}_custom${index}M${4 - i}`).value) || 0;
             customTotal += customInput;
         });
 
-        const moisTotal = invalidite + salaires + indemnites + chomage + customTotal;
+        const moisTotal = invalidite + salaires + indemnites + chomage + bim + customTotal;
         total += moisTotal;
 
         details.push({
@@ -242,6 +237,7 @@ function calculateRessources(role, dateEffet) {
             salaires,
             indemnites,
             chomage,
+            bim,
             customTotal,
             moisTotal,
         });
@@ -260,6 +256,7 @@ function generateMonthlyDetails(details, role) {
                 <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
                 <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
                 <tr><td>Chômage</td><td>${detail.chomage.toFixed(2)} €</td></tr>
+                <tr><td>BIM (Capitaux placés)</td><td>${detail.bim.toFixed(2)} €</td></tr>
                 ${detail.customTotal > 0 ? `<tr><td>Colonnes personnalisées</td><td>${detail.customTotal.toFixed(2)} €</td></tr>` : ''}
                 <tr><td><strong>Total du mois</strong></td><td><strong>${detail.moisTotal.toFixed(2)} €</strong></td></tr>
             </table>
