@@ -156,7 +156,7 @@ function getTrimester(startMonth, dateEffet, statut) {
     const plafondAnnuel = plafonds[annee]?.[statut];
     const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
 
-    const trimestreDetails = []; // Ajoutez les détails mois par mois ici
+    const trimestreDetails = []; // Ajouter les détails mois par mois ici
     const totalRessources = 0; // Calcul à compléter pour chaque trimestre
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalApresAbattement = totalRessources - abattement;
@@ -166,7 +166,6 @@ function getTrimester(startMonth, dateEffet, statut) {
     resultSection.appendChild(titreResultats);
 
     // Détail mensuel et autres calculs...
-    // Ajoutez le détail des calculs ici comme dans les exemples précédents
 
     return resultSection;
 }
