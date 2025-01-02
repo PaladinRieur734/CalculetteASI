@@ -3,47 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcul ASI - Allocation supplémentaire d'invalidité</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <title>Calcul des Droits ASI</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Calcul de l'Allocation Supplémentaire d'Invalidité (ASI)</h1>
-            <p>Simulez vos droits en fonction de vos ressources et de votre statut</p>
+            <h1>Calcul des Droits ASI</h1>
+            <p>Saisissez le statut et complétez les ressources pour le trimestre précédent.</p>
         </header>
 
-        <form>
-            <section>
-                <h2>Informations sur la période et le statut</h2>
-                <label for="dateEffet">Date d'effet de la demande</label>
-                <input type="date" id="dateEffet" name="dateEffet">
-
-                <label for="statut">Statut</label>
-                <select id="statut" name="statut">
-                    <option value="seul">Seul</option>
+        <form id="asiForm">
+            <!-- Section Statut -->
+            <section class="statut-section">
+                <label for="statut">Statut :</label>
+                <select id="statut" onchange="genererTableauRessources()">
+                    <option value="" disabled selected>Choisissez le statut</option>
+                    <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
             </section>
 
-            <section>
-                <h2>Période de ressources</h2>
-                <label for="debutRessources">Date de début des ressources</label>
-                <input type="date" id="debutRessources" name="debutRessources">
-
-                <label for="finRessources">Date de fin des ressources</label>
-                <input type="date" id="finRessources" name="finRessources">
+            <!-- Section Date d'effet -->
+            <section class="date-section">
+                <label for="dateEffet">Date d'effet :</label>
+                <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
             </section>
 
-            <section>
-                <button type="button" class="btn" onclick="genererTableauRessources()">Générer les tableaux de ressources</button>
+            <!-- Section Période -->
+            <section class="periode-section">
+                <label for="periodeDebut">Période de ressources :</label>
+                <input type="date" id="periodeDebut" placeholder="Début">
+                <input type="date" id="periodeFin" placeholder="Fin" onchange="genererTableauRessources()">
             </section>
+
+            <!-- Section Tableau des ressources -->
+            <section class="ressources-section">
+                <div id="ressourcesContainer">
+                    <p class="info">Le tableau des ressources apparaîtra ici :</p>
+                </div>
+            </section>
+
+            <!-- Section Abattement -->
+            <section class="abattement-section">
+                <label for="abattement">Montant de l'abattement :</label>
+                <input type="number" id="abattement" placeholder="Montant en €" min="0">
+            </section>
+
+            <!-- Bouton Calcul -->
+            <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
         </form>
 
-        <div id="ressourcesContainer"></div>
-
-        <div id="result"></div>
+        <!-- Résultats -->
+        <div id="result" class="result"></div>
     </div>
+    <script src="calculAsi.js"></script>
 </body>
 </html>
