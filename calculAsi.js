@@ -115,87 +115,117 @@ function addCustomColumn() {
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
-    const periodeDebut = new Date(document.getElementById("periodeDebut").value);
-    const periodeFin = new Date(document.getElementById("periodeFin").value);
 
-    if (!statut || isNaN(dateEffet.getTime()) || isNaN(periodeDebut.getTime()) || isNaN(periodeFin.getTime())) {
+    if (!statut || isNaN(dateEffet.getTime())) {
+        return; // Ne rien calculer si les champs sont vides
+    }
+
+    // Calcul de l'année applicable pour le plafond
+    let annee = dateEffet.getFullYear();
+    const premierJanvier = new Date(annee, 0, 1); // 1er janvier
+    const premierAvril = new Date(annee, 3, 1); // 1er avril
+
+    if (dateEffet >= premierJanvier && dateEffet < premierAvril) {
+        annee -= 1; // Utiliser l'année précédente pour les dates avant le 1er avril
+    }
+
+    if (!plafonds[annee]) {
+        alert("Le plafond pour l'année " + annee + " n'est pas défini.");
         return;
     }
+
+    // Récupération du plafond annuel et trimestriel
+    const plafondAnnuel = plafonds[annee]?.[statut];
+    const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
+
+    // Calcul des mois du trimestre précédent
+    const moisTrimestrePrecedent = getMoisTrimestrePrecedent(dateEffet);
+
+    // Filtrer les ressources pour le trimestre précédent
+    const demandeurRessources = calculateRessourcesTrimestre("Demandeur", moisTrimestrePrecedent);
+    let conjointRessources = null;
+
+    if (statut === "couple") {
+        conjointRessources = calculateRessourcesTrimestre("Conjoint", moisTrimestrePrecedent);
+    }
+
+    // Calcul des ressources totales
+    const totalRessources = demandeurRessources.total + (conjointRessources ? conjointRessources.total : 0);
+    const abattement = parseFloat(document.getElementById("abattement").value) || 0;
+    const totalRessourcesApresAbattement = totalRessources - abattement;
 
     const result = document.getElementById("result");
-    result.innerHTML = "";
+    const resultSection = document.createElement("div");
+    resultSection.classList.add("result-section");
 
-    const trimestreDetails = [];
-    const plafondAnnuel = plafonds[dateEffet.getFullYear()]?.[statut];
-    if (!plafondAnnuel) {
-        alert("Plafond introuvable pour l'année sélectionnée.");
-        return;
+    // Titre des résultats
+    const titreResultats = document.createElement("h2");
+    titreResultats.textContent = `Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}`;
+    resultSection.appendChild(titreResultats);
+
+    // Résumé trimestriel
+    resultSection.innerHTML += `
+        <h3>Résumé du trimestre précédent</h3>
+        <table>
+            <tr><td><strong>Total avant abattement</strong></td><td><strong>${totalRessources.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Abattement appliqué</strong></td><td><strong>${abattement.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Total après abattement</strong></td><td><strong>${totalRessourcesApresAbattement.toFixed(2)} €</strong></td></tr>
+            <tr><td><strong>Plafond trimestriel applicable</strong></td><td><strong>${plafondTrimestriel.toFixed(2)} €</strong></td></tr>
+        </table>`;
+
+    // Conclusion
+    if (totalRessourcesApresAbattement > plafondTrimestriel) {
+        resultSection.innerHTML += `<p>Les ressources combinées au cours du trimestre précédent, soit ${totalRessourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+    } else {
+        const montantASI = plafondTrimestriel - totalRessourcesApresAbattement;
+        const montantMensuelASI = montantASI / 3;
+        resultSection.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${totalRessourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     }
-    const plafondTrimestriel = plafondAnnuel / 4;
 
-    let currentQuarterStart = new Date(dateEffet);
-    currentQuarterStart.setMonth(currentQuarterStart.getMonth() - 3);
+    result.appendChild(resultSection);
+}
 
-    while (currentQuarterStart <= periodeFin) {
-        const trimestreTotal = calculateQuarterlyResources(currentQuarterStart, statut, trimestreDetails);
-        const abattement = parseFloat(document.getElementById("abattement").value) || 0;
-        const totalAfterDeduction = trimestreTotal - abattement;
+// Fonction pour obtenir les mois du trimestre précédent
+function getMoisTrimestrePrecedent(dateEffet) {
+    const mois = dateEffet.getMonth();
+    const annee = dateEffet.getFullYear();
+    let moisDebut, moisFin;
 
-        result.innerHTML += `
-            <h2 class="result-title">Droits ASI au ${currentQuarterStart.toLocaleDateString("fr-FR")}</h2>
-            ${generateMonthlyDetails(trimestreDetails)}
-            <h3>Résumé du trimestre</h3>
-            <p>Total trimestriel avant abattement : ${trimestreTotal.toFixed(2)} €</p>
-            <p>Total après abattement : ${totalAfterDeduction.toFixed(2)} €</p>
-            <p>Plafond trimestriel : ${plafondTrimestriel.toFixed(2)} €</p>`;
+    if (mois >= 0 && mois <= 2) { // Janvier à mars
+        moisDebut = 9; // Octobre
+        moisFin = 11; // Décembre
+        return { annee: annee - 1, moisDebut, moisFin };
+    } else if (mois >= 3 && mois <= 5) { // Avril à juin
+        moisDebut = 0; // Janvier
+        moisFin = 2; // Mars
+    } else if (mois >= 6 && mois <= 8) { // Juillet à septembre
+        moisDebut = 3; // Avril
+        moisFin = 5; // Juin
+    } else { // Octobre à décembre
+        moisDebut = 6; // Juillet
+        moisFin = 8; // Septembre
+    }
 
-        if (totalAfterDeduction > plafondTrimestriel) {
-            result.innerHTML += `<p>Les ressources combinées, soit ${totalAfterDeduction.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l'allocation supplémentaire d'invalidité n'est pas attribuée à effet du ${currentQuarterStart.toLocaleDateString("fr-FR")}.</p>`;
-        } else {
-            const montantASI = plafondTrimestriel - totalAfterDeduction;
-            result.innerHTML += `<p>Montant trimestriel de l'ASI : ${montantASI.toFixed(2)} €.</p>`;
+    return { annee, moisDebut, moisFin };
+}
+
+// Fonction pour calculer les ressources pour le trimestre précédent
+function calculateRessourcesTrimestre(type, { annee, moisDebut, moisFin }) {
+    const ressources = document.querySelectorAll(`.ressources-${type.toLowerCase()}`);
+    let total = 0;
+    const details = [];
+
+    ressources.forEach((ressource) => {
+        const mois = parseInt(ressource.dataset.mois, 10);
+        const anneeRessource = parseInt(ressource.dataset.annee, 10);
+        const montant = parseFloat(ressource.value) || 0;
+
+        if (anneeRessource === annee && mois >= moisDebut && mois <= moisFin) {
+            total += montant;
+            details.push({ mois, annee, montant });
         }
-
-        currentQuarterStart.setMonth(currentQuarterStart.getMonth() + 3);
-    }
-}
-
-function calculateQuarterlyResources(quarterStart, statut, trimestreDetails) {
-    let trimestreTotal = 0;
-
-    for (let i = 0; i < 3; i++) {
-        const mois = new Date(quarterStart);
-        mois.setMonth(quarterStart.getMonth() + i);
-
-        const invalidite = parseFloat(document.getElementById(`demandeur_invalidite_${mois.getMonth()}_${mois.getFullYear()}`).value) || 0;
-        const salaires = parseFloat(document.getElementById(`demandeur_salaires_${mois.getMonth()}_${mois.getFullYear()}`).value) || 0;
-        const indemnites = parseFloat(document.getElementById(`demandeur_indemnites_${mois.getMonth()}_${mois.getFullYear()}`).value) || 0;
-
-        trimestreTotal += invalidite + salaires + indemnites;
-
-        trimestreDetails.push({
-            mois: mois.toLocaleString("fr-FR", { month: "long", year: "numeric" }),
-            invalidite,
-            salaires,
-            indemnites,
-        });
-    }
-
-    return trimestreTotal;
-}
-
-function generateMonthlyDetails(details) {
-    let html = "<h4>Détails des ressources mois par mois</h4>";
-    details.forEach(detail => {
-        html += `
-            <table>
-                <tr><td>${detail.mois}</td></tr>
-                <tr><td>Pension d'invalidité</td><td>${detail.invalidite.toFixed(2)} €</td></tr>
-                <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)}
-                <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
-                <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
-                <tr><td><strong>Total mensuel</strong></td><td><strong>${(detail.invalidite + detail.salaires + detail.indemnites).toFixed(2)} €</strong></td></tr>
-            </table>`;
     });
-    return html;
+
+    return { total, details };
 }
+
