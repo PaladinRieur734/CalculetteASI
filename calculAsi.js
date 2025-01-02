@@ -12,29 +12,30 @@ const plafonds = {
 let customColumns = [];
 
 function genererTableauRessources() {
-    const debutPeriode = new Date(document.getElementById("debutPeriode").value);
-    const finPeriode = new Date(document.getElementById("finPeriode").value);
+    const dateEffet = new Date(document.getElementById("dateEffet").value);
     const statut = document.getElementById("statut").value;
+    const periodeDebut = new Date(document.getElementById("periodeDebut").value);
+    const periodeFin = new Date(document.getElementById("periodeFin").value);
 
     const ressourcesContainer = document.getElementById("ressourcesContainer");
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
 
-    if (!statut || isNaN(debutPeriode.getTime()) || isNaN(finPeriode.getTime())) {
-        return; // Ne rien afficher si les champs sont vides ou invalides
+    if (!statut || isNaN(dateEffet.getTime()) || isNaN(periodeDebut.getTime()) || isNaN(periodeFin.getTime())) {
+        return; // Ne rien afficher si les champs sont vides
     }
 
     // Génération du tableau pour le demandeur
-    const tableDemandeur = createRessourceTable("Demandeur", debutPeriode, finPeriode);
+    const tableDemandeur = createRessourceTable("Demandeur", periodeDebut, periodeFin);
     ressourcesContainer.appendChild(tableDemandeur);
 
     // Génération du tableau pour le conjoint si le statut est "couple"
     if (statut === "couple") {
-        const tableConjoint = createRessourceTable("Conjoint", debutPeriode, finPeriode);
+        const tableConjoint = createRessourceTable("Conjoint", periodeDebut, periodeFin);
         ressourcesContainer.appendChild(tableConjoint);
     }
 }
 
-function createRessourceTable(role, debutPeriode, finPeriode) {
+function createRessourceTable(role, periodeDebut, periodeFin) {
     const tableContainer = document.createElement("div");
     tableContainer.classList.add("table-container");
 
@@ -44,6 +45,8 @@ function createRessourceTable(role, debutPeriode, finPeriode) {
 
     const table = document.createElement("table");
     const header = document.createElement("tr");
+
+    // Ajout des colonnes fixes
     [
         "Mois",
         "Pension d'invalidité",
@@ -57,40 +60,40 @@ function createRessourceTable(role, debutPeriode, finPeriode) {
         header.appendChild(th);
     });
 
-    // Ajouter les colonnes personnalisées dynamiques
-    customColumns.forEach(colName => {
+    // Ajout des colonnes personnalisées
+    customColumns.forEach(col => {
         const th = document.createElement("th");
-        th.textContent = colName;
+        th.textContent = col;
         header.appendChild(th);
     });
 
-    // Ajouter la colonne "+" pour ajouter de nouvelles colonnes
-    const addColumnButtonCell = document.createElement("th");
-    const addButton = document.createElement("button");
-    addButton.textContent = "+";
-    addButton.classList.add("add-column-btn");
-    addButton.onclick = () => addCustomColumn();
-    addColumnButtonCell.appendChild(addButton);
-    header.appendChild(addColumnButtonCell);
+    // Ajout du bouton pour ajouter une colonne
+    const thPlus = document.createElement("th");
+    const btnPlus = document.createElement("button");
+    btnPlus.textContent = "+";
+    btnPlus.classList.add("add-column-btn");
+    btnPlus.onclick = () => addCustomColumn();
+    thPlus.appendChild(btnPlus);
+    header.appendChild(thPlus);
 
     table.appendChild(header);
 
-    // Génération des mois entre la période spécifiée
-    const current = new Date(debutPeriode);
-    while (current <= finPeriode) {
+    // Génération des lignes de la période
+    let currentMonth = new Date(periodeDebut);
+    while (currentMonth <= periodeFin) {
         const row = document.createElement("tr");
 
-        // Colonne pour le mois
+        // Mois
         const moisCell = document.createElement("td");
-        moisCell.textContent = current.toLocaleString("fr-FR", { month: "long", year: "numeric" });
+        moisCell.textContent = currentMonth.toLocaleString("fr-FR", { month: "long", year: "numeric" });
         row.appendChild(moisCell);
 
-        // Colonnes pour les ressources
+        // Colonnes fixes
         ["invalidite", "salaires", "indemnites", "chomage", "bim"].forEach(type => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
-            input.id = `${role.toLowerCase()}_${type}_${current.getMonth()}_${current.getFullYear()}`;
+            input.id = `${role.toLowerCase()}_${type}_${currentMonth.getMonth()}_${currentMonth.getFullYear()}`;
             input.placeholder = "€";
             input.min = 0;
             cell.appendChild(input);
@@ -102,7 +105,7 @@ function createRessourceTable(role, debutPeriode, finPeriode) {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
-            input.id = `${role.toLowerCase()}_custom${index}_${current.getMonth()}_${current.getFullYear()}`;
+            input.id = `${role.toLowerCase()}_custom${index}_${currentMonth.getMonth()}_${currentMonth.getFullYear()}`;
             input.placeholder = "€";
             input.min = 0;
             cell.appendChild(input);
@@ -110,19 +113,20 @@ function createRessourceTable(role, debutPeriode, finPeriode) {
         });
 
         table.appendChild(row);
-        current.setMonth(current.getMonth() + 1);
+
+        // Passer au mois suivant
+        currentMonth.setMonth(currentMonth.getMonth() + 1);
     }
 
     tableContainer.appendChild(table);
-
     return tableContainer;
 }
 
 function addCustomColumn() {
-    const columnName = prompt("Nom de la nouvelle colonne:");
-    if (columnName) {
-        customColumns.push(columnName);
-        genererTableauRessources(); // Regénérer le tableau avec la nouvelle colonne
+    const colName = prompt("Nom de la colonne :");
+    if (colName) {
+        customColumns.push(colName);
+        genererTableauRessources();
     }
 }
 
