@@ -3,46 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulation ASI</title>
+    <title>Calculateur ASI</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Simulation ASI</h1>
+        <h1>Calculateur d'Allocation Supplémentaire d'Invalidité (ASI)</h1>
     </header>
 
     <main>
-        <section class="input-section">
+        <section>
             <label for="dateEffet">Date d'effet :</label>
-            <input type="date" id="dateEffet">
+            <input type="date" id="dateEffet" required>
 
             <label for="statut">Statut :</label>
             <select id="statut">
-                <option value="">-- Sélectionnez --</option>
+                <option value="">-- Choisir --</option>
                 <option value="seul">Seul</option>
                 <option value="couple">Couple</option>
             </select>
-
-            <label for="abattement">Abattement :</label>
-            <input type="number" id="abattement" placeholder="€" min="0">
-
-            <button onclick="genererTableauRessources()">Générer le tableau</button>
         </section>
 
         <section id="ressourcesContainer">
-            <!-- Tableaux des ressources générés dynamiquement -->
+            <!-- Les tableaux des ressources seront générés ici -->
         </section>
 
-        <button class="calculate-btn" onclick="calculerASI()">Calculer l'ASI</button>
+        <button onclick="genererTableauRessources()">Générer tableau de ressources</button>
+        <button onclick="calculerASI()">Calculer l'ASI</button>
 
-        <section id="result">
-            <!-- Résultats affichés dynamiquement -->
-        </section>
+        <section class="result-section"></section>
     </main>
-
-    <footer>
-        <p>Simulation ASI - Calcul automatique des droits</p>
-    </footer>
 
     <script src="script.js"></script>
 </body>
