@@ -55,12 +55,14 @@ function createRessourceTable(role, dateEffet) {
     return tableContainer;
 }
 
-// Fonction pour générer le tableau des ressources
 function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
     const statut = document.getElementById("statut").value;
+    
+    console.log('Date d\'effet:', dateEffet);
+    console.log('Statut:', statut);
 
-    const ressourcesContainer = document.getElementById("tableContainer");
+    const ressourcesContainer = document.getElementById("ressourcesContainer");
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
 
     if (!statut || isNaN(dateEffet.getTime())) {
@@ -77,6 +79,7 @@ function genererTableauRessources() {
         ressourcesContainer.appendChild(tableConjoint);
     }
 }
+
 // Partie 2/4 : Fonction de calcul des ressources et des droits ASI
 
 // Fonction pour calculer les ressources totales
