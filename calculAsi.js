@@ -1,177 +1,140 @@
+// Variables globales
+const moisFrancais = [
+    "janvier", "février", "mars", "avril", "mai", "juin",
+    "juillet", "août", "septembre", "octobre", "novembre", "décembre"
+];
+
+// Plafonds ASI par année (valeurs depuis 2017, en euros)
 const plafonds = {
-    "2017": { seul: 9658.13, couple: 15592.07 },
-    "2018": { seul: 9820.46, couple: 15872.24 },
-    "2019": { seul: 9951.84, couple: 16091.92 },
-    "2020": { seul: 10068.00, couple: 16293.12 },
-    "2021": { seul: 10183.20, couple: 16396.49 },
-    "2022": { seul: 10265.16, couple: 16512.93 },
-    "2023": { seul: 10320.07, couple: 16548.23 },
-    "2024": { seul: 10536.50, couple: 16890.35 },
+    2017: { personneSeule: 1128.70, couple: 1859.10 },
+    2018: { personneSeule: 1144.60, couple: 1885.60 },
+    2019: { personneSeule: 1160.04, couple: 1911.74 },
+    2020: { personneSeule: 1173.77, couple: 1935.98 },
+    2021: { personneSeule: 1183.25, couple: 1951.78 },
+    2022: { personneSeule: 1163.92, couple: 1919.04 },
+    2023: { personneSeule: 1177.44, couple: 1939.57 },
+    2024: { personneSeule: 1189.22, couple: 1958.56 }, // Exemple pour 2024
 };
 
-let customColumns = [];
-
-function genererTableauRessources() {
-    const dateEffet = new Date(document.getElementById("dateEffet").value);
-    const statut = document.getElementById("statut").value;
-
-    const ressourcesContainer = document.getElementById("ressourcesContainer");
-    ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
-
-    if (!statut || isNaN(dateEffet.getTime())) {
-        return; // Ne rien afficher si les champs sont vides
-    }
-
-    // Génération du tableau pour le demandeur
-    const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
-    ressourcesContainer.appendChild(tableDemandeur);
-
-    // Génération du tableau pour le conjoint si le statut est "couple"
-    if (statut === "couple") {
-        const tableConjoint = createRessourceTable("Conjoint", dateEffet);
-        ressourcesContainer.appendChild(tableConjoint);
-    }
+// Fonction pour récupérer le plafond selon l'année
+function getPlafond(dateEffet, statut) {
+    const annee = dateEffet.getFullYear();
+    const plafondsAnnee = plafonds[annee] || plafonds[2024]; // Utiliser les valeurs 2024 par défaut
+    return statut === "personneSeule" ? plafondsAnnee.personneSeule : plafondsAnnee.couple;
 }
-function createRessourceTable(role, dateEffet) {
-    const tableContainer = document.createElement("div");
-    tableContainer.classList.add("table-container");
+function genererTableau(dateEffet) {
+    const tableBody = document.getElementById("table-ressources");
+    tableBody.innerHTML = ""; // Réinitialiser le tableau
+    const date = new Date(dateEffet);
+    date.setMonth(date.getMonth() - 1); // Mois précédent la date d'effet
 
-    const title = document.createElement("h3");
-    title.textContent = `Ressources du ${role}`;
-    tableContainer.appendChild(title);
-
-    const table = document.createElement("table");
-    const header = document.createElement("tr");
-    [
-        "Mois",
-        "Pension d'invalidité",
-        "Salaires",
-        "Indemnités journalières",
-        "Chômage"
-    ].forEach(col => {
-        const th = document.createElement("th");
-        th.textContent = col;
-        header.appendChild(th);
-    });
-
-    // Ajouter les colonnes personnalisées dynamiques
-    customColumns.forEach(colName => {
-        const th = document.createElement("th");
-        th.textContent = colName;
-        header.appendChild(th);
-    });
-
-    // Ajouter la colonne "+" pour ajouter de nouvelles colonnes
-    const addColumnButtonCell = document.createElement("th");
-    const addButton = document.createElement("button");
-    addButton.textContent = "+";
-    addButton.classList.add("add-column-btn");
-    addButton.onclick = (event) => {
-        event.preventDefault();
-        addCustomColumn();
-    };
-    addColumnButtonCell.appendChild(addButton);
-    header.appendChild(addColumnButtonCell);
-
-    table.appendChild(header);
-
-    // Génération des mois dans l'ordre croissant
-    for (let i = 1; i <= 3; i++) {
-        const mois = new Date(dateEffet);
-        mois.setMonth(mois.getMonth() - (4 - i)); // Mois précédents dans l'ordre croissant
-
+    for (let i = 0; i < 3; i++) {
         const row = document.createElement("tr");
-
-        // Colonne pour le mois
+        
+        // Ajouter les mois dans l'ordre décroissant
         const moisCell = document.createElement("td");
-        moisCell.textContent = mois.toLocaleString("fr-FR", { month: "long", year: "numeric" });
+        const mois = moisFrancais[date.getMonth()] + " " + date.getFullYear();
+        moisCell.textContent = mois;
         row.appendChild(moisCell);
 
         // Colonnes pour les ressources
-        ["invalidite", "salaires", "indemnites", "chomage"].forEach(type => {
+        ["pension", "salaire", "indemnites", "chomage"].forEach(type => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
-            input.id = `${role.toLowerCase()}_${type}M${i}`;
             input.placeholder = "€";
-            input.min = 0;
+            input.dataset.type = type;
+            input.dataset.mois = mois;
             cell.appendChild(input);
             row.appendChild(cell);
         });
 
-        // Colonnes personnalisées
-        customColumns.forEach((col, index) => {
-            const cell = document.createElement("td");
-            const input = document.createElement("input");
-            input.type = "number";
-            input.id = `${role.toLowerCase()}_custom${index}M${i}`;
-            input.placeholder = "€";
-            input.min = 0;
-            cell.appendChild(input);
-            row.appendChild(cell);
-        });
-
-        table.appendChild(row);
-    }
-
-    tableContainer.appendChild(table);
-
-    return tableContainer;
-}
-function addCustomColumn() {
-    const columnName = prompt("Nom de la nouvelle colonne:");
-    if (columnName) {
-        customColumns.push(columnName);
-        genererTableauRessources(); // Regénérer le tableau avec la nouvelle colonne
+        tableBody.appendChild(row);
+        date.setMonth(date.getMonth() - 1); // Reculer d'un mois
     }
 }
+
+// Empêcher le rafraîchissement lors de l'ajout de lignes
+document.getElementById("ajouter-ligne").addEventListener("click", (e) => {
+    e.preventDefault();
+    genererTableau(new Date(document.getElementById("date-effet").value));
+});
 function calculerASI() {
+    const dateEffet = new Date(document.getElementById("date-effet").value);
     const statut = document.getElementById("statut").value;
-    const dateEffet = new Date(document.getElementById("dateEffet").value);
+    const plafondTrimestriel = getPlafond(dateEffet, statut) * 3;
 
-    if (!statut || isNaN(dateEffet.getTime())) {
-        return; // Ne rien calculer si les champs sont vides
-    }
-
-    let annee = dateEffet.getFullYear();
-    const premierJanvier = new Date(annee, 0, 1);
-    const premierAvril = new Date(annee, 3, 1);
-
-    if (dateEffet >= premierJanvier && dateEffet < premierAvril) {
-        annee -= 1;
-    }
-
-    const plafondAnnuel = plafonds[annee]?.[statut];
-    const plafondTrimestriel = plafondAnnuel / 4;
-
-    const result = document.getElementById("result");
-    result.innerHTML = "";
-
-    const demandeurRessources = calculateRessources("Demandeur", dateEffet);
-    let conjointRessources = null;
-
-    if (statut === "couple") {
-        conjointRessources = calculateRessources("Conjoint", dateEffet);
-    }
-
-    const totalRessources = demandeurRessources.total + (conjointRessources ? conjointRessources.total : 0);
-    const abattement = parseFloat(document.getElementById("abattement").value) || 0;
-    const totalRessourcesApresAbattement = totalRessources - abattement;
-
-    demandeurRessources.details.forEach(detail => {
-        result.innerHTML += `<h5>${detail.mois}</h5><table><tr><td>Total mensuel</td><td>${detail.moisTotal.toFixed(2)} €</td></tr></table>`;
+    // Récupérer les ressources
+    const ressources = [];
+    document.querySelectorAll("#table-ressources tr").forEach(row => {
+        const mois = row.cells[0].textContent;
+        let total = 0;
+        ["pension", "salaire", "indemnites", "chomage"].forEach((type, index) => {
+            const valeur = parseFloat(row.cells[index + 1].querySelector("input").value) || 0;
+            total += valeur;
+        });
+        ressources.push({ mois, total });
     });
 
-    if (conjointRessources) {
-        conjointRessources.details.forEach(detail => {
-            result.innerHTML += `<h5>${detail.mois}</h5><table><tr><td>Total mensuel</td><td>${detail.moisTotal.toFixed(2)} €</td></tr></table>`;
-        });
-    }
+    // Calcul des droits
+    const resultats = ressources.map(({ mois, total }) => {
+        const asi = Math.max(0, plafondTrimestriel - total);
+        return { mois, total, asi: asi.toFixed(2) };
+    });
 
-    if (totalRessourcesApresAbattement > plafondTrimestriel) {
-        result.innerHTML += `<p>Les ressources, soit ${totalRessourcesApresAbattement.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l'ASI ne pouvait être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
-    } else {
-        const montantASI = plafondTrimestriel - totalRessourcesApresAbattement;
-        result.innerHTML += `<p>Le montant trimestriel à servir est de ${montantASI.toFixed(2)} €.</p>`;
-    }
+    afficherResultats(resultats, plafondTrimestriel);
 }
+function afficherResultats(resultats, plafondTrimestriel) {
+    const resultatsContainer = document.getElementById("resultats");
+    resultatsContainer.innerHTML = ""; // Réinitialiser les résultats
+
+    // Tableau des résultats
+    const table = document.createElement("table");
+    table.className = "result-table";
+
+    // Entêtes du tableau
+    const headerRow = document.createElement("tr");
+    ["Mois", "Total Ressources", "ASI due"].forEach(texte => {
+        const headerCell = document.createElement("th");
+        headerCell.textContent = texte;
+        headerRow.appendChild(headerCell);
+    });
+    table.appendChild(headerRow);
+
+    // Lignes des résultats
+    resultats.forEach(({ mois, total, asi }) => {
+        const row = document.createElement("tr");
+
+        const moisCell = document.createElement("td");
+        moisCell.textContent = mois;
+        row.appendChild(moisCell);
+
+        const totalCell = document.createElement("td");
+        totalCell.textContent = `${total.toFixed(2)} €`;
+        row.appendChild(totalCell);
+
+        const asiCell = document.createElement("td");
+        asiCell.textContent = `${asi} €`;
+        row.appendChild(asiCell);
+
+        table.appendChild(row);
+    });
+
+    resultatsContainer.appendChild(table);
+
+    // Ajouter la conclusion
+    const conclusion = document.createElement("p");
+    conclusion.className = "conclusion";
+    conclusion.textContent = `Le montant trimestriel maximum de l'ASI est de ${plafondTrimestriel.toFixed(2)} €.`;
+    resultatsContainer.appendChild(conclusion);
+}
+document.getElementById("date-effet").addEventListener("change", () => {
+    const dateEffet = document.getElementById("date-effet").value;
+    genererTableau(dateEffet);
+});
+
+document.getElementById("calculer").addEventListener("click", (e) => {
+    e.preventDefault();
+    calculerASI();
+});
+
