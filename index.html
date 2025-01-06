@@ -1,4 +1,4 @@
-HTML : <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -10,14 +10,15 @@ HTML : <!DOCTYPE html>
     <div class="container">
         <header>
             <h1>Calcul des Droits ASI</h1>
-            <p>Saisissez le statut et complétez les ressources pour le trimestre précédent.</p>
+            <p>Saisissez les informations ci-dessous pour calculer les droits trimestriels.</p>
         </header>
 
         <form id="asiForm">
             <!-- Section Statut -->
             <section class="statut-section">
-                <label for="statut">Statut :</label>
-                <select id="statut">
+                <h2>Statut</h2>
+                <select id="statut" required onchange="genererTableauRessources()">
+                    <option value="" disabled selected>Choisissez le statut</option>
                     <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
@@ -25,19 +26,30 @@ HTML : <!DOCTYPE html>
 
             <!-- Section Date d'effet -->
             <section class="date-section">
-                <label for="dateEffet">Date d'effet :</label>
+                <h2>Date d'effet</h2>
                 <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
+            </section>
+
+            <!-- Section Période des ressources -->
+            <section class="periode-section">
+                <h2>Période des ressources</h2>
+                <label for="debutPeriode">Début :</label>
+                <input type="date" id="debutPeriode" required>
+                <label for="finPeriode">Fin :</label>
+                <input type="date" id="finPeriode" required onchange="genererTableauRessources()">
             </section>
 
             <!-- Section Tableau des ressources -->
             <section class="ressources-section">
+                <h2>Tableau des ressources</h2>
                 <div id="ressourcesContainer">
-                    <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
+                    <p class="info">Le tableau des ressources apparaîtra ici en fonction des périodes saisies.</p>
                 </div>
             </section>
 
             <!-- Section Abattement -->
             <section class="abattement-section">
+                <h2>Abattement</h2>
                 <label for="abattement">Montant de l'abattement :</label>
                 <input type="number" id="abattement" placeholder="Montant en €" min="0">
             </section>
