@@ -1,38 +1,13 @@
 const plafonds = {
-    2017: {
-        "demandeur": 11000,
-        "couple": 15000,
-    },
-    2018: {
-        "demandeur": 11200,
-        "couple": 15200,
-    },
-    2019: {
-        "demandeur": 11500,
-        "couple": 15500,
-    },
-    2020: {
-        "demandeur": 12000,
-        "couple": 16000,
-    },
-    2021: {
-        "demandeur": 12200,
-        "couple": 16200,
-    },
-    2022: {
-        "demandeur": 12500,
-        "couple": 16500,
-    },
-    2023: {
-        "demandeur": 13000,
-        "couple": 17000,
-    },
-    2024: {
-        "demandeur": 13500,
-        "couple": 17500,
-    },
+    "2017": { seul: 9658.13, couple: 15592.07 },
+    "2018": { seul: 9820.46, couple: 15872.24 },
+    "2019": { seul: 9951.84, couple: 16091.92 },
+    "2020": { seul: 10068.00, couple: 16293.12 },
+    "2021": { seul: 10183.20, couple: 16396.49 },
+    "2022": { seul: 10265.16, couple: 16512.93 },
+    "2023": { seul: 10320.07, couple: 16548.23 },
+    "2024": { seul: 10536.50, couple: 16890.35 },
 };
-
 
 function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
