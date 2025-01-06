@@ -105,8 +105,9 @@ function calculerASI() {
     console.log("Année calculée : " + annee);  // Afficher l'année calculée
     console.log("Statut choisi : " + statut);  // Afficher le statut choisi
 
-    // Vérification du plafond pour l'année obtenue
-    const plafondAnnuel = plafonds[annee]?.[statut];
+    // **Correction** : Utiliser l'année sous forme de chaîne pour accéder à la clé dans l'objet 'plafonds'
+    const plafondAnnuel = plafonds[annee.toString()]?.[statut];
+    
     console.log("Plafond pour l'année " + annee + " et statut " + statut + " : " + plafondAnnuel);
 
     // Si le plafond est défini, calculer sinon prendre 0
