@@ -3,52 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcul de l'ASI (Allocation Supplémentaire d'Invalidité)</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Calcul de l'ASI</title>
+    <style>
+        .table-container {
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        .add-column-btn {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px;
+            font-size: 14px;
+        }
+        .add-column-btn:hover {
+            background-color: #45a049;
+        }
+        .result-section {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Calcul de l'ASI</h1>
-            <p>Complétez les informations pour calculer votre allocation supplémentaire d'invalidité.</p>
-        </header>
 
-        <form id="asiForm">
-            <section>
-                <h2>Informations sur la période</h2>
-                <label for="dateEffet">Date d'effet (jour de début de la période de ressource)</label>
-                <input type="date" id="dateEffet" required>
-            </section>
+    <h1>Calcul de l'Allocation Supplémentaire d'Invalidité (ASI)</h1>
 
-            <section>
-                <h2>Statut du demandeur</h2>
-                <label for="statut">Statut</label>
-                <select id="statut" required>
-                    <option value="">Sélectionnez un statut</option>
-                    <option value="seul">Seul</option>
-                    <option value="couple">Couple</option>
-                </select>
-            </section>
-
-            <section>
-                <h2>Abattement</h2>
-                <label for="abattement">Montant de l'abattement</label>
-                <input type="number" id="abattement" placeholder="€" min="0">
-            </section>
-
-            <section>
-                <h2>Ressources</h2>
-                <div id="ressourcesContainer"></div>
-            </section>
-
-            <section>
-                <button type="button" class="btn" onclick="genererTableauRessources()">Générer le tableau des ressources</button>
-                <button type="button" class="btn" onclick="calculerASI()">Calculer l'ASI</button>
-            </section>
-        </form>
-
-        <div id="result"></div>
+    <div>
+        <label for="dateEffet">Date d'effet de la période de ressource :</label>
+        <input type="date" id="dateEffet" required>
     </div>
+
+    <div>
+        <label for="statut">Statut :</label>
+        <select id="statut" required>
+            <option value="seul">Seul</option>
+            <option value="couple">Couple</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="abattement">Abattement :</label>
+        <input type="number" id="abattement" placeholder="Abattement en €" min="0">
+    </div>
+
+    <div id="ressourcesContainer"></div>
+
+    <button onclick="calculerASI()">Calculer l'ASI</button>
+
+    <div id="result"></div>
 
     <script src="script.js"></script>
 </body>
