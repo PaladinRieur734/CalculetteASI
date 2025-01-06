@@ -3,47 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcul des Droits ASI</title>
+    <title>Calcul ASI</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Calcul des Droits ASI</h1>
-        <p>Saisissez la date d’effet et complétez les ressources pour le trimestre précédent.</p>
 
-        <!-- Sélection du statut -->
-        <div class="input-group">
-            <label for="statut">Statut</label>
-            <select id="statut">
-                <option value="personne_seule">Personne seule</option>
+    <div class="container">
+        <h1>Calcul de l'Allocation Supplémentaire d'Invalidité (ASI)</h1>
+        
+        <form id="form">
+            <label for="dateEffet">Date d'effet :</label>
+            <input type="date" id="dateEffet" required>
+
+            <label for="statut">Statut :</label>
+            <select id="statut" required>
+                <option value="">Sélectionnez un statut</option>
+                <option value="seul">Seul</option>
                 <option value="couple">Couple</option>
             </select>
-        </div>
 
-        <!-- Saisie de la date d'effet -->
-        <div class="input-group">
-            <label for="dateEffet">Date d'effet</label>
-            <input type="date" id="dateEffet">
-        </div>
+            <label for="abat">Abattement :</label>
+            <input type="number" id="abat" placeholder="€" required>
 
-        <!-- Titre et conteneur du tableau -->
-        <h2 id="tableTitle">Tableau des ressources trimestrielles</h2>
-        <div id="tableContainer">
-            <!-- Le tableau sera généré ici dynamiquement -->
-        </div>
+            <button type="button" id="calculate">Calculer</button>
+        </form>
 
-        <!-- Abattement -->
-        <h3>Abattement</h3>
-        <input type="number" id="abat" placeholder="Montant en €">
-
-        <!-- Bouton pour calculer les droits -->
-        <button id="calculate">Calculer les droits</button>
-
-        <!-- Section pour afficher les résultats -->
-        <div id="resultats">
-            <!-- Les résultats apparaîtront ici -->
-        </div>
+        <div id="tableContainer"></div>
+        <div id="resultats"></div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
