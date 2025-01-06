@@ -47,8 +47,7 @@ function createRessourceTable(role, dateEffet) {
         "Pension d'invalidité",
         "Salaires",
         "Indemnités journalières",
-        "Chômage",
-        "BIM (Capitaux placés)"
+        "Chômage"
     ].forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
@@ -67,7 +66,10 @@ function createRessourceTable(role, dateEffet) {
     const addButton = document.createElement("button");
     addButton.textContent = "+";
     addButton.classList.add("add-column-btn");
-    addButton.onclick = () => addCustomColumn();
+    addButton.onclick = (event) => {
+        event.preventDefault();
+        addCustomColumn();
+    };
     addColumnButtonCell.appendChild(addButton);
     header.appendChild(addColumnButtonCell);
 
@@ -86,7 +88,7 @@ function createRessourceTable(role, dateEffet) {
         row.appendChild(moisCell);
 
         // Colonnes pour les ressources
-        ["invalidite", "salaires", "indemnites", "chomage", "bim"].forEach(type => {
+        ["invalidite", "salaires", "indemnites", "chomage"].forEach(type => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
@@ -115,6 +117,13 @@ function createRessourceTable(role, dateEffet) {
     tableContainer.appendChild(table);
 
     return tableContainer;
+}
+function addCustomColumn() {
+    const columnName = prompt("Nom de la nouvelle colonne:");
+    if (columnName) {
+        customColumns.push(columnName);
+        genererTableauRessources(); // Regénérer le tableau avec la nouvelle colonne
+    }
 }
 function calculerASI() {
     const statut = document.getElementById("statut").value;
@@ -160,9 +169,7 @@ function calculerASI() {
     }
 
     if (totalRessourcesApresAbattement > plafondTrimestriel) {
-        result.innerHTML += `<p>Les ressources, soit ${totalRessourcesApresAbattement.toFixed(2)} €,
-        étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, 
-        l'ASI ne pouvait être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+        result.innerHTML += `<p>Les ressources, soit ${totalRessourcesApresAbattement.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l'ASI ne pouvait être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     } else {
         const montantASI = plafondTrimestriel - totalRessourcesApresAbattement;
         result.innerHTML += `<p>Le montant trimestriel à servir est de ${montantASI.toFixed(2)} €.</p>`;
