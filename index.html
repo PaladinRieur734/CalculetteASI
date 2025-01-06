@@ -17,8 +17,7 @@
             <!-- Section Statut -->
             <section class="statut-section">
                 <label for="statut">Statut :</label>
-                <select id="statut" onchange="genererTableauRessources()">
-                    <option value="" disabled selected>Choisissez le statut</option>
+                <select id="statut">
                     <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
@@ -30,17 +29,10 @@
                 <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
             </section>
 
-            <!-- Section Période -->
-            <section class="periode-section">
-                <label for="periodeDebut">Période de ressources :</label>
-                <input type="date" id="periodeDebut" placeholder="Début">
-                <input type="date" id="periodeFin" placeholder="Fin" onchange="genererTableauRessources()">
-            </section>
-
             <!-- Section Tableau des ressources -->
             <section class="ressources-section">
                 <div id="ressourcesContainer">
-                    <p class="info">Le tableau des ressources apparaîtra ici :</p>
+                    <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
                 </div>
             </section>
 
@@ -48,12 +40,6 @@
             <section class="abattement-section">
                 <label for="abattement">Montant de l'abattement :</label>
                 <input type="number" id="abattement" placeholder="Montant en €" min="0">
-            </section>
-
-            <!-- Section BIM -->
-            <section class="bim-section">
-                <label for="bimPreviousYear">BIM de l'année N-1 :</label>
-                <input type="number" id="bimPreviousYear" placeholder="Montant des BIM en €" min="0">
             </section>
 
             <!-- Bouton Calcul -->
