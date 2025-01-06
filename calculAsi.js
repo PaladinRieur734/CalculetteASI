@@ -95,12 +95,13 @@ function calculerASI() {
         return; // Ne rien calculer si les champs sont vides
     }
 
-    // Détermination de l'année fiscale en fonction de la date
+    // Récupérer l'année et déterminer si on doit prendre l'année précédente (avant avril)
     let annee = dateEffet.getFullYear();
-    if (dateEffet.getMonth() >= 3) { // Si c'est après mars, on reste sur l'année en cours
-        annee += 1; // On passe à l'année suivante si la date est après le 31 mars
+    if (dateEffet.getMonth() < 3) { // Avant avril
+        annee -= 1;
     }
 
+    // Vérification du plafond pour l'année obtenue
     const plafondAnnuel = plafonds[annee]?.[statut];
     const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
 
@@ -153,6 +154,7 @@ function calculerASI() {
 
     result.appendChild(resultSection);
 }
+
 
 
 function calculateRessources(role, dateEffet) {
