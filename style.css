@@ -1,98 +1,122 @@
+/* Style général */
 body {
-    font-family: 'Roboto', Arial, sans-serif;
-    background: #f7f8fa;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
+    background-color: #f9f9f9;
     color: #333;
 }
 
 .container {
-    max-width: 900px;
-    margin: 40px auto;
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
     padding: 20px;
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* En-tête */
+header {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 header h1 {
-    font-size: 2em;
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 10px;
+    color: #1e90ff;
+    font-size: 2rem;
+    margin: 0;
 }
 
 header p {
-    text-align: center;
-    color: #7f8c8d;
-    font-size: 1em;
+    font-size: 1rem;
+    color: #555;
 }
 
-h2 {
-    color: #34495e;
-    font-size: 1.5em;
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
-
-label {
-    font-weight: bold;
+/* Formulaire */
+form label {
     display: block;
-    margin-top: 10px;
-    color: #2c3e50;
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
-input, select, button {
+form input[type="date"],
+form input[type="number"],
+form select {
     width: 100%;
     padding: 10px;
-    margin-top: 5px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
 }
 
-table {
+form input:focus,
+form select:focus {
+    border-color: #1e90ff;
+    outline: none;
+}
+
+/* Bouton */
+form .btn {
+    display: block;
+    background-color: #1e90ff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    margin: 20px auto;
+    transition: background-color 0.3s ease;
+}
+
+form .btn:hover {
+    background-color: #005bb5;
+}
+
+/* Tableau des ressources */
+.table-container {
+    margin-bottom: 20px;
+}
+
+.table-container table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
 }
 
-table th, table td {
+.table-container th,
+.table-container td {
     border: 1px solid #ddd;
     padding: 8px;
-    text-align: center;
+    text-align: left;
 }
 
-table th {
-    background-color: #3498db;
-    color: white;
-    font-weight: bold;
+.table-container th {
+    background-color: #1e90ff;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.9rem;
 }
 
-.info {
-    color: #7f8c8d;
-    font-style: italic;
-}
-
-button {
-    background: #3498db;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-button:hover {
-    background: #2980b9;
-}
-
+/* Résultats */
 .result {
-    margin-top: 30px;
+    margin-top: 20px;
     padding: 20px;
-    border-radius: 10px;
-    background-color: #f7f9fa;
-    border: 2px solid #dcdfe3;
-    font-size: 1.2em;
-    color: #2c3e50;
+    background-color: #f1faff;
+    border: 1px solid #1e90ff;
+    border-radius: 8px;
+}
+
+.result h2 {
+    text-align: center;
+    background-color: #1e90ff;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 0 0 20px 0;
 }
