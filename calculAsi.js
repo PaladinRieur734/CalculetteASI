@@ -137,10 +137,19 @@ function calculerASI() {
     // Obtenir l'année de la date d'effet
     let annee = dateEffet.getFullYear();
 
-    // Si la date d'effet est après le 1er avril, utiliser l'année suivante pour les plafonds
+    // Vérifier si la date d'effet est entre le 1er janvier et le 31 mars
+    const premierJanvier = new Date(annee, 0, 1); // 1er janvier de l'année
     const premierAvril = new Date(annee, 3, 1); // 1er avril de l'année
-    if (dateEffet >= premierAvril) {
-        annee += 1; // Utiliser l'année suivante
+
+    // Si la date est entre le 1er janvier et le 31 mars, on utilise l'année précédente
+    if (dateEffet >= premierJanvier && dateEffet < premierAvril) {
+        annee -= 1; // Utiliser l'année précédente
+    }
+
+    // Vérifier si l'année existe dans les plafonds
+    if (!plafonds[annee]) {
+        alert("Le plafond pour l'année " + annee + " n'est pas défini.");
+        return; // Sortir si l'année n'a pas de plafond défini
     }
 
     // Récupérer le plafond de l'année
