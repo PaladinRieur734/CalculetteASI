@@ -18,7 +18,7 @@
             <section class="statut-section">
                 <label for="statut">Statut :</label>
                 <select id="statut">
-                    <option value="seul">Personne seule</option>
+                    <option value="personneSeule">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
             </section>
@@ -33,6 +33,18 @@
             <section class="ressources-section">
                 <div id="ressourcesContainer">
                     <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mois</th>
+                                <th>Pension</th>
+                                <th>Salaire</th>
+                                <th>Indemnités</th>
+                                <th>Chômage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-ressources"></tbody>
+                    </table>
                 </div>
             </section>
 
