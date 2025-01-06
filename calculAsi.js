@@ -5,9 +5,33 @@ const plafonds = {
     "2020": { seul: 10068.00, couple: 16293.12 },
     "2021": { seul: 10183.20, couple: 16396.49 },
     "2022": { seul: 10265.16, couple: 16512.93 },
-    "2023": { seul: 10320.07, couple: 16548.23 },
-    "2024": { seul: 10536.50, couple: 16890.35 },
+    "2023": { 
+        avantAvril: { seul: 10320.07, couple: 16548.23 },
+        apresAvril: { seul: 10536.50, couple: 16890.35 },
+    },
+    "2024": { 
+        avantAvril: { seul: 10536.50, couple: 16890.35 },
+        apresAvril: { seul: 10756.00, couple: 17245.00 }, // Exemple des futurs plafonds
+    },
 };
+
+// Fonction pour déterminer le plafond applicable en fonction de la date
+function obtenirPlafond(dateEffet, statut) {
+    const annee = dateEffet.getFullYear();
+    const mois = dateEffet.getMonth() + 1; // Les mois vont de 0 à 11, donc on ajoute 1.
+
+    // Si l'année n'a pas de distinction avant/après avril
+    if (!plafonds[annee].avantAvril) {
+        return plafonds[annee][statut];
+    }
+
+    // Retourne le plafond avant ou après avril
+    if (mois < 4) {
+        return plafonds[annee].avantAvril[statut];
+    } else {
+        return plafonds[annee].apresAvril[statut];
+    }
+}
 
 function genererMoisPrecedents() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
@@ -62,6 +86,9 @@ function calculerASI() {
 
     let droitsTotal = 0;
 
+    // Récupération du plafond applicable
+    const plafondTrimestriel = obtenirPlafond(dateEffet, statut);
+
     for (let i = 1; i <= 3; i++) {
         const ressources = [
             parseFloat(document.getElementById(`salairesM${i}`).value) || 0,
@@ -72,11 +99,11 @@ function calculerASI() {
         ];
 
         const totalRessources = ressources.reduce((sum, value) => sum + value, 0);
-        const plafondMensuel = plafonds[dateEffet.getFullYear()][statut] / 12;
+        const plafondMensuel = plafondTrimestriel / 3; // Le plafond est divisé par 3 pour obtenir le plafond mensuel
 
         if (totalRessources <= plafondMensuel) {
             const droit = plafondMensuel - totalRessources;
-            droitsTotal += droit * 3; // Mois vers trimestre
+            droitsTotal += droit; // Droits mensuels sont ajoutés
             resultDiv.innerHTML += `✅ ${i} mois avant : Droits = <strong>${droit.toFixed(2)} €</strong>.<br>`;
         } else {
             resultDiv.innerHTML += `❌ ${i} mois avant : Pas de droits (Ressources : ${totalRessources.toFixed(2)} €).<br>`;
@@ -85,5 +112,3 @@ function calculerASI() {
 
     resultDiv.innerHTML += `<br><strong>Droits totaux sur 3 mois :</strong> ${droitsTotal.toFixed(2)} €`;
 }
-
-
