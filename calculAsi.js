@@ -13,20 +13,20 @@ const plafonds = {
     2021: { personneSeule: 1183.25, couple: 1951.78 },
     2022: { personneSeule: 1163.92, couple: 1919.04 },
     2023: { personneSeule: 1177.44, couple: 1939.57 },
-    2024: { personneSeule: 1189.22, couple: 1958.56 }, // Exemple pour 2024
+    2024: { personneSeule: 1189.22, couple: 1958.56 },
 };
 
 // Fonction pour récupérer le plafond selon l'année
 function getPlafond(dateEffet, statut) {
     const annee = dateEffet.getFullYear();
-    const plafondsAnnee = plafonds[annee] || plafonds[2024]; // Utiliser les valeurs 2024 par défaut
+    const plafondsAnnee = plafonds[annee] || plafonds[2024];
     return statut === "personneSeule" ? plafondsAnnee.personneSeule : plafondsAnnee.couple;
 }
 function genererTableau(dateEffet) {
     const tableBody = document.getElementById("table-ressources");
     tableBody.innerHTML = ""; // Réinitialiser le tableau
     const date = new Date(dateEffet);
-    date.setMonth(date.getMonth() - 1); // Mois précédent la date d'effet
+    date.setMonth(date.getMonth() - 1); // Commencer au mois précédent la date d'effet
 
     for (let i = 0; i < 3; i++) {
         const row = document.createElement("tr");
@@ -54,7 +54,7 @@ function genererTableau(dateEffet) {
     }
 }
 
-// Empêcher le rafraîchissement lors de l'ajout de lignes
+// Gestion de l'ajout de lignes
 document.getElementById("ajouter-ligne").addEventListener("click", (e) => {
     e.preventDefault();
     genererTableau(new Date(document.getElementById("date-effet").value));
@@ -137,4 +137,3 @@ document.getElementById("calculer").addEventListener("click", (e) => {
     e.preventDefault();
     calculerASI();
 });
-
