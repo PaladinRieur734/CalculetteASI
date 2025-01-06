@@ -9,23 +9,31 @@
 </head>
 <body>
     <div id="form-container">
+        <h1>Calcul de l'Allocation de Solidarité aux Personnes Agées (ASI)</h1>
+
+        <!-- Champ pour la date d'effet -->
         <label for="dateEffet">Date d'effet :</label>
         <input type="date" id="dateEffet">
 
+        <!-- Sélecteur pour le statut (seul ou couple) -->
         <label for="statut">Statut :</label>
         <select id="statut">
             <option value="seul">Seul</option>
             <option value="couple">Couple</option>
         </select>
 
+        <!-- Champ pour l'abattement -->
         <label for="abat">Abattement :</label>
-        <input type="number" id="abat">
+        <input type="number" id="abat" placeholder="€">
 
+        <!-- Bouton pour calculer l'ASI -->
         <button id="calculate">Calculer l'ASI</button>
     </div>
 
+    <!-- Zone où seront affichées les tables de ressources -->
     <div id="tableContainer"></div>
-    <div id="resultats"></div>
 
+    <!-- Zone où seront affichés les résultats du calcul -->
+    <div id="resultats"></div>
 </body>
 </html>
