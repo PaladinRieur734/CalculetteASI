@@ -1,119 +1,72 @@
-/* style.css */
-
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
+    background-color: #f4f4f9;
+    color: #333;
 }
 
 header {
-    background-color: #0044cc;
+    background: #0077c2;
     color: white;
-    padding: 1rem;
+    padding: 1em 0;
     text-align: center;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.8em;
 }
 
 main {
-    padding: 1.5rem;
-    max-width: 800px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1em 2em;
 }
 
-.input-section label {
+label {
     display: block;
-    font-weight: bold;
-    margin-top: 1rem;
+    margin: 1em 0 0.5em;
 }
 
-.input-section input,
-.input-section select,
-.input-section button {
-    display: block;
-    margin-top: 0.5rem;
-    padding: 0.5rem;
-    width: 100%;
-    max-width: 300px;
-    font-size: 1rem;
+input, select, button {
+    padding: 0.5em;
+    margin-bottom: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
 }
 
-.calculate-btn {
-    background-color: #0044cc;
+button {
+    background: #0077c2;
     color: white;
     border: none;
-    padding: 0.7rem;
-    font-size: 1rem;
-    margin-top: 1rem;
     cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.3s;
+    transition: background 0.3s;
 }
 
-.calculate-btn:hover {
-    background-color: #003399;
+button:hover {
+    background: #005fa3;
 }
 
-#ressourcesContainer .table-container {
-    margin-top: 1rem;
-}
-
-#ressourcesContainer table {
+table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 0.5rem;
+    margin: 1em 0;
 }
 
-#ressourcesContainer th,
-#ressourcesContainer td {
+th, td {
     border: 1px solid #ddd;
-    padding: 0.5rem;
-    text-align: center;
+    padding: 0.5em;
+    text-align: left;
 }
 
-#ressourcesContainer th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-}
-
-#ressourcesContainer input {
-    width: 100%;
-    padding: 0.3rem;
-    text-align: right;
-}
-
-footer {
-    text-align: center;
-    padding: 1rem;
-    background: #0044cc;
-    color: white;
-    margin-top: 2rem;
+th {
+    background: #f4f4f9;
 }
 
 .result-section {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    padding: 1rem;
-    margin-top: 1.5rem;
-    border-radius: 4px;
-}
-
-.result-section h2 {
-    color: #0044cc;
-}
-
-.result-section table {
-    width: 100%;
-    margin-top: 1rem;
-    border-collapse: collapse;
-}
-
-.result-section th,
-.result-section td {
-    border: 1px solid #ddd;
-    padding: 0.5rem;
-    text-align: left;
+    margin-top: 2em;
+    padding: 1em;
+    background: #e8f5e9;
+    border: 1px solid #c8e6c9;
 }
