@@ -10,48 +10,36 @@
     <div class="container">
         <header>
             <h1>Calcul des Droits ASI</h1>
-            <p>Saisissez le statut et complétez les ressources pour le trimestre précédent.</p>
+            <p>Saisissez les informations ci-dessous pour générer les tableaux des ressources et calculer les droits.</p>
         </header>
 
         <form id="asiForm">
+            <!-- Section Date d'effet -->
+            <section class="date-section">
+                <label for="dateEffet">Date d'effet :</label>
+                <input type="date" id="dateEffet" onchange="genererTableauRessources()">
+            </section>
+
             <!-- Section Statut -->
             <section class="statut-section">
                 <label for="statut">Statut :</label>
-                <select id="statut">
-                    <option value="personneSeule">Personne seule</option>
+                <select id="statut" onchange="genererTableauRessources()">
+                    <option value="" disabled selected>Choisissez le statut</option>
+                    <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
             </section>
 
-            <!-- Section Date d'effet -->
-            <section class="date-section">
-                <label for="dateEffet">Date d'effet :</label>
-                <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
-            </section>
-
             <!-- Section Tableau des ressources -->
             <section class="ressources-section">
-                <div id="ressourcesContainer">
-                    <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Mois</th>
-                                <th>Pension</th>
-                                <th>Salaire</th>
-                                <th>Indemnités</th>
-                                <th>Chômage</th>
-                            </tr>
-                        </thead>
-                        <tbody id="table-ressources"></tbody>
-                    </table>
-                </div>
+                <h2>Tableau des ressources trimestrielles</h2>
+                <div id="ressourcesContainer"></div>
             </section>
 
             <!-- Section Abattement -->
             <section class="abattement-section">
                 <label for="abattement">Montant de l'abattement :</label>
-                <input type="number" id="abattement" placeholder="Montant en €" min="0">
+                <input type="number" id="abattement" placeholder="Montant en €">
             </section>
 
             <!-- Bouton Calcul -->
@@ -61,6 +49,6 @@
         <!-- Résultats -->
         <div id="result" class="result"></div>
     </div>
-    <script src="calculAsi.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
