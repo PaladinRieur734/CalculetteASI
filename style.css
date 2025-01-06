@@ -40,21 +40,32 @@ h2 {
 /* Bouton + intégré au tableau */
 .add-column-btn {
     position: absolute;
-    top: 0;
-    right: 10px;
+    top: -10px;
+    right: -40px;
     background-color: #3498db;
     color: white;
     border: none;
-    font-size: 1em;
+    font-size: 1.2em;
+    font-weight: bold;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .add-column-btn:hover {
     background-color: #2980b9;
     transition: background-color 0.3s ease;
+}
+
+/* Style pour les nouvelles colonnes */
+table th input[type="text"] {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 0.9em;
 }
 
 label {
