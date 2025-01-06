@@ -1,72 +1,175 @@
+/* Style général */
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
+    background-color: #f9f9f9;
     color: #333;
 }
 
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* En-tête */
 header {
-    background: #0077c2;
-    color: white;
-    padding: 1em 0;
     text-align: center;
+    margin-bottom: 20px;
 }
 
-h1 {
+header h1 {
+    color: #1e90ff; /* Bleu Dodger */
+    font-size: 2rem;
     margin: 0;
-    font-size: 1.8em;
 }
 
-main {
-    padding: 1em 2em;
+header p {
+    font-size: 1rem;
+    color: #555;
 }
 
-label {
+/* Formulaire */
+form section {
+    margin-bottom: 20px;
+}
+
+form section h2 {
+    font-size: 1.2rem;
+    color: #1e90ff; /* Bleu Dodger */
+    border-bottom: 2px solid #1e90ff;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+form label {
     display: block;
-    margin: 1em 0 0.5em;
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
-input, select, button {
-    padding: 0.5em;
-    margin-bottom: 1em;
-    border: 1px solid #ccc;
+form input[type="date"],
+form input[type="number"],
+form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 1em;
+    font-size: 1rem;
+    box-sizing: border-box;
 }
 
-button {
-    background: #0077c2;
-    color: white;
+form input[type="number"]::placeholder {
+    font-style: italic;
+    color: #aaa;
+}
+
+/* Focus sur les éléments du formulaire */
+form input:focus,
+form select:focus {
+    border-color: #1e90ff;
+    outline: none;
+}
+
+/* Bouton */
+form .btn {
+    display: block;
+    background-color: #1e90ff;
+    color: #fff;
+    padding: 10px 20px;
     border: none;
+    border-radius: 4px;
+    font-size: 1rem;
     cursor: pointer;
-    transition: background 0.3s;
+    text-align: center;
+    margin: 20px auto; /* Centre le bouton */
+    transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background: #005fa3;
+form .btn:hover {
+    background-color: #005bb5;
 }
 
-table {
+/* Tableau des ressources */
+.table-container {
+    margin-bottom: 20px;
+}
+
+.table-container h3 {
+    color: #1e90ff; /* Bleu Dodger */
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.table-container table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1em 0;
+    margin-bottom: 10px;
 }
 
-th, td {
+.table-container th,
+.table-container td {
     border: 1px solid #ddd;
-    padding: 0.5em;
+    padding: 8px;
     text-align: left;
 }
 
-th {
-    background: #f4f4f9;
+.table-container th {
+    background-color: #1e90ff;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.9rem;
 }
 
-.result-section {
-    margin-top: 2em;
-    padding: 1em;
-    background: #e8f5e9;
-    border: 1px solid #c8e6c9;
+/* Résultats */
+.result {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f1faff;
+    border: 1px solid #1e90ff;
+    border-radius: 8px;
+}
+
+.result h2 {
+    text-align: center;
+    background-color: #1e90ff;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 0 0 20px 0;
+}
+
+.result h4,
+.result h5 {
+    margin: 10px 0;
+    color: #1e90ff; /* Bleu Dodger */
+}
+
+.result table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.result td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+.result td:first-child {
+    font-weight: bold;
+
+/* Style pour les messages d'erreur */
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 10px;
 }
