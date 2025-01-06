@@ -134,7 +134,16 @@ function calculerASI() {
         return; // Ne rien calculer si les champs sont vides
     }
 
-    const annee = dateEffet.getFullYear();
+    // Obtenir l'année de la date d'effet
+    let annee = dateEffet.getFullYear();
+
+    // Si la date d'effet est après le 1er avril, utiliser l'année suivante pour les plafonds
+    const premierAvril = new Date(annee, 3, 1); // 1er avril de l'année
+    if (dateEffet >= premierAvril) {
+        annee += 1; // Utiliser l'année suivante
+    }
+
+    // Récupérer le plafond de l'année
     const plafondAnnuel = plafonds[annee]?.[statut];
     const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
 
@@ -144,7 +153,7 @@ function calculerASI() {
 
     // Titre des résultats
     const titreResultats = document.createElement("h2");
-    titreResultats.textContent = Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")};
+    titreResultats.textContent = `Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}`;
     resultSection.appendChild(titreResultats);
 
     const demandeurRessources = calculateRessources("Demandeur", dateEffet);
@@ -167,26 +176,27 @@ function calculerASI() {
     }
 
     // Résumé trimestriel
-    resultSection.innerHTML += 
+    resultSection.innerHTML += `
         <h3>Résumé du trimestre</h3>
         <table>
             <tr><td><strong>Total avant abattement</strong></td><td><strong>${totalRessources.toFixed(2)} €</strong></td></tr>
             <tr><td><strong>Abattement appliqué</strong></td><td><strong>${abattement.toFixed(2)} €</strong></td></tr>
             <tr><td><strong>Total après abattement</strong></td><td><strong>${totalRessourcesApresAbattement.toFixed(2)} €</strong></td></tr>
             <tr><td><strong>Plafond trimestriel applicable</strong></td><td><strong>${plafondTrimestriel.toFixed(2)} €</strong></td></tr>
-        </table>;
+        </table>`;
 
     // Conclusion
     if (totalRessourcesApresAbattement > plafondTrimestriel) {
-        resultSection.innerHTML += <p>Les ressources combinées au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>;
+        resultSection.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     } else {
         const montantASI = plafondTrimestriel - totalRessourcesApresAbattement;
         const montantMensuelASI = montantASI / 3;
-        resultSection.innerHTML += <p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${totalRessourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>;
+        resultSection.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${totalRessourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     }
 
     result.appendChild(resultSection);
 }
+
 
 function calculateRessources(role, dateEffet) {
     const details = [];
