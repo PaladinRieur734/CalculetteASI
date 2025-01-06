@@ -1,50 +1,46 @@
+/* Styles de base */
 body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
+    font-family: 'Roboto', Arial, sans-serif;
+    background: #f7f8fa;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f9;
     color: #333;
 }
 
 .container {
-    max-width: 800px;
-    margin: 20px auto;
-    background: #fff;
+    max-width: 900px;
+    margin: 40px auto;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 header h1 {
-    margin: 0 0 10px;
-    color: #007BFF;
+    font-size: 2em;
+    color: #2c3e50;
     text-align: center;
+    margin-bottom: 10px;
 }
 
 header p {
     text-align: center;
-    color: #555;
+    color: #7f8c8d;
+    font-size: 1em;
 }
 
-.mois {
-    background-color: #f8f8f8;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 15px;
-}
-
-.mois h3 {
-    margin: 0;
-    color: #007BFF;
+h2 {
+    color: #34495e;
+    font-size: 1.5em;
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 label {
     font-weight: bold;
     display: block;
     margin-top: 10px;
+    color: #2c3e50;
 }
 
 input, select, button {
@@ -53,25 +49,51 @@ input, select, button {
     margin-top: 5px;
     margin-bottom: 10px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+table th {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+}
+
+.info {
+    color: #7f8c8d;
+    font-style: italic;
 }
 
 button {
-    background: #007BFF;
-    color: #fff;
-    border: none;
+    background: #3498db;
+    color: white;
+    font-weight: bold;
     cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 button:hover {
-    background: #0056b3;
+    background: #2980b9;
 }
 
 .result {
     margin-top: 30px;
-    padding: 15px;
-    border-radius: 8px;
-    border: 2px solid #ddd;
-    background-color: #fdfdfd;
-    font-size: 16px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f7f9fa;
+    border: 2px solid #dcdfe3;
+    font-size: 1.2em;
+    color: #2c3e50;
 }
