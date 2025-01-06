@@ -4,34 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calcul ASI</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Si vous avez un fichier CSS -->
+    <script defer src="script.js"></script> <!-- Le fichier JavaScript -->
 </head>
 <body>
+    <div id="form-container">
+        <label for="dateEffet">Date d'effet :</label>
+        <input type="date" id="dateEffet">
 
-    <div class="container">
-        <h1>Calcul de l'Allocation Supplémentaire d'Invalidité (ASI)</h1>
-        
-        <form id="form">
-            <label for="dateEffet">Date d'effet :</label>
-            <input type="date" id="dateEffet" required>
+        <label for="statut">Statut :</label>
+        <select id="statut">
+            <option value="seul">Seul</option>
+            <option value="couple">Couple</option>
+        </select>
 
-            <label for="statut">Statut :</label>
-            <select id="statut" required>
-                <option value="">Sélectionnez un statut</option>
-                <option value="seul">Seul</option>
-                <option value="couple">Couple</option>
-            </select>
+        <label for="abat">Abattement :</label>
+        <input type="number" id="abat">
 
-            <label for="abat">Abattement :</label>
-            <input type="number" id="abat" placeholder="€" required>
-
-            <button type="button" id="calculate">Calculer</button>
-        </form>
-
-        <div id="tableContainer"></div>
-        <div id="resultats"></div>
+        <button id="calculate">Calculer l'ASI</button>
     </div>
 
-    <script src="script.js"></script>
+    <div id="tableContainer"></div>
+    <div id="resultats"></div>
+
 </body>
 </html>
