@@ -48,7 +48,8 @@ function createRessourceTable(role, dateEffet) {
         "Pension d'invalidité",
         "Salaires",
         "Indemnités journalières",
-        "Chômage"
+        "Chômage",
+        "BIM (Capitaux placés)"
     ].forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
@@ -86,7 +87,7 @@ function createRessourceTable(role, dateEffet) {
         row.appendChild(moisCell);
 
         // Colonnes pour les ressources
-        ["invalidite", "salaires", "indemnites", "chomage"].forEach(type => {
+        ["invalidite", "salaires", "indemnites", "chomage", "bim"].forEach(type => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
@@ -124,7 +125,6 @@ function addCustomColumn() {
         genererTableauRessources(); // Regénérer le tableau avec la nouvelle colonne
     }
 }
-
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
@@ -217,8 +217,6 @@ function calculateRessources(role, dateEffet) {
         const salaires = parseFloat(document.getElementById(`${role.toLowerCase()}_salairesM${4 - i}`).value) || 0;
         const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${4 - i}`).value) || 0;
         const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${4 - i}`).value) || 0;
-
-        // Récupérer le montant BIM et appliquer les 3% du montant annuel, ramené au trimestre
         const bimBrut = parseFloat(document.getElementById(`${role.toLowerCase()}_bimM${4 - i}`).value) || 0;
         const bim = (bimBrut * 0.03) / 4;
 
