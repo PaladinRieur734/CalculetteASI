@@ -91,6 +91,7 @@ function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
 
+    // Vérifier si les champs sont remplis correctement
     if (!statut || isNaN(dateEffet.getTime())) {
         return; // Ne rien calculer si les champs sont vides
     }
@@ -101,10 +102,17 @@ function calculerASI() {
         annee -= 1;
     }
 
+    console.log("Année calculée : " + annee);  // Afficher l'année calculée
+    console.log("Statut choisi : " + statut);  // Afficher le statut choisi
+
     // Vérification du plafond pour l'année obtenue
     const plafondAnnuel = plafonds[annee]?.[statut];
+    console.log("Plafond pour l'année " + annee + " et statut " + statut + " : " + plafondAnnuel);
+
+    // Si le plafond est défini, calculer sinon prendre 0
     const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
 
+    // Récupérer la référence à l'élément résultat
     const result = document.getElementById("result");
     const resultSection = document.createElement("div");
     resultSection.classList.add("result-section");
@@ -114,6 +122,7 @@ function calculerASI() {
     titreResultats.textContent = `Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}`;
     resultSection.appendChild(titreResultats);
 
+    // Calcul des ressources pour le demandeur
     const demandeurRessources = calculateRessources("Demandeur", dateEffet);
     let conjointRessources = null;
 
@@ -121,6 +130,7 @@ function calculerASI() {
         conjointRessources = calculateRessources("Conjoint", dateEffet);
     }
 
+    // Calcul du total des ressources après abattement
     const totalRessources = demandeurRessources.total + (conjointRessources ? conjointRessources.total : 0);
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalRessourcesApresAbattement = totalRessources - abattement;
@@ -155,26 +165,16 @@ function calculerASI() {
     result.appendChild(resultSection);
 }
 
-
-
-function calculateRessources(role, dateEffet) {
-    const details = [];
+// Exemple de fonction pour calculer les ressources (il faut l'adapter selon vos besoins)
+function calculateRessources(type, dateEffet) {
+    // Simule les ressources pour un demandeur ou conjoint, à adapter
     let total = 0;
+    let details = [];
 
-    for (let i = 3; i >= 1; i--) {
-        const mois = new Date(dateEffet);
-        mois.setMonth(mois.getMonth() - i);
-
-        const invalidite = parseFloat(document.getElementById(`${role.toLowerCase()}_invaliditeM${4 - i}`).value) || 0;
-        const salaires = parseFloat(document.getElementById(`${role.toLowerCase()}_salairesM${4 - i}`).value) || 0;
-        const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${4 - i}`).value) || 0;
-        const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${4 - i}`).value) || 0;
-        const bimBrut = parseFloat(document.getElementById(`${role.toLowerCase()}_bimM${4 - i}`).value) || 0;
-        const bim = (bimBrut * 0.03) / 4;
-        const autres = parseFloat(document.getElementById(`${role.toLowerCase()}_autresM${4 - i}`).value) || 0;
-
-        const moisTotal = invalidite + salaires + indemnites + chomage + bim + autres;
-        total += moisTotal;
+    // Exemple de calculs mensuels
+    for (let i = 0; i < 12; i++) {
+        details.push({ mois: new Date(dateEffet.getFullYear(), i, 1), montant: Math.random() * 1000 });
+        total += details[i].montant;
 
         details.push({
             mois: mois.toLocaleString("fr-FR", { month: "long", year: "numeric" }),
@@ -191,20 +191,12 @@ function calculateRessources(role, dateEffet) {
     return { total, details };
 }
 
-function generateMonthlyDetails(details, role) {
-    let html = `<h4>Détails des ressources pour ${role}</h4>`;
+/ Exemple de fonction pour générer les détails mensuels
+function generateMonthlyDetails(details, type) {
+    let html = `<h3>Détails pour ${type}</h3><table><tr><th>Mois</th><th>Montant</th></tr>`;
     details.forEach(detail => {
-        html += `
-            <h5>${detail.mois}</h5>
-            <table>
-                <tr><td>Pension d'invalidité</td><td>${detail.invalidite.toFixed(2)} €</td></tr>
-                <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
-                <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
-                <tr><td>Chômage</td><td>${detail.chomage.toFixed(2)} €</td></tr>
-                <tr><td>BIM (Capitaux placés)</td><td>${detail.bim.toFixed(2)} €</td></tr>
-                <tr><td>Autres ressources</td><td>${detail.autres.toFixed(2)} €</td></tr>
-                <tr><td><strong>Total mensuel</strong></td><td><strong>${detail.moisTotal.toFixed(2)} €</strong></td></tr>
-            </table>`;
+        html += `<tr><td>${detail.mois.toLocaleDateString("fr-FR")}</td><td>${detail.montant.toFixed(2)} €</td></tr>`;
     });
+    html += "</table>";
     return html;
 }
