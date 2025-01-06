@@ -1,120 +1,54 @@
-/* Style général */
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
-    color: #333;
-}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcul des Droits ASI</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Calcul des Droits ASI</h1>
+            <p>Saisissez le statut et complétez les ressources pour le trimestre précédent.</p>
+        </header>
 
-.container {
-    width: 90%;
-    max-width: 800px;
-    margin: 20px auto;
-    background: #fff;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
+        <form id="asiForm">
+            <!-- Section Statut -->
+            <section class="statut-section">
+                <label for="statut">Statut :</label>
+                <select id="statut">
+                    <option value="seul">Personne seule</option>
+                    <option value="couple">Couple</option>
+                </select>
+            </section>
 
-/* En-tête */
-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
+            <!-- Section Date d'effet -->
+            <section class="date-section">
+                <label for="dateEffet">Date d'effet :</label>
+                <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
+            </section>
 
-header h1 {
-    color: #1e90ff;
-    font-size: 2rem;
-    margin: 0;
-}
+            <!-- Section Tableau des ressources -->
+            <section class="ressources-section">
+                <div id="ressourcesContainer">
+                    <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
+                </div>
+            </section>
 
-header p {
-    font-size: 1rem;
-    color: #555;
-}
+            <!-- Section Abattement -->
+            <section class="abattement-section">
+                <label for="abattement">Montant de l'abattement :</label>
+                <input type="number" id="abattement" placeholder="Montant en €" min="0">
+            </section>
 
-/* Formulaire */
-form section {
-    margin-bottom: 20px;
-}
+            <!-- Bouton Calcul -->
+            <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
+        </form>
 
-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-form input[type="date"],
-form input[type="number"],
-form select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    box-sizing: border-box;
-}
-
-form .btn {
-    display: block;
-    background-color: #1e90ff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    text-align: center;
-    margin: 20px auto;
-    transition: background-color 0.3s ease;
-}
-
-form .btn:hover {
-    background-color: #005bb5;
-}
-
-/* Tableau */
-.table-container {
-    margin-bottom: 20px;
-}
-
-.table-container table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 10px;
-}
-
-.table-container th,
-.table-container td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-}
-
-.table-container th {
-    background-color: #1e90ff;
-    color: #fff;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-}
-
-/* Résultats */
-.result {
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #f1faff;
-    border: 1px solid #1e90ff;
-    border-radius: 8px;
-}
-
-.result h2 {
-    text-align: center;
-    background-color: #1e90ff;
-    color: #fff;
-    padding: 10px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-}
+        <!-- Résultats -->
+        <div id="result" class="result"></div>
+    </div>
+    <script src="calculAsi.js"></script>
+</body>
+</html>
