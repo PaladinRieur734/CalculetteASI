@@ -29,11 +29,28 @@
             <button onclick="genererTableauRessources()">Générer le tableau</button>
         </section>
 
-        <section id="ressourcesContainer"></section>
+        <section id="ressourcesContainer">
+            <h3>Ressources trimestrielles</h3>
+            <table id="ressourcesTable">
+                <thead>
+                    <tr>
+                        <th>Période</th>
+                        <th>Ressources</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Lignes générées dynamiquement -->
+                </tbody>
+            </table>
+            <button class="add-column-btn" onclick="ajouterPeriode()">+ Ajouter une période</button>
+        </section>
 
         <button class="calculate-btn" onclick="calculerASI()">Calculer l'ASI</button>
 
-        <section id="result"></section>
+        <section id="result">
+            <!-- Résultats du calcul affichés dynamiquement -->
+        </section>
     </main>
 
     <footer>
