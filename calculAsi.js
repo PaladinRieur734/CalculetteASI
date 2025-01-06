@@ -9,6 +9,8 @@ const plafonds = {
     "2024": { seul: 10536.50, couple: 16890.35 },
 };
 
+let customColumns = [];
+
 function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
     const statut = document.getElementById("statut").value;
@@ -36,7 +38,7 @@ function createRessourceTable(role, dateEffet) {
     tableContainer.classList.add("table-container");
 
     const title = document.createElement("h3");
-    title.textContent = `Ressources du ${role}`;
+    title.textContent = Ressources du ${role};
     tableContainer.appendChild(title);
 
     const table = document.createElement("table");
@@ -53,6 +55,22 @@ function createRessourceTable(role, dateEffet) {
         th.textContent = col;
         header.appendChild(th);
     });
+
+    // Ajouter les colonnes personnalisées dynamiques
+    customColumns.forEach(colName => {
+        const th = document.createElement("th");
+        th.textContent = colName;
+        header.appendChild(th);
+    });
+
+    // Ajouter la colonne "+" pour ajouter de nouvelles colonnes
+    const addColumnButtonCell = document.createElement("th");
+    const addButton = document.createElement("button");
+    addButton.textContent = "+";
+    addButton.classList.add("add-column-btn");
+    addButton.onclick = () => addCustomColumn();
+    addColumnButtonCell.appendChild(addButton);
+    header.appendChild(addColumnButtonCell);
 
     table.appendChild(header);
 
@@ -73,7 +91,19 @@ function createRessourceTable(role, dateEffet) {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
-            input.id = `${role.toLowerCase()}_${type}M${4 - i}`;
+            input.id = ${role.toLowerCase()}_${type}M${4 - i};
+            input.placeholder = "€";
+            input.min = 0;
+            cell.appendChild(input);
+            row.appendChild(cell);
+        });
+
+        // Colonnes personnalisées
+        customColumns.forEach((col, index) => {
+            const cell = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "number";
+            input.id = ${role.toLowerCase()}_custom${index}M${4 - i};
             input.placeholder = "€";
             input.min = 0;
             cell.appendChild(input);
@@ -86,6 +116,14 @@ function createRessourceTable(role, dateEffet) {
     tableContainer.appendChild(table);
 
     return tableContainer;
+}
+
+function addCustomColumn() {
+    const columnName = prompt("Nom de la nouvelle colonne:");
+    if (columnName) {
+        customColumns.push(columnName);
+        genererTableauRessources(); // Regénérer le tableau avec la nouvelle colonne
+    }
 }
 
 function calculerASI() {
@@ -101,7 +139,13 @@ function calculerASI() {
     const plafondTrimestriel = plafondAnnuel ? plafondAnnuel / 4 : 0;
 
     const result = document.getElementById("result");
-    result.innerHTML = ""; // Réinitialise les résultats
+    const resultSection = document.createElement("div");
+    resultSection.classList.add("result-section");
+
+    // Titre des résultats
+    const titreResultats = document.createElement("h2");
+    titreResultats.textContent = Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")};
+    resultSection.appendChild(titreResultats);
 
     const demandeurRessources = calculateRessources("Demandeur", dateEffet);
     let conjointRessources = null;
@@ -114,27 +158,34 @@ function calculerASI() {
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalRessourcesApresAbattement = totalRessources - abattement;
 
-    result.innerHTML += generateMonthlyDetails(demandeurRessources.details, "Demandeur");
+    // Détails mois par mois pour le demandeur
+    resultSection.innerHTML += generateMonthlyDetails(demandeurRessources.details, "Demandeur");
+
+    // Détails mois par mois pour le conjoint (si applicable)
     if (conjointRessources) {
-        result.innerHTML += generateMonthlyDetails(conjointRessources.details, "Conjoint");
+        resultSection.innerHTML += generateMonthlyDetails(conjointRessources.details, "Conjoint");
     }
 
-    result.innerHTML += `
+    // Résumé trimestriel
+    resultSection.innerHTML += 
         <h3>Résumé du trimestre</h3>
         <table>
             <tr><td><strong>Total avant abattement</strong></td><td><strong>${totalRessources.toFixed(2)} €</strong></td></tr>
             <tr><td><strong>Abattement appliqué</strong></td><td><strong>${abattement.toFixed(2)} €</strong></td></tr>
             <tr><td><strong>Total après abattement</strong></td><td><strong>${totalRessourcesApresAbattement.toFixed(2)} €</strong></td></tr>
             <tr><td><strong>Plafond trimestriel applicable</strong></td><td><strong>${plafondTrimestriel.toFixed(2)} €</strong></td></tr>
-        </table>`;
+        </table>;
 
+    // Conclusion
     if (totalRessourcesApresAbattement > plafondTrimestriel) {
-        result.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+        resultSection.innerHTML += <p>Les ressources combinées au cours du trimestre de référence, soit ${totalRessourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>;
     } else {
         const montantASI = plafondTrimestriel - totalRessourcesApresAbattement;
         const montantMensuelASI = montantASI / 3;
-        result.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${totalRessourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+        resultSection.innerHTML += <p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${totalRessourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>;
     }
+
+    result.appendChild(resultSection);
 }
 
 function calculateRessources(role, dateEffet) {
@@ -145,14 +196,20 @@ function calculateRessources(role, dateEffet) {
         const mois = new Date(dateEffet);
         mois.setMonth(mois.getMonth() - i);
 
-        const invalidite = parseFloat(document.getElementById(`${role.toLowerCase()}_invaliditeM${4 - i}`).value) || 0;
-        const salaires = parseFloat(document.getElementById(`${role.toLowerCase()}_salairesM${4 - i}`).value) || 0;
-        const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${4 - i}`).value) || 0;
-        const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${4 - i}`).value) || 0;
-        const bimBrut = parseFloat(document.getElementById(`${role.toLowerCase()}_bimM${4 - i}`).value) || 0;
+        const invalidite = parseFloat(document.getElementById(${role.toLowerCase()}_invaliditeM${4 - i}).value) || 0;
+        const salaires = parseFloat(document.getElementById(${role.toLowerCase()}_salairesM${4 - i}).value) || 0;
+        const indemnites = parseFloat(document.getElementById(${role.toLowerCase()}_indemnitesM${4 - i}).value) || 0;
+        const chomage = parseFloat(document.getElementById(${role.toLowerCase()}_chomageM${4 - i}).value) || 0;
+        const bimBrut = parseFloat(document.getElementById(${role.toLowerCase()}_bimM${4 - i}).value) || 0;
         const bim = (bimBrut * 0.03) / 4;
 
-        const moisTotal = invalidite + salaires + indemnites + chomage + bim;
+        let customTotal = 0;
+        customColumns.forEach((col, index) => {
+            const customInput = parseFloat(document.getElementById(${role.toLowerCase()}_custom${index}M${4 - i}).value) || 0;
+            customTotal += customInput;
+        });
+
+        const moisTotal = invalidite + salaires + indemnites + chomage + bim + customTotal;
         total += moisTotal;
 
         details.push({
@@ -162,6 +219,7 @@ function calculateRessources(role, dateEffet) {
             indemnites,
             chomage,
             bim,
+            customTotal,
             moisTotal,
         });
     }
@@ -170,9 +228,9 @@ function calculateRessources(role, dateEffet) {
 }
 
 function generateMonthlyDetails(details, role) {
-    let html = `<h4>Détails des ressources pour ${role}</h4>`;
+    let html = <h4>Détails des ressources pour ${role}</h4>;
     details.forEach(detail => {
-        html += `
+        html += 
             <h5>${detail.mois}</h5>
             <table>
                 <tr><td>Pension d'invalidité</td><td>${detail.invalidite.toFixed(2)} €</td></tr>
@@ -180,8 +238,11 @@ function generateMonthlyDetails(details, role) {
                 <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
                 <tr><td>Chômage</td><td>${detail.chomage.toFixed(2)} €</td></tr>
                 <tr><td>BIM (Capitaux placés)</td><td>${detail.bim.toFixed(2)} €</td></tr>
+                ${customColumns.map((col, index) => 
+                    <tr><td>${col}</td><td>${detail.customTotal.toFixed(2)} €</td></tr>
+                ).join('')}
                 <tr><td><strong>Total mensuel</strong></td><td><strong>${detail.moisTotal.toFixed(2)} €</strong></td></tr>
-            </table>`;
+            </table>;
     });
     return html;
 }
