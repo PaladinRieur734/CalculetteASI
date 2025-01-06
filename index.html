@@ -10,59 +10,37 @@
     <div class="container">
         <header>
             <h1>Calcul des Droits ASI</h1>
-            <p>Saisissez le statut et complétez les ressources pour le trimestre précédent.</p>
+            <p>Entrez la date d'effet et complétez les ressources pour chaque mois du trimestre précédent.</p>
         </header>
 
         <form id="asiForm">
-            <!-- Section Statut -->
+            <section class="date-section">
+                <h2>Date d'effet</h2>
+                <label for="dateEffet">Date d'effet :</label>
+                <input type="date" id="dateEffet" required onchange="genererMoisPrecedents()">
+            </section>
+
+            <section class="ressources-section">
+                <h2>Ressources mois par mois</h2>
+                <div id="ressourcesContainer">
+                    <p>Les mois précédant la date d'effet apparaîtront ici :</p>
+                </div>
+            </section>
+
             <section class="statut-section">
+                <h2>Statut</h2>
                 <label for="statut">Statut :</label>
-                <select id="statut" onchange="genererTableauRessources()">
-                    <option value="" disabled selected>Choisissez le statut</option>
+                <select id="statut">
                     <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
             </section>
 
-            <!-- Section Date d'effet -->
-            <section class="date-section">
-                <label for="dateEffet">Date d'effet :</label>
-                <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
-            </section>
-
-            <!-- Section Période -->
-            <section class="periode-section">
-                <label for="periodeDebut">Période de ressources :</label>
-                <input type="date" id="periodeDebut" placeholder="Début">
-                <input type="date" id="periodeFin" placeholder="Fin" onchange="genererTableauRessources()">
-            </section>
-
-            <!-- Section Tableau des ressources -->
-            <section class="ressources-section">
-                <div id="ressourcesContainer">
-                    <p class="info">Le tableau des ressources apparaîtra ici :</p>
-                </div>
-            </section>
-
-            <!-- Section Abattement -->
-            <section class="abattement-section">
-                <label for="abattement">Montant de l'abattement :</label>
-                <input type="number" id="abattement" placeholder="Montant en €" min="0">
-            </section>
-
-            <!-- Section BIM -->
-            <section class="bim-section">
-                <label for="bimPreviousYear">BIM de l'année N-1 :</label>
-                <input type="number" id="bimPreviousYear" placeholder="Montant des BIM en €" min="0">
-            </section>
-
-            <!-- Bouton Calcul -->
             <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
         </form>
 
-        <!-- Résultats -->
         <div id="result" class="result"></div>
     </div>
-    <script src="calculAsi.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
