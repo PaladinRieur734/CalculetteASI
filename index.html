@@ -9,15 +9,16 @@
 <body>
     <div class="container">
         <header>
-            <h1>Calcul des Droits ASI</h1>
-            <p>Saisissez la date d’effet et complétez les ressources pour le trimestre précédent.</p>
+            <h1>ANTISAPIN : Calculette des droits ASI</h1>
+            <p>Saisissez les informations pour générer le tableau des ressources et calculer les droits.</p>
         </header>
 
         <form id="asiForm">
             <!-- Section Statut -->
             <section class="statut-section">
                 <label for="statut">Statut :</label>
-                <select id="statut">
+                <select id="statut" onchange="genererTableauRessources()">
+                    <option value="" disabled selected>Choisissez le statut</option>
                     <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
@@ -26,14 +27,14 @@
             <!-- Section Date d'effet -->
             <section class="date-section">
                 <label for="dateEffet">Date d'effet :</label>
-                <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
+                <input type="date" id="dateEffet" onchange="genererTableauRessources()">
             </section>
 
             <!-- Section Tableau des ressources -->
             <section class="ressources-section">
                 <h2>Tableau des ressources trimestrielles</h2>
                 <div id="ressourcesContainer">
-                    <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
+                    <p class="info">Le tableau des ressources apparaîtra ici après sélection du statut et de la date d'effet.</p>
                 </div>
             </section>
 
