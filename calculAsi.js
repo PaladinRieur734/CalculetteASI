@@ -183,16 +183,55 @@ function calculateRessources(role, dateEffet) {
     let total = 0;
 
     for (let i = 3; i >= 1; i--) {
-        const rowTotal = Array.from(document.querySelectorAll(`#${role.toLowerCase()}Table tr:nth-child(${i + 1}) td input`))
-            .reduce((sum, input) => sum + (parseFloat(input.value) || 0), 0);
+        const mois = new Date(dateEffet);
+        mois.setMonth(mois.getMonth() - i);
 
-        total += rowTotal;
+        const invalidite = parseFloat(document.getElementById(`${role.toLowerCase()}_invaliditeM${4 - i}`).value) || 0;
+        const salaires = parseFloat(document.getElementById(`${role.toLowerCase()}_salairesM${4 - i}`).value) || 0;
+        const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${4 - i}`).value) || 0;
+        const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${4 - i}`).value) || 0;
+        const bimBrut = parseFloat(document.getElementById(`${role.toLowerCase()}_bimM${4 - i}`).value) || 0;
+        const bim = (bimBrut * 0.03) / 4;
+
+        let customTotal = 0;
+        customColumns.forEach((col, index) => {
+            const customInput = parseFloat(document.getElementById(`${role.toLowerCase()}_custom${index}M${4 - i}`).value) || 0;
+            customTotal += customInput;
+        });
+
+        const moisTotal = invalidite + salaires + indemnites + chomage + bim + customTotal;
+        total += moisTotal;
 
         details.push({
-            mois: new Date(dateEffet).toLocaleString("fr-FR", { month: "long", year: "numeric" }),
-            total: rowTotal,
+            mois: mois.toLocaleString("fr-FR", { month: "long", year: "numeric" }),
+            invalidite,
+            salaires,
+            indemnites,
+            chomage,
+            bim,
+            customTotal,
+            moisTotal,
         });
     }
 
     return { total, details };
+}
+
+function generateMonthlyDetails(details, role) {
+    let html = `<h4>Détails des ressources pour ${role}</h4>`;
+    details.forEach(detail => {
+        html += `
+            <h5>${detail.mois}</h5>
+            <table>
+                <tr><td>Pension d'invalidité</td><td>${detail.invalidite.toFixed(2)} €</td></tr>
+                <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
+                <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
+                <tr><td>Chômage</td><td>${detail.chomage.toFixed(2)} €</td></tr>
+                <tr><td>BIM (Capitaux placés)</td><td>${detail.bim.toFixed(2)} €</td></tr>
+                ${detail.customTotal > 0 ? `<tr><td>Colonnes personnalisées</td><td>${detail.customTotal.toFixed(2)} €</td></tr>` : ''}
+                <tr><td><strong>Total du mois</strong></td><td><strong>${detail.moisTotal.toFixed(2)} €</strong></td></tr>
+            </table>
+        `;
+    });
+    return html;
 }
