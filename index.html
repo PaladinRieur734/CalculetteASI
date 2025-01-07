@@ -17,7 +17,8 @@
             <!-- Section Statut -->
             <section class="statut-section">
                 <label for="statut">Statut :</label>
-                <select id="statut">
+                <select id="statut" onchange="genererTableauRessources()">
+                    <option value="" disabled selected>Choisissez le statut</option>
                     <option value="seul">Personne seule</option>
                     <option value="couple">Couple</option>
                 </select>
@@ -29,10 +30,17 @@
                 <input type="date" id="dateEffet" required onchange="genererTableauRessources()">
             </section>
 
+            <!-- Section Période -->
+            <section class="periode-section">
+                <label for="periodeDebut">Période de ressources :</label>
+                <input type="date" id="periodeDebut" placeholder="Début">
+                <input type="date" id="periodeFin" placeholder="Fin" onchange="genererTableauRessources()">
+            </section>
+
             <!-- Section Tableau des ressources -->
             <section class="ressources-section">
                 <div id="ressourcesContainer">
-                    <p class="info">Le tableau des ressources pour le trimestre précédent apparaîtra ici :</p>
+                    <p class="info">Le tableau des ressources apparaîtra ici :</p>
                 </div>
             </section>
 
