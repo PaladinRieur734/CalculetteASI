@@ -26,7 +26,6 @@ function genererTableauRessources() {
         ressourcesContainer.appendChild(tableConjoint);
     }
 }
-
 function createRessourceTable(role, dateEffet) {
     const tableContainer = document.createElement("div");
     tableContainer.classList.add("table-container");
@@ -94,7 +93,6 @@ function createRessourceTable(role, dateEffet) {
     tableContainer.appendChild(table);
     return tableContainer;
 }
-
 function addColumnToTable(role) {
     const table = document.getElementById(`${role.toLowerCase()}Table`);
     if (!table) return;
@@ -142,7 +140,6 @@ function calculerASI() {
     if (statut === "couple") {
         conjointRessources = calculateRessources("Conjoint", dateEffet);
     }
-
     const totalRessources = demandeurRessources.total + (conjointRessources ? conjointRessources.total : 0);
     const abattement = parseFloat(document.getElementById("abattement").value) || 0;
     const totalRessourcesApresAbattement = totalRessources - abattement;
@@ -195,21 +192,4 @@ function calculateRessources(role, dateEffet) {
     }
 
     return { total, details };
-}
-function generateMonthlyDetails(details, role) {
-    let html = `<h4>Détails des ressources pour ${role}</h4>`;
-    details.forEach(detail => {
-        html += `
-            <h5>${detail.mois}</h5>
-            <table>
-                <tr><td>Pension d'invalidité</td><td>${detail.invalidite.toFixed(2)} €</td></tr>
-                <tr><td>Salaires</td><td>${detail.salaires.toFixed(2)} €</td></tr>
-                <tr><td>Indemnités journalières</td><td>${detail.indemnites.toFixed(2)} €</td></tr>
-                <tr><td>Chômage</td><td>${detail.chomage.toFixed(2)} €</td></tr>
-                <tr><td>BIM (Capitaux placés)</td><td>${detail.bim.toFixed(2)} €</td></tr>
-                <tr><td>Autres ressources</td><td>${detail.autres.toFixed(2)} €</td></tr>
-                <tr><td><strong>Total mensuel</strong></td><td><strong>${detail.moisTotal.toFixed(2)} €</strong></td></tr>
-            </table>`;
-    });
-    return html;
 }
