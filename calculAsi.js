@@ -141,22 +141,29 @@ function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
 
+    if (!statut) {
+        alert("Veuillez sélectionner un statut.");
+        return;
+    }
+
     if (isNaN(dateEffet.getTime())) {
         alert("Veuillez renseigner une date d'effet valide.");
         return;
     }
 
+    // Récupération des plafonds et de l'abattement
     const plafondAnnuel = obtenirPlafond(dateEffet, statut);
     const plafondTrimestriel = plafondAnnuel / 4;
-
     const abattement = obtenirAbattement(dateEffet, statut);
 
+    // Calcul des ressources
     const demandeurRessources = calculateRessources("Demandeur", dateEffet);
     const conjointRessources = statut === "couple" ? calculateRessources("Conjoint", dateEffet).total : 0;
 
     const totalRessourcesAvantAbattement = demandeurRessources.total + conjointRessources;
     const totalRessourcesApresAbattement = Math.max(0, totalRessourcesAvantAbattement - abattement);
 
+    // Affichage des résultats
     afficherResultats(dateEffet, plafondTrimestriel, totalRessourcesAvantAbattement, totalRessourcesApresAbattement);
 }
 
@@ -170,9 +177,49 @@ function afficherResultats(dateEffet, plafondTrimestriel, ressourcesAvantAbattem
         <p><strong>Plafond trimestriel applicable :</strong> ${plafondTrimestriel.toFixed(2)} €</p>
     `;
 
+    // Conclusion selon les ressources
     if (ressourcesApresAbattement > plafondTrimestriel) {
         result.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${ressourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     } else {
         const montantASI = plafondTrimestriel - ressourcesApresAbattement;
         const montantMensuelASI = montantASI / 3;
-        result.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${ressourcesApresAbattement
+        result.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${ressourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+    }
+}
+
+function calculateRessources(role, dateEffet) {
+    const details = [];
+    let total = 0;
+
+    // Calcul des ressources pour chaque mois du trimestre précédent
+    for (let i = 3; i >= 1; i--) {
+        const mois = new Date(dateEffet);
+        mois.setMonth(mois.getMonth() - i);
+
+        const invalidite = parseFloat(document.getElementById(`${role.toLowerCase()}_invaliditeM${4 - i}`).value) || 0;
+        const salaires = parseFloat(document.getElementById(`${role.toLowerCase()}_salairesM${4 - i}`).value) || 0;
+        const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${4 - i}`).value) || 0;
+        const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${4 - i}`).value) || 0;
+
+        let customTotal = 0;
+        customColumns.forEach((col, index) => {
+            const customInput = parseFloat(document.getElementById(`${role.toLowerCase()}_custom${index}M${4 - i}`).value) || 0;
+            customTotal += customInput;
+        });
+
+        const moisTotal = invalidite + salaires + indemnites + chomage + customTotal;
+        total += moisTotal;
+
+        details.push({
+            mois: mois.toLocaleString("fr-FR", { month: "long", year: "numeric" }),
+            invalidite,
+            salaires,
+            indemnites,
+            chomage,
+            customTotal,
+            moisTotal,
+        });
+    }
+
+    return { total, details };
+}
