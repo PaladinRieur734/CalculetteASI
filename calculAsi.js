@@ -1,4 +1,3 @@
-// Plafonds ASI, qui changent au 1er avril chaque année
 const plafonds = {
     "2017": { seul: 9658.13, couple: 15592.07 },
     "2018": { seul: 9820.46, couple: 15872.24 },
@@ -10,37 +9,13 @@ const plafonds = {
     "2024": { seul: 10536.50, couple: 16890.35 },
 };
 
-// Liste des abattements annuels
-const abattements = {
-    "2017": { seul: 1400, couple: 2400 },
-    "2018": { seul: 1450, couple: 2450 },
-    "2019": { seul: 1500, couple: 2500 },
-    "2020": { seul: 1550, couple: 2550 },
-    "2021": { seul: 1600, couple: 2600 },
-    "2022": { seul: 1600, couple: 2600 },
-    "2023": { seul: 1600, couple: 2600 },
-    "2024": { seul: 1650, couple: 2650 },
-};
-
-// Fonction pour récupérer le plafond applicable en fonction de la date d'effet
 function obtenirPlafond(dateEffet, statut) {
     const annee = dateEffet.getFullYear();
     const mois = dateEffet.getMonth() + 1;
     const anneePlafond = mois < 4 ? annee - 1 : annee;
     return plafonds[anneePlafond]?.[statut] || 0;
 }
-
-// Fonction pour obtenir l'abattement applicable
-function obtenirAbattement(dateEffet, statut, salaires) {
-    const annee = dateEffet.getFullYear();
-    const mois = dateEffet.getMonth() + 1;
-    const anneeAbattement = mois < 4 ? annee - 1 : annee;
-    const abattementMax = abattements[anneeAbattement]?.[statut] || 0;
-
-    // Si les salaires sont inférieurs ou égaux à l'abattement maximal
-    return Math.min(salaires, abattementMax);
-}
-let customColumns = []; // Colonnes personnalisées ajoutées par l'utilisateur
+let customColumns = [];
 
 function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
@@ -49,7 +24,7 @@ function genererTableauRessources() {
     if (isNaN(dateEffet.getTime())) return;
 
     const ressourcesContainer = document.getElementById("ressourcesContainer");
-    ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
+    ressourcesContainer.innerHTML = "";
 
     const tableDemandeur = createRessourceTable("Demandeur", dateEffet);
     ressourcesContainer.appendChild(tableDemandeur);
@@ -72,26 +47,18 @@ function createRessourceTable(role, dateEffet) {
     table.id = `${role.toLowerCase()}Table`;
 
     const header = document.createElement("tr");
-    [
-        "Mois",
-        "Pension d'invalidité",
-        "Salaires",
-        "Indemnités journalières",
-        "Chômage"
-    ].forEach(col => {
+    ["Mois", "Pension d'invalidité", "Salaires", "Indemnités journalières", "Chômage"].forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
         header.appendChild(th);
     });
 
-    // Ajouter les colonnes personnalisées dynamiques
     customColumns.forEach(colName => {
         const th = document.createElement("th");
         th.textContent = colName;
         header.appendChild(th);
     });
 
-    // Ajouter le bouton "+" pour ajouter une colonne
     const addColumnButton = document.createElement("th");
     const button = document.createElement("button");
     button.textContent = "+";
@@ -127,7 +94,6 @@ function createRessourceTable(role, dateEffet) {
             row.appendChild(cell);
         });
 
-        // Colonnes personnalisées
         customColumns.forEach((col, index) => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
@@ -156,8 +122,6 @@ function addColumnToTable(role) {
     const headerInput = document.createElement("input");
     headerInput.type = "text";
     headerInput.placeholder = `Ressource ${columnIndex - 4}`;
-    headerInput.style.wordWrap = "break-word";
-    headerInput.style.whiteSpace = "normal";
     headerCell.appendChild(headerInput);
     table.rows[0].insertBefore(headerCell, table.rows[0].lastChild);
 
@@ -295,6 +259,7 @@ function afficherResultats(
         result.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${ressourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     }
 }
+
 function generateMonthlyDetails(details, role) {
     let html = `<h4>Détails des ressources pour ${role}</h4>`;
     details.forEach(detail => {
