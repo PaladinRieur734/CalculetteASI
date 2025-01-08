@@ -192,6 +192,18 @@ function afficherResultats(
     const result = document.getElementById("result");
     result.innerHTML = `
         <h2>Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}</h2>
+    `;
+
+    // Détails mois par mois pour le demandeur et conjoint
+    result.innerHTML += `<h3>Détails des ressources</h3>`;
+    result.innerHTML += generateMonthlyDetails(demandeurDetails, "Demandeur");
+
+    if (conjointDetails) {
+        result.innerHTML += generateMonthlyDetails(conjointDetails, "Conjoint");
+    }
+
+    // Résumé des ressources
+    result.innerHTML += `
         <h3>Résumé des ressources</h3>
         <table>
             <tr><td><strong>Total trimestriel avant abattement :</strong></td><td>${ressourcesAvantAbattement.toFixed(
@@ -209,6 +221,7 @@ function afficherResultats(
         </table>
     `;
 
+    // Conclusion
     if (ressourcesApresAbattement > plafondTrimestriel) {
         result.innerHTML += `
             <p>Les ressources combinées au cours du trimestre de référence, soit ${ressourcesApresAbattement.toFixed(
@@ -233,14 +246,6 @@ function afficherResultats(
             2
         )} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>
         `;
-    }
-
-    // Ajout des détails mois par mois
-    result.innerHTML += `<h3>Détails des ressources</h3>`;
-    result.innerHTML += generateMonthlyDetails(demandeurDetails, "Demandeur");
-
-    if (conjointDetails) {
-        result.innerHTML += generateMonthlyDetails(conjointDetails, "Conjoint");
     }
 }
 
