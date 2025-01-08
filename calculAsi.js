@@ -265,6 +265,15 @@ function afficherResultats(
         <h2>Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}</h2>
     `;
 
+    // Détails mois par mois pour le demandeur
+    result.innerHTML += `<h3>Détails des ressources</h3>`;
+    result.innerHTML += generateMonthlyDetails(demandeurDetails, "Demandeur");
+
+    // Détails mois par mois pour le conjoint (si applicable)
+    if (conjointDetails) {
+        result.innerHTML += generateMonthlyDetails(conjointDetails, "Conjoint");
+    }
+
     // Résumé des ressources
     result.innerHTML += `
         <h3>Résumé des ressources</h3>
@@ -277,15 +286,6 @@ function afficherResultats(
         </table>
     `;
 
-    // Détails mois par mois pour le demandeur
-    result.innerHTML += `<h3>Détails des ressources</h3>`;
-    result.innerHTML += generateMonthlyDetails(demandeurDetails, "Demandeur");
-
-    // Détails mois par mois pour le conjoint (si applicable)
-    if (conjointDetails) {
-        result.innerHTML += generateMonthlyDetails(conjointDetails, "Conjoint");
-    }
-
     // Conclusion
     if (ressourcesApresAbattement > plafondTrimestriel) {
         result.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${ressourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
@@ -295,7 +295,6 @@ function afficherResultats(
         result.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${ressourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     }
 }
-
 function generateMonthlyDetails(details, role) {
     let html = `<h4>Détails des ressources pour ${role}</h4>`;
     details.forEach(detail => {
