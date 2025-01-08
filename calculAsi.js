@@ -69,6 +69,19 @@ function createRessourceTable(role, dateEffet) {
         header.appendChild(th);
     });
 
+    // Ajouter un bouton "+" pour les colonnes supplémentaires
+    const addColumnButton = document.createElement("th");
+    const button = document.createElement("button");
+    button.textContent = "+";
+    button.className = "add-column-btn";
+    button.title = "Ajouter une ressource";
+    button.onclick = event => {
+        event.preventDefault();
+        addColumnToTable(role.toLowerCase());
+    };
+    addColumnButton.appendChild(button);
+    header.appendChild(addColumnButton);
+
     table.appendChild(header);
 
     for (let i = 3; i >= 1; i--) {
@@ -96,6 +109,33 @@ function createRessourceTable(role, dateEffet) {
 
     tableContainer.appendChild(table);
     return tableContainer;
+}
+
+function addColumnToTable(role) {
+    const table = document.getElementById(`${role.toLowerCase()}Table`);
+    if (!table) return;
+
+    const columnIndex = table.rows[0].cells.length - 1;
+
+    const headerCell = document.createElement("th");
+    const headerInput = document.createElement("input");
+    headerInput.type = "text";
+    headerInput.placeholder = `Ressource ${columnIndex - 4}`;
+    headerInput.style.wordWrap = "break-word";
+    headerInput.style.whiteSpace = "normal";
+    headerCell.appendChild(headerInput);
+    table.rows[0].insertBefore(headerCell, table.rows[0].lastChild);
+
+    for (let i = 1; i < table.rows.length; i++) {
+        const cell = document.createElement("td");
+        const input = document.createElement("input");
+        input.type = "number";
+        input.placeholder = "€";
+        input.min = 0;
+        input.id = `${role}_custom${columnIndex - 4}M${4 - i}`;
+        cell.appendChild(input);
+        table.rows[i].insertBefore(cell, table.rows[i].lastChild);
+    }
 }
 function calculerASI() {
     const statut = document.getElementById("statut").value;
@@ -135,6 +175,4 @@ function afficherResultats(dateEffet, plafondTrimestriel, ressourcesAvantAbattem
     } else {
         const montantASI = plafondTrimestriel - ressourcesApresAbattement;
         const montantMensuelASI = montantASI / 3;
-        result.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${ressourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
-    }
-}
+        result.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${ressourcesApresAbattement
