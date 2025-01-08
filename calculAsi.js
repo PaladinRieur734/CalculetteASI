@@ -33,6 +33,8 @@ function obtenirAbattement(dateEffet, statut) {
     const annee = dateEffet.getFullYear();
     return abattements[annee]?.[statut] || 0;
 }
+let customColumns = []; // Colonnes personnalisées ajoutées par l'utilisateur
+
 function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
     const statut = document.getElementById("statut").value;
@@ -121,8 +123,6 @@ function addColumnToTable(role) {
     const headerInput = document.createElement("input");
     headerInput.type = "text";
     headerInput.placeholder = `Ressource ${columnIndex - 4}`;
-    headerInput.style.wordWrap = "break-word";
-    headerInput.style.whiteSpace = "normal";
     headerCell.appendChild(headerInput);
     table.rows[0].insertBefore(headerCell, table.rows[0].lastChild);
 
