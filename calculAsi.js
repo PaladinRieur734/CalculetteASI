@@ -10,7 +10,7 @@ const plafonds = {
     "2024": { seul: 10536.50, couple: 16890.35 },
 };
 
-// Liste complète des abattements par année
+// Liste des abattements annuels
 const abattements = {
     "2017": { seul: 1400, couple: 2400 },
     "2018": { seul: 1450, couple: 2450 },
@@ -26,11 +26,19 @@ const abattements = {
 function obtenirPlafond(dateEffet, statut) {
     const annee = dateEffet.getFullYear();
     const mois = dateEffet.getMonth() + 1;
-
-    // Si la date est avant le 1er avril, on utilise le plafond de l'année précédente
     const anneePlafond = mois < 4 ? annee - 1 : annee;
-
     return plafonds[anneePlafond]?.[statut] || 0;
+}
+
+// Fonction pour obtenir l'abattement applicable
+function obtenirAbattement(dateEffet, statut, salaires) {
+    const annee = dateEffet.getFullYear();
+    const mois = dateEffet.getMonth() + 1;
+    const anneeAbattement = mois < 4 ? annee - 1 : annee;
+    const abattementMax = abattements[anneeAbattement]?.[statut] || 0;
+
+    // Si les salaires sont inférieurs ou égaux à l'abattement maximal
+    return Math.min(salaires, abattementMax);
 }
 let customColumns = []; // Colonnes personnalisées ajoutées par l'utilisateur
 
@@ -189,6 +197,44 @@ function calculerASI() {
         demandeurRessources.details,
         statut === "couple" ? calculateRessources("Conjoint", dateEffet).details : null
     );
+}
+
+function calculateRessources(role, dateEffet) {
+    const details = [];
+    let total = 0;
+    let salaires = 0;
+
+    for (let i = 3; i >= 1; i--) {
+        const mois = new Date(dateEffet);
+        mois.setMonth(mois.getMonth() - i);
+
+        const invalidite = parseFloat(document.getElementById(`${role.toLowerCase()}_invaliditeM${4 - i}`).value) || 0;
+        const salairesMois = parseFloat(document.getElementById(`${role.toLowerCase()}_salairesM${4 - i}`).value) || 0;
+        const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${4 - i}`).value) || 0;
+        const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${4 - i}`).value) || 0;
+
+        let customTotal = 0;
+        customColumns.forEach((col, index) => {
+            const customInput = parseFloat(document.getElementById(`${role.toLowerCase()}_custom${index}M${4 - i}`).value) || 0;
+            customTotal += customInput;
+        });
+
+        const moisTotal = invalidite + salairesMois + indemnites + chomage + customTotal;
+        total += moisTotal;
+        salaires += salairesMois;
+
+        details.push({
+            mois: mois.toLocaleString("fr-FR", { month: "long", year: "numeric" }),
+            invalidite,
+            salaires: salairesMois,
+            indemnites,
+            chomage,
+            customTotal,
+            moisTotal,
+        });
+    }
+
+    return { total, salaires, details };
 }
 
 function afficherResultats(
