@@ -229,15 +229,6 @@ function afficherResultats(
         <h2>Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}</h2>
     `;
 
-    // Détails mois par mois pour le demandeur
-    result.innerHTML += `<h3>Détails des ressources</h3>`;
-    result.innerHTML += generateMonthlyDetails(demandeurDetails, "Demandeur");
-
-    // Détails mois par mois pour le conjoint (si applicable)
-    if (conjointDetails) {
-        result.innerHTML += generateMonthlyDetails(conjointDetails, "Conjoint");
-    }
-
     // Résumé des ressources
     result.innerHTML += `
         <h3>Résumé des ressources</h3>
@@ -249,6 +240,15 @@ function afficherResultats(
             <tr><td><strong>Plafond trimestriel applicable :</strong></td><td>${plafondTrimestriel.toFixed(2)} €</td></tr>
         </table>
     `;
+
+    // Détails mois par mois pour le demandeur
+    result.innerHTML += `<h3>Détails des ressources</h3>`;
+    result.innerHTML += generateMonthlyDetails(demandeurDetails, "Demandeur");
+
+    // Détails mois par mois pour le conjoint (si applicable)
+    if (conjointDetails) {
+        result.innerHTML += generateMonthlyDetails(conjointDetails, "Conjoint");
+    }
 
     // Conclusion
     if (ressourcesApresAbattement > plafondTrimestriel) {
@@ -272,7 +272,7 @@ function generateMonthlyDetails(details, role) {
                 <li>Chômage : ${detail.chomage.toFixed(2)} €</li>
                 ${
                     detail.customTotal > 0
-                        ? `<li>Colonnes personnalisées : ${detail.customTotal.toFixed(2)} €</li>`
+                        ? `<li>Ressources personnalisées : ${detail.customTotal.toFixed(2)} €</li>`
                         : ""
                 }
                 <li><strong>Total mensuel :</strong> ${detail.moisTotal.toFixed(2)} €</li>
