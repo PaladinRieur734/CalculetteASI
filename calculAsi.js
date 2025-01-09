@@ -204,7 +204,10 @@ function calculateRessources(role, dateEffet) {
             salaires,
             indemnites,
             chomage,
-            customTotal,
+            customDetails: customColumns.map((col, index) => ({
+                nom: col,
+                montant: parseFloat(document.getElementById(`${role.toLowerCase()}_custom${index}M${4 - i}`).value) || 0,
+            })),
             moisTotal,
         });
     }
@@ -271,18 +274,20 @@ function calculerASI() {
     }
 }
 function generateMonthlyDetails(details, role) {
-    let html = `<h4>Détails des ressources pour ${role}</h4>`;
+    let html = `<h5>Détails des ressources pour ${role}</h5>`;
     details.forEach(detail => {
         html += `
-            <h5>${detail.mois}</h5>
+            <h6>${detail.mois}</h6>
             <ul>
                 <li>Pension d'invalidité : ${detail.invalidite.toFixed(2)} €</li>
                 <li>Salaires : ${detail.salaires.toFixed(2)} €</li>
                 <li>Indemnités journalières : ${detail.indemnites.toFixed(2)} €</li>
                 <li>Chômage : ${detail.chomage.toFixed(2)} €</li>
                 ${
-                    detail.customTotal > 0
-                        ? `<li>Colonnes personnalisées : ${detail.customTotal.toFixed(2)} €</li>`
+                    detail.customDetails.length > 0
+                        ? detail.customDetails
+                              .map(custom => `<li>${custom.nom} : ${custom.montant.toFixed(2)} €</li>`)
+                              .join("")
                         : ""
                 }
                 <li><strong>Total mensuel :</strong> ${detail.moisTotal.toFixed(2)} €</li>
