@@ -43,7 +43,6 @@ function obtenirAbattement(dateEffet, statut, salaires) {
 
 // Liste des colonnes personnalisées et leurs noms
 let customColumns = [];
-
 function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
     const statut = document.getElementById("statut").value;
@@ -60,92 +59,6 @@ function genererTableauRessources() {
         const tableConjoint = createRessourceTable("Conjoint", dateEffet);
         ressourcesContainer.appendChild(tableConjoint);
     }
-}
-
-function createRessourceTable(role, dateEffet) {
-    const tableContainer = document.createElement("div");
-    tableContainer.classList.add("table-container");
-
-    const title = document.createElement("h3");
-    title.textContent = `Ressources du ${role}`;
-    tableContainer.appendChild(title);
-
-    const table = document.createElement("table");
-    table.id = `${role.toLowerCase()}Table`;
-
-    const header = document.createElement("tr");
-    [
-        "Mois",
-        "Pension d'invalidité",
-        "Salaires",
-        "Indemnités journalières",
-        "Chômage"
-    ].forEach(col => {
-        const th = document.createElement("th");
-        th.textContent = col;
-        header.appendChild(th);
-    });
-
-    // Ajouter les colonnes personnalisées dynamiques
-    customColumns.forEach(colName => {
-        const th = document.createElement("th");
-        th.textContent = colName;
-        header.appendChild(th);
-    });
-
-    // Ajouter le bouton "+" pour ajouter une colonne
-    const addColumnButton = document.createElement("th");
-    const button = document.createElement("button");
-    button.textContent = "+";
-    button.className = "add-column-btn";
-    button.title = "Ajouter une ressource";
-    button.onclick = event => {
-        event.preventDefault();
-        addColumnToTable(role.toLowerCase());
-    };
-    addColumnButton.appendChild(button);
-    header.appendChild(addColumnButton);
-
-    table.appendChild(header);
-
-    for (let i = 3; i >= 1; i--) {
-        const mois = new Date(dateEffet);
-        mois.setMonth(mois.getMonth() - i);
-
-        const row = document.createElement("tr");
-
-        const moisCell = document.createElement("td");
-        moisCell.textContent = mois.toLocaleString("fr-FR", { month: "long", year: "numeric" });
-        row.appendChild(moisCell);
-
-        ["invalidite", "salaires", "indemnites", "chomage"].forEach(type => {
-            const cell = document.createElement("td");
-            const input = document.createElement("input");
-            input.type = "number";
-            input.id = `${role.toLowerCase()}_${type}M${4 - i}`;
-            input.placeholder = "€";
-            input.min = 0;
-            cell.appendChild(input);
-            row.appendChild(cell);
-        });
-
-        // Colonnes personnalisées
-        customColumns.forEach((col, index) => {
-            const cell = document.createElement("td");
-            const input = document.createElement("input");
-            input.type = "number";
-            input.id = `${role.toLowerCase()}_custom${index}M${4 - i}`;
-            input.placeholder = "€";
-            input.min = 0;
-            cell.appendChild(input);
-            row.appendChild(cell);
-        });
-
-        table.appendChild(row);
-    }
-
-    tableContainer.appendChild(table);
-    return tableContainer;
 }
 function addColumnToTable(role) {
     const table = document.getElementById(`${role.toLowerCase()}Table`);
@@ -172,7 +85,6 @@ function addColumnToTable(role) {
         table.rows[i].insertBefore(cell, table.rows[i].lastChild);
     }
 }
-
 function calculateRessources(role, dateEffet) {
     const details = [];
     let total = 0;
@@ -210,7 +122,6 @@ function calculateRessources(role, dateEffet) {
 
     return { total, salaires: salairesTotal, details };
 }
-
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
