@@ -40,7 +40,9 @@ function obtenirAbattement(dateEffet, statut, salaires) {
     // Si les salaires sont inférieurs ou égaux à l'abattement maximal
     return Math.min(salaires, abattementMax);
 }
-let customColumns = []; // Colonnes personnalisées ajoutées par l'utilisateur
+
+// Liste des colonnes personnalisées et leurs noms
+let customColumns = [];
 
 function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
@@ -145,20 +147,18 @@ function createRessourceTable(role, dateEffet) {
     tableContainer.appendChild(table);
     return tableContainer;
 }
-
 function addColumnToTable(role) {
     const table = document.getElementById(`${role.toLowerCase()}Table`);
     if (!table) return;
 
-    const columnIndex = table.rows[0].cells.length - 1;
+    const columnIndex = customColumns.length;
+    const columnName = prompt("Entrez le nom de la nouvelle colonne :");
+    if (!columnName) return;
+
+    customColumns.push(columnName);
 
     const headerCell = document.createElement("th");
-    const headerInput = document.createElement("input");
-    headerInput.type = "text";
-    headerInput.placeholder = `Ressource ${columnIndex - 4}`;
-    headerInput.style.wordWrap = "break-word";
-    headerInput.style.whiteSpace = "normal";
-    headerCell.appendChild(headerInput);
+    headerCell.textContent = columnName;
     table.rows[0].insertBefore(headerCell, table.rows[0].lastChild);
 
     for (let i = 1; i < table.rows.length; i++) {
@@ -167,11 +167,12 @@ function addColumnToTable(role) {
         input.type = "number";
         input.placeholder = "€";
         input.min = 0;
-        input.id = `${role}_custom${columnIndex - 4}M${4 - i}`;
+        input.id = `${role}_custom${columnIndex}M${4 - i}`;
         cell.appendChild(input);
         table.rows[i].insertBefore(cell, table.rows[i].lastChild);
     }
 }
+
 function calculateRessources(role, dateEffet) {
     const details = [];
     let total = 0;
@@ -308,7 +309,7 @@ function generateMonthlyDetails(details, role) {
                 <li>Chômage : ${detail.chomage.toFixed(2)} €</li>
                 ${
                     detail.customTotal > 0
-                        ? `<li>${detail.customName || "Colonnes personnalisées"} : ${detail.customTotal.toFixed(2)} €</li>`
+                        ? `<li>${customColumns[detail.customIndex]} : ${detail.customTotal.toFixed(2)} €</li>`
                         : ""
                 }
                 <li><strong>Total mensuel :</strong> ${detail.moisTotal.toFixed(2)} €</li>
