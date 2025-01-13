@@ -46,7 +46,11 @@ function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
     const statut = document.getElementById("statut").value;
 
-    if (isNaN(dateEffet.getTime())) return;
+    if (!statut || isNaN(dateEffet.getTime())) {
+        document.getElementById("ressourcesContainer").innerHTML = `
+            <p class="info">Veuillez sélectionner un statut et une date d'effet pour générer le tableau.</p>`;
+        return;
+    }
 
     const ressourcesContainer = document.getElementById("ressourcesContainer");
     ressourcesContainer.innerHTML = ""; // Réinitialise le contenu
@@ -72,24 +76,20 @@ function createRessourceTable(role, dateEffet) {
     table.id = `${role.toLowerCase()}Table`;
 
     const header = document.createElement("tr");
-    [
-        "Mois",
-        "Pension d'invalidité",
-        "Salaires",
-        "Indemnités journalières",
-        "Chômage"
-    ].forEach(col => {
+    ["Mois", "Pension d'invalidité", "Salaires", "Indemnités journalières", "Chômage"].forEach(col => {
         const th = document.createElement("th");
         th.textContent = col;
         header.appendChild(th);
     });
 
+    // Ajouter les colonnes personnalisées dynamiques
     customColumns.forEach(colName => {
         const th = document.createElement("th");
         th.textContent = colName;
         header.appendChild(th);
     });
 
+    // Ajouter le bouton "+" pour ajouter une colonne
     const addColumnButton = document.createElement("th");
     const button = document.createElement("button");
     button.textContent = "+";
@@ -125,6 +125,7 @@ function createRessourceTable(role, dateEffet) {
             row.appendChild(cell);
         });
 
+        // Colonnes personnalisées
         customColumns.forEach((col, index) => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
@@ -142,30 +143,30 @@ function createRessourceTable(role, dateEffet) {
     tableContainer.appendChild(table);
     return tableContainer;
 }
-
 function addColumnToTable(role) {
     const table = document.getElementById(`${role.toLowerCase()}Table`);
     if (!table) return;
 
-    const columnIndex = customColumns.length;
-    const columnName = prompt("Nom de la nouvelle ressource ?");
-    if (!columnName) return;
+    const columnIndex = table.rows[0].cells.length - 1;
+    const newColumnName = prompt("Nom de la nouvelle colonne :");
 
-    customColumns.push(columnName);
+    if (!newColumnName) return;
+
+    customColumns.push(newColumnName);
 
     const headerCell = document.createElement("th");
-    headerCell.textContent = columnName;
-    table.rows[0].appendChild(headerCell);
+    headerCell.textContent = newColumnName;
+    table.rows[0].insertBefore(headerCell, table.rows[0].lastChild);
 
     for (let i = 1; i < table.rows.length; i++) {
         const cell = document.createElement("td");
         const input = document.createElement("input");
         input.type = "number";
-        input.id = `${role}_custom${columnIndex}M${4 - i}`;
         input.placeholder = "€";
         input.min = 0;
+        input.id = `${role}_custom${customColumns.length - 1}M${4 - i}`;
         cell.appendChild(input);
-        table.rows[i].appendChild(cell);
+        table.rows[i].insertBefore(cell, table.rows[i].lastChild);
     }
 }
 function calculateRessources(role, dateEffet) {
@@ -198,17 +199,13 @@ function calculateRessources(role, dateEffet) {
             salaires,
             indemnites,
             chomage,
-            customColumns: customColumns.map((name, index) => ({
-                name,
-                value: parseFloat(document.getElementById(`${role.toLowerCase()}_custom${index}M${4 - i}`).value) || 0,
-            })),
+            customTotal,
             moisTotal,
         });
     }
 
     return { total, salaires: salairesTotal, details };
 }
-
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
@@ -262,7 +259,15 @@ function afficherResultats(
         <h2>Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}</h2>
     `;
 
-    // Résumé des ressources
+    // Affichage des détails des ressources en premier
+    result.innerHTML += `<h3>Détails des ressources</h3>`;
+    result.innerHTML += generateMonthlyDetails(demandeurDetails, "Demandeur");
+
+    if (conjointDetails) {
+        result.innerHTML += generateMonthlyDetails(conjointDetails, "Conjoint");
+    }
+
+    // Affichage du résumé des ressources
     result.innerHTML += `
         <h3>Résumé des ressources</h3>
         <table>
@@ -274,18 +279,9 @@ function afficherResultats(
         </table>
     `;
 
-    // Détails mois par mois pour le demandeur
-    result.innerHTML += `<h3>Détails des ressources</h3>`;
-    result.innerHTML += generateMonthlyDetails(demandeurDetails, "Demandeur");
-
-    // Détails mois par mois pour le conjoint (si applicable)
-    if (conjointDetails) {
-        result.innerHTML += generateMonthlyDetails(conjointDetails, "Conjoint");
-    }
-
     // Conclusion
     if (ressourcesApresAbattement > plafondTrimestriel) {
-        result.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${ressourcesApresAbattement.toFixed(2)} €, étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+        result.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${ressourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     } else {
         const montantASI = plafondTrimestriel - ressourcesApresAbattement;
         const montantMensuelASI = montantASI / 3;
@@ -304,8 +300,8 @@ function generateMonthlyDetails(details, role) {
                 <li>Indemnités journalières : ${detail.indemnites.toFixed(2)} €</li>
                 <li>Chômage : ${detail.chomage.toFixed(2)} €</li>
                 ${
-                    detail.customColumns.length > 0
-                        ? detail.customColumns.map(col => `<li>${col.name} : ${col.value.toFixed(2)} €</li>`).join("")
+                    detail.customTotal > 0
+                        ? `<li>${customColumns[details.indexOf(detail)] || "Autres ressources"} : ${detail.customTotal.toFixed(2)} €</li>`
                         : ""
                 }
                 <li><strong>Total mensuel :</strong> ${detail.moisTotal.toFixed(2)} €</li>
