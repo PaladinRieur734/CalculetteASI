@@ -143,27 +143,25 @@ function addColumnToTable(role) {
     const table = document.getElementById(`${role.toLowerCase()}Table`);
     if (!table) return;
 
-    const columnIndex = table.rows[0].cells.length - 1;
+    const columnIndex = customColumns.length; // Index de la nouvelle colonne
+    const columnName = prompt("Nom de la colonne personnalisée :");
+    if (!columnName) return;
 
+    customColumns.push(columnName); // Ajouter le nom de la colonne à la liste
+
+    // Ajouter une cellule d'en-tête pour la nouvelle colonne
     const headerCell = document.createElement("th");
-    const headerInput = document.createElement("input");
-    headerInput.type = "text";
-    headerInput.placeholder = `Ressource ${columnIndex - 4}`;
-    headerInput.style.wordWrap = "break-word";
-    headerInput.style.whiteSpace = "normal";
-    headerInput.addEventListener("change", event => {
-        customColumns[columnIndex - 4] = event.target.value;
-    });
-    headerCell.appendChild(headerInput);
+    headerCell.textContent = columnName;
     table.rows[0].insertBefore(headerCell, table.rows[0].lastChild);
 
+    // Ajouter des cellules de données pour chaque ligne
     for (let i = 1; i < table.rows.length; i++) {
         const cell = document.createElement("td");
         const input = document.createElement("input");
         input.type = "number";
         input.placeholder = "€";
         input.min = 0;
-        input.id = `${role}_custom${columnIndex - 4}M${4 - i}`;
+        input.id = `${role}_custom${columnIndex}M${4 - i}`; // ID unique basé sur le rôle, l'index et le mois
         cell.appendChild(input);
         table.rows[i].insertBefore(cell, table.rows[i].lastChild);
     }
@@ -184,9 +182,11 @@ function calculateRessources(role, dateEffet) {
         const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${4 - i}`).value) || 0;
 
         let customTotal = 0;
+        const customValues = {}; // Object pour stocker les valeurs des colonnes personnalisées
         customColumns.forEach((col, index) => {
-            const customInput = parseFloat(document.getElementById(`${role.toLowerCase()}_custom${index}M${4 - i}`).value) || 0;
-            customTotal += customInput;
+            const value = parseFloat(document.getElementById(`${role.toLowerCase()}_custom${index}M${4 - i}`).value) || 0;
+            customValues[col] = value; // Associer la valeur au nom de la colonne
+            customTotal += value;
         });
 
         const moisTotal = invalidite + salaires + indemnites + chomage + customTotal;
@@ -199,13 +199,14 @@ function calculateRessources(role, dateEffet) {
             salaires,
             indemnites,
             chomage,
-            customTotal,
+            customValues, // Inclure les colonnes personnalisées
             moisTotal,
         });
     }
 
     return { total, salaires: salairesTotal, details };
 }
+
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
@@ -285,7 +286,6 @@ function afficherResultats(
         const montantMensuelASI = montantASI / 3;
         result.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${ressourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     }
-}
 function generateMonthlyDetails(details, role) {
     let html = `<h4>Détails des ressources pour ${role}</h4>`;
     details.forEach(detail => {
@@ -297,8 +297,10 @@ function generateMonthlyDetails(details, role) {
                 <li>Indemnités journalières : ${detail.indemnites.toFixed(2)} €</li>
                 <li>Chômage : ${detail.chomage.toFixed(2)} €</li>
                 ${
-                    detail.customTotal > 0
-                        ? `<li>${customColumns.join(", ")} : ${detail.customTotal.toFixed(2)} €</li>`
+                    Object.keys(detail.customValues).length > 0
+                        ? `<li>Colonnes personnalisées :</li>${Object.entries(detail.customValues)
+                              .map(([key, value]) => `<li>${key} : ${value.toFixed(2)} €</li>`)
+                              .join("")}`
                         : ""
                 }
                 <li><strong>Total mensuel :</strong> ${detail.moisTotal.toFixed(2)} €</li>
