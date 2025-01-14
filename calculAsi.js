@@ -41,10 +41,8 @@ function obtenirAbattement(dateEffet, statut, salaires) {
     return Math.min(salaires, abattementMax);
 }
 
-// Colonnes personnalisées ajoutées par l'utilisateur
-let customColumns = [];
+let customColumns = []; // Colonnes personnalisées ajoutées par l'utilisateur
 
-// Génération automatique du tableau des ressources
 function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
     const statut = document.getElementById("statut").value;
@@ -86,14 +84,14 @@ function createRessourceTable(role, dateEffet) {
         header.appendChild(th);
     });
 
-    // Colonnes personnalisées dynamiques
+    // Ajouter les colonnes personnalisées dynamiques
     customColumns.forEach(colName => {
         const th = document.createElement("th");
         th.textContent = colName;
         header.appendChild(th);
     });
 
-    // Bouton pour ajouter une colonne
+    // Ajouter le bouton "+" pour ajouter une colonne
     const addColumnButton = document.createElement("th");
     const button = document.createElement("button");
     button.textContent = "+";
@@ -143,6 +141,11 @@ function createRessourceTable(role, dateEffet) {
 
         table.appendChild(row);
     }
+
+    tableContainer.appendChild(table);
+    return tableContainer;
+}
+
 function addColumnToTable(role) {
     const table = document.getElementById(`${role.toLowerCase()}Table`);
     if (!table) return;
@@ -169,7 +172,6 @@ function addColumnToTable(role) {
         table.rows[i].insertBefore(cell, table.rows[i].lastChild);
     }
 }
-
 function calculateRessources(role, dateEffet) {
     const details = [];
     let total = 0;
@@ -207,11 +209,14 @@ function calculateRessources(role, dateEffet) {
 
     return { total, salaires: salairesTotal, details };
 }
+
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
 
-    if (isNaN(dateEffet.getTime())) return;
+    if (isNaN(dateEffet.getTime())) {
+        return; // Sortir si la date est invalide
+    }
 
     const plafondAnnuel = obtenirPlafond(dateEffet, statut);
     const plafondTrimestriel = plafondAnnuel / 4;
@@ -259,6 +264,15 @@ function afficherResultats(
         <h2>Droits ASI au ${dateEffet.toLocaleDateString("fr-FR")}</h2>
     `;
 
+    // Détails des ressources
+    result.innerHTML += `<h3>Détails des ressources</h3>`;
+    result.innerHTML += generateMonthlyDetails(demandeurDetails, "Demandeur");
+
+    // Détails pour le conjoint, si applicable
+    if (conjointDetails) {
+        result.innerHTML += generateMonthlyDetails(conjointDetails, "Conjoint");
+    }
+
     // Résumé des ressources
     result.innerHTML += `
         <h3>Résumé des ressources</h3>
@@ -271,15 +285,6 @@ function afficherResultats(
         </table>
     `;
 
-    // Détails mois par mois pour le demandeur
-    result.innerHTML += `<h3>Détails des ressources</h3>`;
-    result.innerHTML += generateMonthlyDetails(demandeurDetails, "Demandeur");
-
-    // Détails mois par mois pour le conjoint (si applicable)
-    if (conjointDetails) {
-        result.innerHTML += generateMonthlyDetails(conjointDetails, "Conjoint");
-    }
-
     // Conclusion
     if (ressourcesApresAbattement > plafondTrimestriel) {
         result.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${ressourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
@@ -289,7 +294,6 @@ function afficherResultats(
         result.innerHTML += `<p>Le montant trimestriel de l’allocation supplémentaire à servir était donc de ${montantASI.toFixed(2)} € (${plafondTrimestriel.toFixed(2)} € [plafond] – ${ressourcesApresAbattement.toFixed(2)} € [ressources]). Seuls des arrérages d’un montant mensuel de ${montantMensuelASI.toFixed(2)} € étaient dus à compter du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     }
 }
-
 function generateMonthlyDetails(details, role) {
     let html = `<h4>Détails des ressources pour ${role}</h4>`;
     details.forEach(detail => {
@@ -302,7 +306,7 @@ function generateMonthlyDetails(details, role) {
                 <li>Chômage : ${detail.chomage.toFixed(2)} €</li>
                 ${
                     detail.customTotal > 0
-                        ? `<li>Colonnes personnalisées : ${detail.customTotal.toFixed(2)} €</li>`
+                        ? `<li>${customColumns.map((col, index) => `${col} : ${detail.customTotal.toFixed(2)} €`).join(', ')}</li>`
                         : ""
                 }
                 <li><strong>Total mensuel :</strong> ${detail.moisTotal.toFixed(2)} €</li>
@@ -310,5 +314,3 @@ function generateMonthlyDetails(details, role) {
     });
     return html;
 }
-
-  
