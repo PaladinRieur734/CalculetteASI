@@ -36,10 +36,12 @@ function obtenirAbattement(dateEffet, statut, salaires) {
     const mois = dateEffet.getMonth() + 1;
     const anneeAbattement = mois < 4 ? annee - 1 : annee;
     const abattementMax = abattements[anneeAbattement]?.[statut] || 0;
-
-    // Si les salaires sont inférieurs ou égaux à l'abattement maximal
     return Math.min(salaires, abattementMax);
 }
+// Colonnes personnalisées (2 colonnes seulement)
+let customColumns = ["Colonne personnalisée 1", "Colonne personnalisée 2"];
+
+// Fonction pour générer le tableau des ressources
 function genererTableauRessources() {
     const dateEffet = new Date(document.getElementById("dateEffet").value);
     const statut = document.getElementById("statut").value;
@@ -58,7 +60,7 @@ function genererTableauRessources() {
     }
 }
 
-// Fonction pour créer un tableau de ressources avec 3 colonnes personnalisées
+// Création du tableau des ressources
 function createRessourceTable(role, dateEffet) {
     const tableContainer = document.createElement("div");
     tableContainer.classList.add("table-container");
@@ -71,23 +73,28 @@ function createRessourceTable(role, dateEffet) {
     table.id = `${role.toLowerCase()}Table`;
 
     const header = document.createElement("tr");
-    ["Mois", "Pension d'invalidité", "Salaires", "Indemnités journalières", "Chômage"].forEach(col => {
+    [
+        "Mois",
+        "Pension d'invalidité",
+        "Salaires",
+        "Indemnités journalières",
+        "Chômage",
+        ...customColumns
+    ].forEach((col, index) => {
         const th = document.createElement("th");
-        th.textContent = col; // Les colonnes fixes ne sont pas modifiables
-        header.appendChild(th);
-    });
-
-    // Ajouter 3 colonnes personnalisées modifiables
-    ["Colonne 1", "Colonne 2", "Colonne 3"].forEach((col, index) => {
-        const th = document.createElement("th");
-        const input = document.createElement("input");
-        input.type = "text";
-        input.placeholder = col;
-        input.value = col;
-        input.dataset.index = index;
-        input.dataset.role = role.toLowerCase();
-        input.classList.add("custom-column-name");
-        th.appendChild(input);
+        if (index >= 5) {
+            const input = document.createElement("input");
+            input.type = "text";
+            input.value = col;
+            input.dataset.index = index - 5;
+            input.oninput = (e) => updateCustomColumnNames(e.target, index - 5);
+            input.style.wordWrap = "break-word";
+            input.style.whiteSpace = "normal";
+            input.style.width = "100%";
+            th.appendChild(input);
+        } else {
+            th.textContent = col;
+        }
         header.appendChild(th);
     });
 
@@ -103,11 +110,23 @@ function createRessourceTable(role, dateEffet) {
         moisCell.textContent = mois.toLocaleString("fr-FR", { month: "long", year: "numeric" });
         row.appendChild(moisCell);
 
-        ["invalidite", "salaires", "indemnites", "chomage", "custom1", "custom2", "custom3"].forEach(type => {
+        ["invalidite", "salaires", "indemnites", "chomage"].forEach(type => {
             const cell = document.createElement("td");
             const input = document.createElement("input");
             input.type = "number";
             input.id = `${role.toLowerCase()}_${type}M${4 - i}`;
+            input.placeholder = "€";
+            input.min = 0;
+            cell.appendChild(input);
+            row.appendChild(cell);
+        });
+
+        // Colonnes personnalisées
+        customColumns.forEach((col, index) => {
+            const cell = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "number";
+            input.id = `${role.toLowerCase()}_custom${index}M${4 - i}`;
             input.placeholder = "€";
             input.min = 0;
             cell.appendChild(input);
@@ -120,6 +139,12 @@ function createRessourceTable(role, dateEffet) {
     tableContainer.appendChild(table);
     return tableContainer;
 }
+
+// Mettre à jour les noms des colonnes personnalisées
+function updateCustomColumnNames(input, index) {
+    customColumns[index] = input.value;
+}
+// Calcul des ressources
 function calculateRessources(role, dateEffet) {
     const details = [];
     let total = 0;
@@ -134,14 +159,15 @@ function calculateRessources(role, dateEffet) {
         const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${4 - i}`).value) || 0;
         const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${4 - i}`).value) || 0;
 
-        // Récupérer les valeurs des colonnes personnalisées
-        const customValues = [];
-        ["custom1", "custom2", "custom3"].forEach((customCol, index) => {
-            const value = parseFloat(document.getElementById(`${role.toLowerCase()}_${customCol}M${4 - i}`).value) || 0;
-            customValues[index] = value;
+        let customTotal = 0;
+        const customValues = {};
+        customColumns.forEach((col, index) => {
+            const value = parseFloat(document.getElementById(`${role.toLowerCase()}_custom${index}M${4 - i}`).value) || 0;
+            customValues[col] = value;
+            customTotal += value;
         });
 
-        const moisTotal = invalidite + salaires + indemnites + chomage + customValues.reduce((sum, val) => sum + val, 0);
+        const moisTotal = invalidite + salaires + indemnites + chomage + customTotal;
         total += moisTotal;
         salairesTotal += salaires;
 
@@ -151,18 +177,23 @@ function calculateRessources(role, dateEffet) {
             salaires,
             indemnites,
             chomage,
-            customValues,
+            customColumns: customValues,
             moisTotal,
         });
     }
 
     return { total, salaires: salairesTotal, details };
 }
+
+// Calcul des droits ASI
 function calculerASI() {
     const statut = document.getElementById("statut").value;
     const dateEffet = new Date(document.getElementById("dateEffet").value);
 
-    if (isNaN(dateEffet.getTime())) return;
+    if (isNaN(dateEffet.getTime())) {
+        alert("Veuillez sélectionner une date d'effet valide.");
+        return;
+    }
 
     const plafondAnnuel = obtenirPlafond(dateEffet, statut);
     const plafondTrimestriel = plafondAnnuel / 4;
@@ -172,13 +203,13 @@ function calculerASI() {
 
     const totalRessourcesAvantAbattement = demandeurRessources.total + conjointRessources.total;
 
-    // Calcul des BIM (3% de la valeur des BIM au 31 décembre de l'année N-1, divisé par 4)
+    // Calcul des BIM
     const bimN1 = parseFloat(document.getElementById("bimN1").value) || 0;
     const montantBIMTrimestriel = (bimN1 * 0.03) / 4;
 
     const totalRessourcesAvecBIM = totalRessourcesAvantAbattement + montantBIMTrimestriel;
 
-    // Calcul de l'abattement (uniquement sur les salaires)
+    // Calcul de l'abattement
     const totalSalaires = demandeurRessources.salaires + conjointRessources.salaires;
     const abattement = totalSalaires > 0 ? obtenirAbattement(dateEffet, statut, totalSalaires) : 0;
 
@@ -195,6 +226,7 @@ function calculerASI() {
         statut === "couple" ? conjointRessources.details : null
     );
 }
+// Affichage des résultats
 function afficherResultats(
     dateEffet,
     plafondTrimestriel,
@@ -241,6 +273,7 @@ function afficherResultats(
     }
 }
 
+// Génération des détails mois par mois
 function generateMonthlyDetails(details, role) {
     let html = `<h4>Détails des ressources pour ${role}</h4>`;
     details.forEach(detail => {
@@ -252,9 +285,9 @@ function generateMonthlyDetails(details, role) {
                 <li>Indemnités journalières : ${detail.indemnites.toFixed(2)} €</li>
                 <li>Chômage : ${detail.chomage.toFixed(2)} €</li>
                 ${
-                    detail.customValues.reduce((sum, val) => sum + val, 0) > 0
-                        ? detail.customValues
-                              .map((val, idx) => `<li>${document.querySelector(`[data-index="${idx}"]`).value} : ${val.toFixed(2)} €</li>`)
+                    Object.keys(detail.customColumns).length > 0
+                        ? Object.entries(detail.customColumns)
+                              .map(([col, val]) => `<li>${col} : ${val.toFixed(2)} €</li>`)
                               .join("")
                         : ""
                 }
