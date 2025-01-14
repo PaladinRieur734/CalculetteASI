@@ -58,7 +58,7 @@ function genererTableauRessources() {
     }
 }
 
-// Fonction pour créer un tableau de ressources avec 3 colonnes personnalisées par défaut
+// Fonction pour créer un tableau de ressources avec 3 colonnes personnalisées
 function createRessourceTable(role, dateEffet) {
     const tableContainer = document.createElement("div");
     tableContainer.classList.add("table-container");
@@ -71,22 +71,22 @@ function createRessourceTable(role, dateEffet) {
     table.id = `${role.toLowerCase()}Table`;
 
     const header = document.createElement("tr");
-    [
-        "Mois",
-        "Pension d'invalidité",
-        "Salaires",
-        "Indemnités journalières",
-        "Chômage",
-        "Colonne 1",
-        "Colonne 2",
-        "Colonne 3",
-    ].forEach(col => {
+    ["Mois", "Pension d'invalidité", "Salaires", "Indemnités journalières", "Chômage"].forEach(col => {
+        const th = document.createElement("th");
+        th.textContent = col; // Les colonnes fixes ne sont pas modifiables
+        header.appendChild(th);
+    });
+
+    // Ajouter 3 colonnes personnalisées modifiables
+    ["Colonne 1", "Colonne 2", "Colonne 3"].forEach((col, index) => {
         const th = document.createElement("th");
         const input = document.createElement("input");
         input.type = "text";
         input.placeholder = col;
-        input.classList.add("custom-column-name");
+        input.value = col;
+        input.dataset.index = index;
         input.dataset.role = role.toLowerCase();
+        input.classList.add("custom-column-name");
         th.appendChild(input);
         header.appendChild(th);
     });
@@ -133,11 +133,15 @@ function calculateRessources(role, dateEffet) {
         const salaires = parseFloat(document.getElementById(`${role.toLowerCase()}_salairesM${4 - i}`).value) || 0;
         const indemnites = parseFloat(document.getElementById(`${role.toLowerCase()}_indemnitesM${4 - i}`).value) || 0;
         const chomage = parseFloat(document.getElementById(`${role.toLowerCase()}_chomageM${4 - i}`).value) || 0;
-        const custom1 = parseFloat(document.getElementById(`${role.toLowerCase()}_custom1M${4 - i}`).value) || 0;
-        const custom2 = parseFloat(document.getElementById(`${role.toLowerCase()}_custom2M${4 - i}`).value) || 0;
-        const custom3 = parseFloat(document.getElementById(`${role.toLowerCase()}_custom3M${4 - i}`).value) || 0;
 
-        const moisTotal = invalidite + salaires + indemnites + chomage + custom1 + custom2 + custom3;
+        // Récupérer les valeurs des colonnes personnalisées
+        const customValues = [];
+        ["custom1", "custom2", "custom3"].forEach((customCol, index) => {
+            const value = parseFloat(document.getElementById(`${role.toLowerCase()}_${customCol}M${4 - i}`).value) || 0;
+            customValues[index] = value;
+        });
+
+        const moisTotal = invalidite + salaires + indemnites + chomage + customValues.reduce((sum, val) => sum + val, 0);
         total += moisTotal;
         salairesTotal += salaires;
 
@@ -147,9 +151,7 @@ function calculateRessources(role, dateEffet) {
             salaires,
             indemnites,
             chomage,
-            custom1,
-            custom2,
-            custom3,
+            customValues,
             moisTotal,
         });
     }
@@ -193,7 +195,6 @@ function calculerASI() {
         statut === "couple" ? conjointRessources.details : null
     );
 }
-
 function afficherResultats(
     dateEffet,
     plafondTrimestriel,
@@ -250,9 +251,13 @@ function generateMonthlyDetails(details, role) {
                 <li>Salaires : ${detail.salaires.toFixed(2)} €</li>
                 <li>Indemnités journalières : ${detail.indemnites.toFixed(2)} €</li>
                 <li>Chômage : ${detail.chomage.toFixed(2)} €</li>
-                <li>Colonne 1 : ${detail.custom1.toFixed(2)} €</li>
-                <li>Colonne 2 : ${detail.custom2.toFixed(2)} €</li>
-                <li>Colonne 3 : ${detail.custom3.toFixed(2)} €</li>
+                ${
+                    detail.customValues.reduce((sum, val) => sum + val, 0) > 0
+                        ? detail.customValues
+                              .map((val, idx) => `<li>${document.querySelector(`[data-index="${idx}"]`).value} : ${val.toFixed(2)} €</li>`)
+                              .join("")
+                        : ""
+                }
                 <li><strong>Total mensuel :</strong> ${detail.moisTotal.toFixed(2)} €</li>
             </ul>`;
     });
