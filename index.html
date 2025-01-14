@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcul des Droits ASI</title>
+    <title>ANTISCAPIN : calculette des droits ASI</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -40,14 +40,13 @@
 
             <!-- Section BIM -->
             <section class="bim-section">
-                <h2>Valeur des BIM</h2>
-                <label for="montantBIM">Valeur des BIM au 31/12 de l'année N-1 :</label>
-                <input type="number" id="montantBIM" placeholder="Montant en €" min="0">
+                <h2>Montant des BIM au 31 décembre N-1</h2>
+                <label for="bimN1">BIM au 31 décembre de l'année N-1 :</label>
+                <input type="number" id="bimN1" placeholder="Montant en €" min="0">
             </section>
 
             <!-- Bouton Calcul -->
-      <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
-
+            <button type="button" class="btn" onclick="calculerASI()">Calculer les droits</button>
         </form>
 
         <!-- Résultats -->
