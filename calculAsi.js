@@ -265,7 +265,7 @@ function afficherResultats(
 
     // Conclusion
     if (ressourcesApresAbattement > plafondTrimestriel) {
-        result.innerHTML += `<p>Les ressources combinées au cours du trimestre de référence, soit ${ressourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
+        result.innerHTML += `<p>Le total des ressources au cours du trimestre de référence, soit ${ressourcesApresAbattement.toFixed(2)} € étant supérieures au plafond trimestriel de ${plafondTrimestriel.toFixed(2)} €, l’allocation supplémentaire d’invalidité ne pouvait pas être attribuée à effet du ${dateEffet.toLocaleDateString("fr-FR")}.</p>`;
     } else {
         const montantASI = plafondTrimestriel - ressourcesApresAbattement;
         const montantMensuelASI = montantASI / 3;
