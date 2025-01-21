@@ -1,4 +1,4 @@
-/* Ajout d'un style global pour ajuster la taille du corps et améliorer la visibilité du tableau */
+/* Style général */
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
@@ -6,42 +6,169 @@ body {
     padding: 0;
     background-color: #f9f9f9;
     color: #333;
-    font-size: 1.1rem;  /* Augmenter légèrement la taille de la police pour améliorer la lisibilité */
+    padding-bottom: 30px; /* Pour éviter que le contenu ne se coupe à la fin de la page */
 }
 
-/* Ajouter une règle pour l'impression pour garantir que tout soit visible sur une seule page */
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    page-break-after: always; /* Permet de forcer la fin de page avant d'imprimer */
+}
+
+/* En-tête */
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    color: #1e90ff;
+    font-size: 2rem;
+    margin: 0;
+}
+
+header p {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* Formulaire */
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="date"],
+form input[type="number"],
+form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+form input:focus,
+form select:focus {
+    border-color: #1e90ff;
+    outline: none;
+}
+
+/* Bouton */
+form .btn {
+    display: block;
+    background-color: #1e90ff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    margin: 20px auto;
+    transition: background-color 0.3s ease;
+}
+
+form .btn:hover {
+    background-color: #005bb5;
+}
+
+/* Tableau des ressources */
+.table-container {
+    margin-bottom: 20px;
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    page-break-inside: auto; /* Empêche le tableau de se couper pendant l'impression */
+}
+
+.table-container th,
+.table-container td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.table-container th {
+    background-color: #1e90ff;
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+/* Résultats */
+.result {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f1faff;
+    border: 1px solid #1e90ff;
+    border-radius: 8px;
+    page-break-inside: avoid; /* Empêche la coupe du contenu de résultats */
+}
+
+.result h2 {
+    text-align: center;
+    background-color: #1e90ff;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 0 0 20px 0;
+}
+
+.result h3,
+.result h4,
+.result h5 {
+    margin: 0;
+    padding: 0;
+}
+
+.result ul {
+    padding-left: 20px;
+    list-style-type: none;
+}
+
+/* Ajustements pour l'impression */
 @media print {
     body {
-        font-size: 1rem;  /* Taille de police réduite pour l'impression */
+        padding: 10px;
     }
+
     .container {
         width: 100%;
         max-width: none;
-        box-shadow: none;
-        border-radius: 0;
-        padding: 0;
         margin: 0;
+        page-break-after: always;
     }
 
-    header {
-        text-align: left;
-    }
-
-    .table-container {
-        margin-bottom: 20px;
-    }
-
-    /* Ajuster le tableau pour qu'il tienne sur une page */
-    table {
-        width: 100%;
+    .table-container table {
         page-break-inside: auto;
+        page-break-before: auto;
     }
-    tr, td, th {
+
+    .result {
         page-break-inside: avoid;
     }
-    .result {
-        padding: 15px;
-        background-color: #f1faff;
-        border: 1px solid #1e90ff;
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    .result h2 {
+        font-size: 1.25rem;
+    }
+
+    .result h3,
+    .result h4 {
+        font-size: 1rem;
     }
 }
