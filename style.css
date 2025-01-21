@@ -9,8 +9,8 @@ body {
 }
 
 .container {
-    width: 90%;
-    max-width: 800px;
+    width: 95%; /* Augmenter la largeur de la page */
+    max-width: 850px; /* Augmenter la taille maximale de la page */
     margin: 20px auto;
     background: #fff;
     padding: 20px;
