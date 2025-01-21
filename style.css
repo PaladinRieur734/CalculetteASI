@@ -9,8 +9,8 @@ body {
 }
 
 .container {
-    width: 90%;
-    max-width: 800px;
+    width: 95%;
+    max-width: 1000px; /* Agrandir légèrement la taille de la page */
     margin: 20px auto;
     background: #fff;
     padding: 20px;
@@ -87,6 +87,7 @@ form .btn:hover {
 .table-container table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed; /* Toutes les colonnes ont la même largeur */
 }
 
 .table-container th,
@@ -94,6 +95,8 @@ form .btn:hover {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+    word-wrap: break-word; /* Retour à la ligne automatique pour les colonnes personnalisées */
+    white-space: pre-wrap;
 }
 
 .table-container th {
@@ -119,4 +122,21 @@ form .btn:hover {
     padding: 10px;
     border-radius: 4px;
     margin: 0 0 20px 0;
+}
+
+/* Résumé des ressources */
+.result table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.result td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.result td:first-child {
+    font-weight: bold;
+    background-color: #f9f9f9;
 }
