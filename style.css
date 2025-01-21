@@ -6,7 +6,6 @@ body {
     padding: 0;
     background-color: #f9f9f9;
     color: #333;
-    padding-bottom: 30px; /* Pour éviter que le contenu ne se coupe à la fin de la page */
 }
 
 .container {
@@ -17,7 +16,6 @@ body {
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    page-break-after: always; /* Permet de forcer la fin de page avant d'imprimer */
 }
 
 /* En-tête */
@@ -27,7 +25,7 @@ header {
 }
 
 header h1 {
-    color: #0000FF; /* Bleu validé pour l'en-tête */
+    color: #1e90ff;
     font-size: 2rem;
     margin: 0;
 }
@@ -58,14 +56,14 @@ form select {
 
 form input:focus,
 form select:focus {
-    border-color: #0000FF; /* Bleu validé pour surbrillance */
+    border-color: #1e90ff;
     outline: none;
 }
 
 /* Bouton */
 form .btn {
     display: block;
-    background-color: #0000FF; /* Bleu validé pour les boutons */
+    background-color: #1e90ff;
     color: #fff;
     padding: 10px 20px;
     border: none;
@@ -78,7 +76,7 @@ form .btn {
 }
 
 form .btn:hover {
-    background-color: #0000CC; /* Bleu plus foncé au survol */
+    background-color: #005bb5;
 }
 
 /* Tableau des ressources */
@@ -89,7 +87,6 @@ form .btn:hover {
 .table-container table {
     width: 100%;
     border-collapse: collapse;
-    page-break-inside: auto; /* Empêche le tableau de se couper pendant l'impression */
 }
 
 .table-container th,
@@ -100,7 +97,7 @@ form .btn:hover {
 }
 
 .table-container th {
-    background-color: #0000FF; /* Bleu validé pour les en-têtes de tableau */
+    background-color: #1e90ff;
     color: #fff;
     text-transform: uppercase;
     font-size: 0.9rem;
@@ -111,30 +108,17 @@ form .btn:hover {
     margin-top: 20px;
     padding: 20px;
     background-color: #f1faff;
-    border: 1px solid #0000FF; /* Encadrement bleu validé */
+    border: 1px solid #1e90ff;
     border-radius: 8px;
-    page-break-inside: avoid; /* Empêche la coupe du contenu de résultats */
 }
 
 .result h2 {
     text-align: center;
-    background-color: #0000FF; /* Bleu validé pour l'en-tête des résultats */
+    background-color: #1e90ff;
     color: #fff;
     padding: 10px;
     border-radius: 4px;
     margin: 0 0 20px 0;
-}
-
-.result h3,
-.result h4,
-.result h5 {
-    margin: 0;
-    padding: 0;
-}
-
-.result ul {
-    padding-left: 20px;
-    list-style-type: none;
 }
 
 /* Ajustements pour l'impression */
