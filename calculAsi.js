@@ -1,13 +1,13 @@
 // Plafonds ASI, qui changent au 1er avril chaque année
 const plafonds = {
-    "2017": { seul: 9658.13, couple: 15592.07 },
-    "2018": { seul: 9820.46, couple: 15872.24 },
-    "2019": { seul: 9951.84, couple: 16091.92 },
-    "2020": { seul: 10068.00, couple: 16293.12 },
-    "2021": { seul: 10183.20, couple: 16396.49 },
-    "2022": { seul: 10265.16, couple: 16512.93 },
-    "2023": { seul: 10320.07, couple: 16548.23 },
-    "2024": { seul: 10536.50, couple: 16890.35 },
+    "2017": { seul: 8457.77, couple: 14814.39 },
+    "2018": { seul: 8542.34, couple: 14962.53 },
+    "2019": { seul: 8679.01, couple: 15201.93 },
+    "2020": { seul: 9000.00, couple: 15750.00 },
+    "2021": { seul: 9600.00, couple: 16800.00 },
+    "2022": { seul: 10167.71, couple: 17786.49 },
+    "2023": { seul: 10320.07, couple: 18060.13 },
+    "2024": { seul: 10794.79, couple: 18890.89 },
 };
 
 // Liste des abattements annuels
