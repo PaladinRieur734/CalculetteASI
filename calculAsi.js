@@ -8,6 +8,7 @@ const plafonds = {
     "2022": { seul: 10167.71, couple: 17786.49 },
     "2023": { seul: 10320.07, couple: 18060.13 },
     "2024": { seul: 10794.79, couple: 18890.89 },
+    "2025": { seul: 10978.30, couple: 19212.03 },
 };
 
 // Liste des abattements annuels
