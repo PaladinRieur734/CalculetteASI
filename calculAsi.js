@@ -16,11 +16,12 @@ const abattements = {
     "2017": { seul: 1400, couple: 2400 },
     "2018": { seul: 1450, couple: 2450 },
     "2019": { seul: 1500, couple: 2500 },
-    "2020": { seul: 1550, couple: 2550 },
-    "2021": { seul: 1600, couple: 2600 },
-    "2022": { seul: 1600, couple: 2600 },
-    "2023": { seul: 1600, couple: 2600 },
-    "2024": { seul: 1650, couple: 2650 },
+    "2020": { seul: 5541.90, couple: 9236.50 },
+    "2021": { seul: 5596.50, couple: 9327.50 },
+    "2022": { seul: 5771.22, couple: 9618.70 },
+    "2023": { seul: 6153.42, couple: 10255.70 },
+    "2024": { seul: 6360.90, couple: 10601.50  },
+    "2025": { seul: 6486.48, couple: 10810.80 },
 };
 
 // Fonction pour récupérer le plafond applicable en fonction de la date d'effet
