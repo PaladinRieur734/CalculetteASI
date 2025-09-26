@@ -32,13 +32,18 @@ function obtenirPlafond(dateEffet, statut) {
     return plafonds[anneePlafond]?.[statut] || 0;
 }
 
-// Fonction pour obtenir l'abattement applicable
+// Fonction pour obtenir l'abattement applicable (corrigée en mode trimestriel
+// et appliquant la règle : si ressources < abattement_trimestriel => abattement = ressources)
 function obtenirAbattement(dateEffet, statut, salaires) {
     const annee = dateEffet.getFullYear();
     const mois = dateEffet.getMonth() + 1;
     const anneeAbattement = mois < 4 ? annee - 1 : annee;
-    const abattementMax = abattements[anneeAbattement]?.[statut] || 0;
-    return Math.min(salaires, abattementMax);
+    const abattementAnnuel = abattements[anneeAbattement]?.[statut] || 0;
+    const abattementTrimestriel = abattementAnnuel / 4;
+
+    // Règle demandée : si les ressources (ici salaires du trimestre) sont inférieures
+    // à l'abattement trimestriel, alors l'abattement = ressources, sinon abattement = abattementTrimestriel
+    return salaires < abattementTrimestriel ? salaires : abattementTrimestriel;
 }
 // Colonnes personnalisées (2 colonnes seulement)
 let customColumns = ["Colonne personnalisée 1", "Colonne personnalisée 2"];
