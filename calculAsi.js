@@ -9,8 +9,7 @@ const plafonds = {
     "2023": { seul: 10320.07, couple: 18060.13 },
     "2024": { seul: 10794.79, couple: 18890.89 },
     "2025": { seul: 10978.30, couple: 19212.03 },
-    "2026": { seul: 11065.92, couple: 19365.60 },
-};
+  };
 
 // Liste des abattements annuels
 const abattements = {
@@ -23,8 +22,7 @@ const abattements = {
     "2023": { seul: 6153.42, couple: 10255.70 },
     "2024": { seul: 6360.90, couple: 10601.50  },
     "2025": { seul: 6486.48, couple: 10810.80 },
-    "2026": { seul: 6562.92, couple: 10938.20 },
-};
+ };
 
 // Fonction pour récupérer le plafond applicable en fonction de la date d'effet
 function obtenirPlafond(dateEffet, statut) {
